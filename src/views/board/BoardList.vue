@@ -106,8 +106,8 @@ export default {
         params: this.requestBody,
         headers: {}
       }).then((res) => {      
-        console.log("테스트입니다.");
-        console.log(res.data);
+        // console.log("테스트입니다.");
+        // console.log(res.data);
 
         if (res.data.resultCode === "OK") {
           this.list = res.data.data
