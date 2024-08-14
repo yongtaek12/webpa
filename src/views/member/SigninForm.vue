@@ -32,6 +32,10 @@
                   <input v-model="formData.registerEmail" class="form__field-input" type="text" placeholder="이메일을 입력해주세요" />
                 </label>
                 <label class="form__field">
+                  <span class="form__field-label">Phone</span>
+                  <input v-model="formData.registerEmail" class="form__field-input" type="text" placeholder="핸드폰번호를 입력해주세요" />
+                </label>
+                <label class="form__field">
                   <span class="form__field-label">Password</span>
                   <input v-model="formData.registerPass" class="form__field-input" type="password" placeholder="비밀번호를 입력해주세요" />
                 </label>
