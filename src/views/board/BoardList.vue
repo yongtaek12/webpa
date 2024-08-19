@@ -10,11 +10,12 @@
     <div id="board-search">
       <div class="container">
         <div class="search-window">                
-          <form action="">
+          <form @submit.prevent="fnPage()">
             <div class="search-wrap">
               <label for="search" class="blind">공지사항 내용 검색</label>
               <select v-model="search_key" class="search-select">
-                <option value="">제목</option>
+                <option value="">- 선택 -</option>
+                <option value="title">제목</option>
                 <option value="author">작성자</option>
                 <option value="contents">내용</option>
               </select>
@@ -25,7 +26,7 @@
                 placeholder="검색어를 입력해주세요."
                 @keyup.enter="fnPage()"
               />
-              <button type="submit" class="btn btn-dark" @click="fnPage()">검색</button>
+              <button type="submit" class="btn btn-dark" @click.prevent="fnPage()">검색</button>
             </div>
           </form>
         </div>
@@ -155,8 +156,8 @@ export default {
         params: this.requestBody,
         headers: {}
       }).then((res) => {      
-        // console.log("테스트입니다.", this.$serverUrl);
-        // console.log(res.data);
+         console.log("테스트입니다.", this.$serverUrl);
+         console.log(res.data);
 
         if (res.data.resultCode === "OK") {
           this.list = res.data.data
