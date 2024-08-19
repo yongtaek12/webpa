@@ -53,6 +53,21 @@
   display: flex;
   justify-content: center;
 }
+
+.pagination .w3-button {
+  color: #333;
+  text-decoration: none;
+  padding: 5px 10px;
+  margin: 2px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.pagination .w3-green {
+  background-color: #4CAF50;
+  color: white;
+}
+
 /* chatbotQuestion.vue */
 /* 전체 컨테이너 스타일 */
 .chatbot-interface {
@@ -211,6 +226,9 @@ html, body, div, input, fieldset, form, h1, p, table, thead, th, tbody, td, text
 table {
   border-collapse: collapse;
   border-spacing: 0;
+  width: 100%;
+  font-size: 14px;
+  font-family: 'Noto Sans KR', sans-serif;
 
 }
 textarea {
@@ -779,36 +797,57 @@ input:disabled {
 /**게시판 새로운 양식 추가 */
 
 section.notice {
-  padding: 80px 0;
+  padding: 40px 0;
 }
 
 .page-title {
   margin-bottom: 60px;
 }
+/* 페이지 타이틀 */
 .page-title h3 {
-  font-size: 28px;
+  font-size: 24px;
   color: #333333;
-  font-weight: 400;
+  font-weight: 700;
   text-align: center;
+  margin-bottom: 20px;
 }
 
+/* 검색 영역 스타일 */
 #board-search .search-window {
   padding: 15px 0;
-  background-color: #f9f7f9;
+  background-color: #f9f9f9;
 }
 #board-search .search-window .search-wrap {
-  position: relative;
-/*   padding-right: 124px; */
-  margin: 0 auto;
-  width: 80%;
-  max-width: 564px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  width: 100%;
+}
+#board-search .search-select {
+  height: 40px;
+  padding: 0 10px;
+  font-size: 14px;
+  border: none;
+  border-right: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+  appearance: none; /* 화살표 제거를 위한 설정 */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 #board-search .search-window .search-wrap input {
   height: 40px;
-  width: 100%;
-  font-size: 14px;
-  padding: 7px 14px;
-  border: 1px solid #ccc;
+  width: 240px;
+  padding: 0 10px;
+  border: none;
+  outline: none;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+#board-search .search-wrap .btn i {
+  font-size: 18px; /* 아이콘 크기 */
+  color: #333;
 }
 #board-search .search-window .search-wrap input:focus {
   border-color: #333;
@@ -816,13 +855,13 @@ section.notice {
   border-width: 1px;
 }
 #board-search .search-window .search-wrap .btn {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 108px;
-  padding: 0;
-  font-size: 16px;
+  height: 40px;
+  padding: 0 16px;
+  font-size: 14px;
+  background-color: #333;
+  color: white;
+  border: none;
+  cursor: pointer;
 }
 
 .board-table {
@@ -843,8 +882,8 @@ section.notice {
   text-decoration: underline;
 }
 .board-table th {
-  text-align: center;
-}
+  background-color: #f1f1f1;
+  font-weight: 700;}
 
 .board-table .th-num {
   width: 100px;
@@ -856,7 +895,9 @@ section.notice {
 }
 
 .board-table th, .board-table td {
-  padding: 14px 0;
+  padding: 14px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
 }
 
 .board-table tbody td {
@@ -874,7 +915,9 @@ section.notice {
 .board-table tbody th p{
   display: none;
 }
-
+.board-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
 .btn {
   display: inline-block;
   padding: 0 30px;
@@ -924,7 +967,20 @@ section.notice {
   border-color: #373737;
   color: #fff;
 }
-
+/* 글쓰기 버튼 스타일 */
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  font-size: 14px;
+  border-radius: 4px;
+}
+.btn-primary:hover {
+  background-color: #0056b3;
+}
 /* reset */
 
 * {

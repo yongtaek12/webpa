@@ -1,83 +1,107 @@
 <template>
-  
   <section class="notice">
     <div class="page-title">
       <div class="container">
         <h3>공지사항</h3>
       </div>
-      <!-- board seach area -->
-      <div id="board-search">
-          <div class="container">
-              <div class="search-window">                
-                  <form action="">
-                      <div class="search-wrap">
-                          <label for="search" class="blind">공지사항 내용 검색</label>
-                          <input id="search" type="search" name="" placeholder="검색어를 입력해주세요." value="">
-                          <button type="submit" class="btn btn-dark">검색</button>
-                      </div>
-                  </form>
-              </div>
-          </div>
-      </div>
-      <!-- board list area -->
-      <div id="board-list">
-        <div class="container">
-          <table class="board-table">
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>제목</th>
-                <th>작성자</th>
-                <th>등록일시</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(row, idx) in list" :key="idx">
-                <td>{{ row.idx }}</td>
-                <td><a v-on:click="fnView(`${row.idx}`)">{{ row.title }}</a></td>
-                <td>{{ row.author }}</td>
-                <td>{{ row.createdAt }}</td>
-              </tr>
-            </tbody>
-          </table>
+    </div>
+
+    <!-- 검색 영역 -->
+    <div id="board-search">
+      <div class="container">
+        <div class="search-window">                
+          <form action="">
+            <div class="search-wrap">
+              <label for="search" class="blind">공지사항 내용 검색</label>
+              <select v-model="search_key" class="search-select">
+                <option value="">제목</option>
+                <option value="author">작성자</option>
+                <option value="contents">내용</option>
+              </select>
+              <input
+                id="search"
+                type="search"
+                v-model="search_value"
+                placeholder="검색어를 입력해주세요."
+                @keyup.enter="fnPage()"
+              />
+              <button type="submit" class="btn btn-dark" @click="fnPage()">검색</button>
+            </div>
+          </form>
         </div>
       </div>
-      <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
-        <span class="pg">
-        <a href="javascript:;" @click="fnPage(1)" class="first w3-button w3-bar-item w3-border">&lt;&lt;</a>
-        <a href="javascript:;" v-if="paging.startPage > 10" @click="fnPage(`${paging.startPage-1}`)"
-          class="prev w3-button w3-bar-item w3-border">&lt;</a>
-        <template v-for=" (n,index) in paginavigation()">
-            <template v-if="paging.page==n">
-                <strong class="w3-button w3-bar-item w3-border w3-green" :key="index">{{ n }}</strong>
-            </template>
-            <template v-else>
-                <a class="w3-button w3-bar-item w3-border" href="javascript:;" @click="fnPage(`${n}`)" :key="index">{{ n }}</a>
-            </template>
-        </template>
-        <a href="javascript:;" v-if="paging.totalPageCnt > paging.endPage"
-          @click="fnPage(`${paging.endPage+1}`)" class="next w3-button w3-bar-item w3-border">&gt;</a>
-        <a href="javascript:;" @click="fnPage(`${paging.totalPageCnt}`)" class="last w3-button w3-bar-item w3-border">&gt;&gt;</a>
-        </span>
-      </div>
-    <!--글등록-->
-    <!-- <div class="container">
-      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite">등록</button>
-    </div> -->
-    <div>
-      <select v-model="search_key">
-        <option value="">- 선택 -</option>
-        <option value="author">작성자</option>
-        <option value="title">제목</option>
-        <option value="contents">내용</option>
-      </select>
-      &nbsp;
-      <input type="text" v-model="search_value" @keyup.enter="fnPage()">
-      &nbsp;
-      <button @click="fnPage()">검색</button>
     </div>
-  </div>
-</section>
+
+    <!-- 게시판 리스트 영역 -->
+    <div id="board-list">
+      <div class="container">
+        <table class="board-table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>제목</th>
+              <th>작성자</th>
+              <th>등록일시</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(row, idx) in list" :key="idx">
+              <td>{{ row.idx }}</td>
+              <td><a v-on:click="fnView(`${row.idx}`)">{{ row.title }}</a></td>
+              <td>{{ row.author }}</td>
+              <td>{{ row.createdAt }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 페이지네이션 영역 -->
+    <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
+      <span class="pg">
+        <a href="javascript:;" @click="fnPage(1)" class="first w3-button w3-bar-item w3-border">&lt;&lt;</a>
+        <a
+          href="javascript:;"
+          v-if="paging.startPage > 10"
+          @click="fnPage(`${paging.startPage - 1}`)"
+          class="prev w3-button w3-bar-item w3-border"
+          >&lt;</a
+        >
+        <template v-for="(n, index) in paginavigation()">
+          <template v-if="paging.page == n">
+            <strong class="w3-button w3-bar-item w3-border w3-green" :key="index">{{ n }}</strong>
+          </template>
+          <template v-else>
+            <a
+              class="w3-button w3-bar-item w3-border"
+              href="javascript:;"
+              @click="fnPage(`${n}`)"
+              :key="index"
+              >{{ n }}</a
+            >
+          </template>
+        </template>
+        <a
+          href="javascript:;"
+          v-if="paging.totalPageCnt > paging.endPage"
+          @click="fnPage(`${paging.endPage + 1}`)"
+          class="next w3-button w3-bar-item w3-border"
+          >&gt;</a
+        >
+        <a
+          href="javascript:;"
+          @click="fnPage(`${paging.totalPageCnt}`)"
+          class="last w3-button w3-bar-item w3-border"
+          >&gt;&gt;</a
+        >
+      </span>
+    </div>
+
+    <!-- 글쓰기 버튼 -->
+    <div class="container">
+      <button type="button" class="btn btn-primary" @click="fnWrite">글쓰기</button>
+    </div>
+  </section>
 </template>
 
 <script>
