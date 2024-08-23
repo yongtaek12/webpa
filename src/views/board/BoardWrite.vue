@@ -19,7 +19,7 @@
     </div>
     <div class="board-contents">
       <ckeditor
-        v-model="editorData"
+        v-model="contents"
         :editor="editor"
         :config="editorConfig"
         @ready="onEditorReady"
@@ -86,7 +86,7 @@ export default {
       // this.setEditorHeight();  // 포커스 시에도 높이 유지
 
     },
-    onBlur(editor) {
+    onBlur() {
       // this.setEditorHeight();  // 블러 시에도 높이 유지
 
     },
@@ -166,7 +166,8 @@ export default {
 <style>
 .ck-editor__editable {
   min-height: 700px !important;
+  font-family: Arial, sans-serif;
+  color: #000 !important;
+
 }
-
-
 </style>
