@@ -9,6 +9,7 @@ import axiosInstance from '@/plugins/axios'
 // 믹스인(mixin)설정을 불러와 적용합니다.
 import mixins from "@/mixins";
 import VueNavigationBar from "vue-navigation-bar";
+import { CkeditorPlugin } from '@ckeditor/ckeditor5-vue';
 
 
 // 새로고침등을 했을때 로그인이 되어있는지 여부를 다시 체크
@@ -32,4 +33,5 @@ userModel.init(app) // 유틸리티 모듈에 Vue 인스턴스 주입
 app
   .use(router)
   .use(store)   //2. store 등록
+  .use( CkeditorPlugin )
   .mount('#app')
