@@ -1,33 +1,33 @@
 <template>
   <div class="board-detail">
     <div class="board-contents">
-      <input
-        type="text"
-        v-model="title"
-        class="w3-input w3-border"
-        placeholder="제목을 입력해주세요."
-        style="resize: none; width: 20%;"
-      />
-      <input
-        type="text"
-        v-model="author"
-        class="w3-input w3-border"
-        placeholder="작성자를 입력해주세요."
-        v-if="idx === undefined"
-        style="resize: none; width: 20%;"
-      />
-    </div>
+		<input
+			type="text"
+			v-model="title"
+			class="w3-input w3-border"
+			placeholder="제목을 입력해주세요."
+			style="resize: none; width: 20%;"
+		/>
+		<input
+			type="text"
+			v-model="author"
+			class="w3-input w3-border"
+			placeholder="작성자를 입력해주세요."
+			v-if="idx === undefined"
+			style="resize: none; width: 20%;"
+		/>
+		</div>
     <div class="board-contents">
-      <ckeditor
-        v-model="editorData"
-        :editor="editor"
-        :config="editorConfig"
-        @ready="onEditorReady"
-        @focus="onFocus"
-        @blur="onBlur"
-      />
+      <div class="main-container">
+        <div class="editor-container editor-container_classic-editor editor-container_include-block-toolbar" ref="editorContainerElement">
+          <div class="editor-container__editor">
+            <div ref="editorElement">
+              <ckeditor v-if="isLayoutReady" v-model="config.initialData" :editor="editor" :config="config" />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
     <div class="common-buttons">
       <button
         type="button"
@@ -50,47 +50,89 @@
 
 <script>
 import {
-  ClassicEditor,
-  Bold,
-  Essentials,
-  Italic,
-  Mention,
-  Paragraph,
-  Undo,
-  Image,
-  ImageToolbar,
-  ImageCaption,
-  ImageStyle,
-  ImageUpload,
-  Link,
-  Table,
-  TableToolbar,
-  List,
-  BlockQuote,
-  CodeBlock,
-  Clipboard,
-  Underline,
-  Strikethrough,
-  Heading,
-  Font,
-  MediaEmbed,
-  InlineEditor,
-  FindAndReplace,
-  PasteFromOffice,
-  ImageResize,
-  Alignment,
-  Indent,
-  IndentBlock,
-  Subscript,
-  Superscript,
-  RemoveFormat,
-  TodoList,
-  Base64UploadAdapter
+	ClassicEditor,
+	AccessibilityHelp,
+	Alignment,
+	Autoformat,
+	AutoImage,
+	Autosave,
+	BalloonToolbar,
+	Base64UploadAdapter,
+	BlockQuote,
+	BlockToolbar,
+	Bold,
+	Code,
+	CodeBlock,
+	Essentials,
+	FindAndReplace,
+	FontBackgroundColor,
+	FontColor,
+	FontFamily,
+	FontSize,
+	FullPage,
+	GeneralHtmlSupport,
+	Heading,
+	Highlight,
+	HorizontalLine,
+	HtmlComment,
+	HtmlEmbed,
+	ImageBlock,
+	ImageCaption,
+	ImageInline,
+	ImageInsert,
+	ImageInsertViaUrl,
+	ImageResize,
+	ImageStyle,
+	ImageTextAlternative,
+	ImageToolbar,
+	ImageUpload,
+	Indent,
+	IndentBlock,
+	Italic,
+	Link,
+	LinkImage,
+	List,
+	ListProperties,
+	Markdown,
+	MediaEmbed,
+	Mention,
+	PageBreak,
+	Paragraph,
+	PasteFromMarkdownExperimental,
+	PasteFromOffice,
+	RemoveFormat,
+	SelectAll,
+	ShowBlocks,
+	SourceEditing,
+	SpecialCharacters,
+	SpecialCharactersArrows,
+	SpecialCharactersCurrency,
+	SpecialCharactersEssentials,
+	SpecialCharactersLatin,
+	SpecialCharactersMathematical,
+	SpecialCharactersText,
+	Strikethrough,
+	Subscript,
+	Superscript,
+	Table,
+	TableCaption,
+	TableCellProperties,
+	TableColumnResize,
+	TableProperties,
+	TableToolbar,
+	TextPartLanguage,
+	TextTransformation,
+	Title,
+	TodoList,
+	Underline,
+	Undo
 } from 'ckeditor5';
+import translations from 'ckeditor5/translations/ko.js';
+
 import 'ckeditor5/ckeditor5.css';
-import coreTranslations from 'ckeditor5/translations/es.js';
-import premiumFeaturesTranslations from 'ckeditor5-premium-features/translations/es.js';
-import '@ckeditor/ckeditor5-build-classic/build/translations/ko';  // 한국어 번역 추가
+// import coreTranslations from 'ckeditor5/translations/es.js';
+// import premiumFeaturesTranslations from 'ckeditor5-premium-features/translations/es.js';
+// import '@ckeditor/ckeditor5-build-classic/build/translations/ko';  // 한국어 번역 추가
 
 // import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandreplace'; // 플러그인 불러오기
 // import Superscript from '@ckeditor/ckeditor5-basic-styles/src/superscript';
@@ -104,130 +146,281 @@ export default {
       author: '',
       contents: '',
       created_at: '',
-      editor: ClassicEditor,
-      editorData: '<p>Hello from CKEditor 5 in Vue!</p>',
-      editorConfig: {
-        language: "ko",
-        plugins: [
-          Essentials,
-          Bold,
-          Italic,
-          Paragraph,
-          Mention,
-          Undo,
-          Image,
-          ImageToolbar,
-          ImageCaption,
-          ImageStyle,
-          ImageUpload,
-          FindAndReplace,
-          Link,
-          Table,
-          TableToolbar,
-          List,
-          BlockQuote,
-          CodeBlock,
-          Clipboard,
-          Underline,
-          Strikethrough,
-          Heading, // 추가된 플러그인
-          Font,
-          MediaEmbed,
-          PasteFromOffice,
-          ImageResize,
-          Alignment,
-          Indent,
-          IndentBlock,
-          InlineEditor,
-          Subscript,
-          Superscript,
-          RemoveFormat,
-          TodoList,
-          Base64UploadAdapter
-        ],
-        toolbar: [
-          'findAndReplace', 'selectAll', '|',
-          'heading', '|',
-          'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
-          'bulletedList', 'numberedList', 'todoList', '|',
-          'outdent', 'indent', '|',
-          'undo', 'redo', '|',
-          'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
-          'alignment', '|',
-          'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
-          'specialCharacters', 'horizontalLine', 'pageBreak', '|',
-          'textPartLanguage', '|',
-          'sourceEditing'
-        ],
-        shouldNotGroupWhenFull: true,
-
-        heading: {
-          options: [
-            {
-              model: "paragraph",
-              view: {
-                name: 'p',
-                classes: 'ck-heading_paragraph',
-                styles: {
-                  'text-align': 'left',  // 왼쪽 정렬
-                  'color': '#000000'     // 글씨 색 검은색
-                }
-              },
-              title: "본문",
-              class: "ck-heading_paragraph"
-            },
-            {
-              model: "heading1",
-              view: "h1",
-              title: "헤더1",
-              class: "ck-heading_heading1",
-            },
-            {
-              model: "heading2",
-              view: "h2",
-              title: "헤더2",
-              class: "ck-heading_heading2",
-            },
-            {
-              model: "heading3",
-              view: "h3",
-              title: "헤더3",
-              class: "ck-heading_heading3",
-            },
-          ]
-        },
-        fontSize: {
-          options: [9, 11, 13, 15, 17, 20, 24, 28, 32, 54],
-        },
-        alignment: {
-          options: ["justify", "left", "center", "right"],
-        },
-        image: {
-          resizeUnit: "px",
-          toolbar: [
-            "imageStyle:alignLeft",
-            "imageStyle:full",
-            "imageStyle:alignRight",
-            "|",
-            "imageTextAlternative",
-          ],
-          styles: ["full", "alignLeft", "alignRight"]
-        },
-        table: {
-          contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
-        },
-        typing: {
-          transformations: {
-            remove: ["enDash", "emDash", "oneHalf", "oneThird", "twoThirds", "oneForth", "threeQuarters"],
-          },
-        },
-        translations: [coreTranslations, premiumFeaturesTranslations],
-        placeholder: "글을 입력해보세요!",
-      }
+      isLayoutReady: false,
+			config: null, // CKEditor needs the DOM tree before calculating the configuration.
+			editor: ClassicEditor     
+  
     };
   },
   mounted() {
     this.fnGetView();
+    // CKEditor 초기화
+    this.config = {
+			toolbar: {
+				items: [
+					'undo',
+					'redo',
+					'|',
+					'sourceEditing',
+					'showBlocks',
+					'findAndReplace',
+					'selectAll',
+					'textPartLanguage',
+					'|',
+					'heading',
+					'|',
+					'fontSize',
+					'fontFamily',
+					'fontColor',
+					'fontBackgroundColor',
+					'|',
+					'bold',
+					'italic',
+					'underline',
+					'strikethrough',
+					'subscript',
+					'superscript',
+					'code',
+					'removeFormat',
+					'|',
+					'specialCharacters',
+					'horizontalLine',
+					'pageBreak',
+					'link',
+					'insertImage',
+					'insertImageViaUrl',
+					'mediaEmbed',
+					'insertTable',
+					'highlight',
+					'blockQuote',
+					'codeBlock',
+					'htmlEmbed',
+					'|',
+					'alignment',
+					'|',
+					'bulletedList',
+					'numberedList',
+					'todoList',
+					'outdent',
+					'indent',
+					'|',
+					'accessibilityHelp'
+				],
+				shouldNotGroupWhenFull: false
+			},
+			plugins: [
+				AccessibilityHelp,
+				Alignment,
+				Autoformat,
+				AutoImage,
+				Autosave,
+				BalloonToolbar,
+				Base64UploadAdapter,
+				BlockQuote,
+				BlockToolbar,
+				Bold,
+				Code,
+				CodeBlock,
+				Essentials,
+				FindAndReplace,
+				FontBackgroundColor,
+				FontColor,
+				FontFamily,
+				FontSize,
+				FullPage,
+				GeneralHtmlSupport,
+				Heading,
+				Highlight,
+				HorizontalLine,
+				HtmlComment,
+				HtmlEmbed,
+				ImageBlock,
+				ImageCaption,
+				ImageInline,
+				ImageInsert,
+				ImageInsertViaUrl,
+				ImageResize,
+				ImageStyle,
+				ImageTextAlternative,
+				ImageToolbar,
+				ImageUpload,
+				Indent,
+				IndentBlock,
+				Italic,
+				Link,
+				LinkImage,
+				List,
+				ListProperties,
+				Markdown,
+				MediaEmbed,
+				Mention,
+				PageBreak,
+				Paragraph,
+				PasteFromMarkdownExperimental,
+				PasteFromOffice,
+				RemoveFormat,
+				SelectAll,
+				ShowBlocks,
+				SourceEditing,
+				SpecialCharacters,
+				SpecialCharactersArrows,
+				SpecialCharactersCurrency,
+				SpecialCharactersEssentials,
+				SpecialCharactersLatin,
+				SpecialCharactersMathematical,
+				SpecialCharactersText,
+				Strikethrough,
+				Subscript,
+				Superscript,
+				Table,
+				TableCaption,
+				TableCellProperties,
+				TableColumnResize,
+				TableProperties,
+				TableToolbar,
+				TextPartLanguage,
+				TextTransformation,
+				Title,
+				TodoList,
+				Underline,
+				Undo
+			],
+			balloonToolbar: ['bold', 'italic', '|', 'link', 'insertImage', '|', 'bulletedList', 'numberedList'],
+			blockToolbar: [
+				'fontSize',
+				'fontColor',
+				'fontBackgroundColor',
+				'|',
+				'bold',
+				'italic',
+				'|',
+				'link',
+				'insertImage',
+				'insertTable',
+				'|',
+				'bulletedList',
+				'numberedList',
+				'outdent',
+				'indent'
+			],
+			fontFamily: {
+				supportAllValues: true
+			},
+			fontSize: {
+				options: [10, 12, 14, 'default', 18, 20, 22],
+				supportAllValues: true
+			},
+			heading: {
+				options: [
+					{
+						model: 'paragraph',
+						title: 'Paragraph',
+						class: 'ck-heading_paragraph'
+					},
+					{
+						model: 'heading1',
+						view: 'h1',
+						title: 'Heading 1',
+						class: 'ck-heading_heading1'
+					},
+					{
+						model: 'heading2',
+						view: 'h2',
+						title: 'Heading 2',
+						class: 'ck-heading_heading2'
+					},
+					{
+						model: 'heading3',
+						view: 'h3',
+						title: 'Heading 3',
+						class: 'ck-heading_heading3'
+					},
+					{
+						model: 'heading4',
+						view: 'h4',
+						title: 'Heading 4',
+						class: 'ck-heading_heading4'
+					},
+					{
+						model: 'heading5',
+						view: 'h5',
+						title: 'Heading 5',
+						class: 'ck-heading_heading5'
+					},
+					{
+						model: 'heading6',
+						view: 'h6',
+						title: 'Heading 6',
+						class: 'ck-heading_heading6'
+					}
+				]
+			},
+			htmlSupport: {
+				allow: [
+					{
+						name: /^.*$/,
+						styles: true,
+						attributes: true,
+						classes: true
+					}
+				]
+			},
+			image: {
+				toolbar: [
+					'toggleImageCaption',
+					'imageTextAlternative',
+					'|',
+					'imageStyle:inline',
+					'imageStyle:wrapText',
+					'imageStyle:breakText',
+					'|',
+					'resizeImage'
+				]
+			},
+			initialData: 
+				'<h2>Congratulations on setting up CKEditor 5! 🎉</h2>\n<p>\n    You\'ve successfully created a CKEditor 5 project. This powerful text editor will enhance your application, enabling rich text editing\n    capabilities that are customizable and easy to use.\n</p>\n<h3>What\'s next?</h3>\n<ol>\n    <li>\n        <strong>Integrate into your app</strong>: time to bring the editing into your application. Take the code you created and add to your\n        application.\n    </li>\n    <li>\n        <strong>Explore features:</strong> Experiment with different plugins and toolbar options to discover what works best for your needs.\n    </li>\n    <li>\n        <strong>Customize your editor:</strong> Tailor the editor\'s configuration to match your application\'s style and requirements. Or even\n        write your plugin!\n    </li>\n</ol>\n<p>\n    Keep experimenting, and don\'t hesitate to push the boundaries of what you can achieve with CKEditor 5. Your feedback is invaluable to us\n    as we strive to improve and evolve. Happy editing!\n</p>\n<h3>Helpful resources</h3>\n<ul>\n    <li>📝 <a href="https://orders.ckeditor.com/trial/premium-features">Trial sign up</a>,</li>\n    <li>📕 <a href="https://ckeditor.com/docs/ckeditor5/latest/installation/index.html">Documentation</a>,</li>\n    <li>⭐️ <a href="https://github.com/ckeditor/ckeditor5">GitHub</a> (star us if you can!),</li>\n    <li>🏠 <a href="https://ckeditor.com">CKEditor Homepage</a>,</li>\n    <li>🧑‍💻 <a href="https://ckeditor.com/ckeditor-5/demo/">CKEditor 5 Demos</a>,</li>\n</ul>\n<h3>Need help?</h3>\n<p>\n    See this text, but the editor is not starting up? Check the browser\'s console for clues and guidance. It may be related to an incorrect\n    license key if you use premium features or another feature-related requirement. If you cannot make it work, file a GitHub issue, and we\n    will help as soon as possible!\n</p>\n',
+			language: 'ko',
+			link: {
+				addTargetToExternalLinks: true,
+				defaultProtocol: 'https://',
+				decorators: {
+					toggleDownloadable: {
+						mode: 'manual',
+						label: 'Downloadable',
+						attributes: {
+							download: 'file'
+						}
+					}
+				}
+			},
+			list: {
+				properties: {
+					styles: true,
+					startIndex: true,
+					reversed: true
+				}
+			},
+			mention: {
+				feeds: [
+					{
+						marker: '@',
+						feed: [
+							/* See: https://ckeditor.com/docs/ckeditor5/latest/features/mentions.html */
+						]
+					}
+				]
+			},
+			menuBar: {
+				isVisible: true
+			},
+			placeholder: 'Type or paste your content here!',
+			table: {
+				contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties']
+			},
+			translations: [translations]
+		};
+    this.isLayoutReady = true;
+
   },
   methods: {
     onFocus() {
@@ -311,7 +504,15 @@ export default {
 
 <style>
 .ck-editor__editable {
-  min-height: 700px !important;
+  min-height: 1000px !important;
+  min-width: 1200px !important;
+
+  /* min-width: 800; */
+}
+
+/*Toolbar*/
+.ck-editor__top {
+	min-width: 1200px;
 }
 .ck-content p.ck-heading_paragraph {
   text-align: left !important;

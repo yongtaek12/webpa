@@ -35,16 +35,30 @@
 }
 
 .board-detail {
-    width: 1468px;
+    /* width: 1468px;
     margin: auto;
-    text-align: left;
+    text-align: center; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .board-contents {
     padding: 12px 8px;
     border-bottom: 1px solid #eee;
+    width: 100%;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
-
+.editor-container {
+  width: 100%;
+}
+.w3-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
 .common-buttons {
     padding: 8px;
     text-align: right;
@@ -1007,4 +1021,36 @@ section.notice {
   margin: -1px;
   width: 1px;
   height: 1px;
+}
+/* 에디터 */
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+@media print {
+	body {
+		margin: 0 !important;
+	}
+}
+.w3-input {
+  box-sizing: border-box;
+}
+.main-container {
+	font-family: 'Lato';
+	width: fit-content;
+	/* margin-left: auto; */
+	margin-right: auto;
+}
+
+.ck-content {
+	font-family: 'Lato';
+	line-height: 1.6;
+	word-break: break-word;
+}
+
+.editor-container_classic-editor .editor-container__editor {
+	min-width: 795px;
+	max-width: 795px;
+}
+
+.editor-container_include-block-toolbar {
+	margin-left: 0px;
 }
