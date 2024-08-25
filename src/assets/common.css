@@ -1054,3 +1054,18 @@ section.notice {
 .editor-container_include-block-toolbar {
 	margin-left: 0px;
 }
+/*수정 읽기 editor 서식*/
+.board-contents h1,
+.board-contents p {
+    color: black;
+}
+.board-contents h2,
+.board-contents h3,
+.board-contents h4,
+.board-contents h5,
+.board-contents h6,
+.board-contents ul,
+.board-contents ol,
+.board-contents p {
+    text-align: left;
+}
