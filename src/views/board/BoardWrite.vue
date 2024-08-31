@@ -134,12 +134,6 @@ import UploadAdapter from '@/views/board/UploadAdapter';
 
 
 import 'ckeditor5/ckeditor5.css';
-// import coreTranslations from 'ckeditor5/translations/es.js';
-// import premiumFeaturesTranslations from 'ckeditor5-premium-features/translations/es.js';
-// import '@ckeditor/ckeditor5-build-classic/build/translations/ko';  // 한국어 번역 추가
-
-// import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandreplace'; // 플러그인 불러오기
-// import Superscript from '@ckeditor/ckeditor5-basic-styles/src/superscript';
 
 export default {
   data() {
@@ -472,7 +466,8 @@ export default {
           .then((res) => {
             this.title = res.data.title;
             this.author = res.data.author;
-            this.contents = res.data.contents;
+            //this.contents = res.data.contents;
+			this.config.initialData = res.data.contents;
             this.created_at = res.data.created_at;
           })
           .catch((err) => {
