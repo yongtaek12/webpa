@@ -189,6 +189,42 @@ import translations from 'ckeditor5/translations/ko.js';
 				Undo
 			],
 
+			balloonToolbar: ['bold', 'italic', '|', 'link', 'insertImage', '|', 'bulletedList', 'numberedList'],
+			blockToolbar: [
+				'fontSize',
+				'fontColor',
+				'fontBackgroundColor',
+				'|',
+				'bold',
+				'italic',
+				'|',
+				'link',
+				'insertImage',
+				'insertTable',
+				'|',
+				'bulletedList',
+				'numberedList',
+				'outdent',
+				'indent'
+			],
+			fontFamily: {
+				supportAllValues: true
+			},
+			fontSize: {
+				options: [10, 12, 14, 'default', 18, 20, 22],
+				supportAllValues: true
+			},
+			htmlSupport: {
+				allow: [
+					{
+						name: /^.*$/,
+						styles: true,
+						attributes: true,
+						classes: true
+					}
+				]
+			},
+
 
 			language: 'ko',
 			link: {
