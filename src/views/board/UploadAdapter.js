@@ -11,12 +11,14 @@ export default class UploadAdapter {
         })))
     }
 
+    //XMLHttpRequest 객체를 준비하고, POST 요청을 설정합니다
     _initRequest() {
         const xhr = this.xhr = new XMLHttpRequest();
         xhr.open('POST', 'http://localhost:8085/board/ckeditor5Upload', true);
         xhr.responseType = 'json';
     }
 
+    //오류, 중단, 완료, 진행 상황 이벤트를 처리하는 리스너를 설정합니다.
     _initListeners(resolve, reject, file) {
         const xhr = this.xhr;
         const loader = this.loader;
@@ -24,18 +26,21 @@ export default class UploadAdapter {
 
         xhr.addEventListener('error', () => {reject(genericErrorText)})
         xhr.addEventListener('abort', () => reject())
+        // 서버에서 응답을 받았을 때 호출될 리스너 설정
         xhr.addEventListener('load', () => {
             const response = xhr.response
+            // 서버 응답이 유효하지 않거나 에러가 있으면 reject 호출
             if(!response || response.error) {
                 return reject( response && response.error ? response.error.message : genericErrorText );
             }
-
+            // 성공적인 응답 처리: Promise를 성공적으로 종료하고, 업로드된 이미지의 URL을 전달
             resolve({
                 default: response.url //업로드된 파일 주소
             })
         })
     }
 
+    //FormData를 사용해 파일을 서버에 전송합니다.
     _sendRequest(file) {
         const data = new FormData()
         data.append('upload',file)
