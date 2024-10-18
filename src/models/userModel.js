@@ -35,6 +35,26 @@ const exportObject = {
                await exportObject.processLogin(res.data)
            })
    },
+    /*
+    * REST API 서버로 회원가입 요청을 보냅니다.
+    */
+    requestSignUp: async (payload) => {
+        const serverUrl = vueInstance.config.globalProperties.$serverUrl;
+        return await axios
+            .post(serverUrl +'/users', {
+                registerEmail: payload.registerEmail,
+                registerPass: payload.registerPass,
+                registerName: payload.registerName,
+                registerPhone: payload.registerPhone,
+                registerPasswordConfirm: payload.registerPasswordConfirm,
+
+            })
+            .then(async (res) => {
+                // console.log("console : ", res)
+                // 정상적으로 응답을 받은경우, processLogin 함수를 실행합니다.
+                // await exportObject.processLogin(res.data)
+            })
+    },
 
    /**
     * 로그인이 완료 된경우, 응답데이타를 이용하여 클라이언트에 토큰을 저장합니다.
