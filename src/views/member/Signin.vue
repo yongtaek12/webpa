@@ -28,25 +28,3 @@
       }
     }
     </script>
-    
-
-
-
-
-
-/**
-      methods: {
-        onSubmit (payload) {
-          this.signin(payload).then(res => {
-            alert('로그인 되었습니다.')
-            this.$router.push({ name: 'PostListPage' })
-          }).catch(err => {
-            alert(err.response.data.msg)
-          })
-        },
-        ...mapActions([ 'signin' ])
-      },
-      components: {
-        SigninForm
-      }
-         */

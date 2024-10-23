@@ -437,23 +437,28 @@ export default {
      * @param {number} nSets - 채울 편지 세트 수
      */
     replenishLetterPool(nSets = 1) {
-      const poolLetters = Array.from(this.$refs.letterPool.childNodes); // 편지 풀의 자식 요소 배열 생성
-      let currentLetters = []; // 현재 편지 배열 초기화
-      let missingLetters = []; // 누락된 편지 배열 초기화
-      let lettersToAdd = []; // 추가할 편지 배열 초기화
+      try{
+        const poolLetters = Array.from(this.$refs.letterPool.childNodes); // 편지 풀의 자식 요소 배열 생성
+        let currentLetters = []; // 현재 편지 배열 초기화
+        let missingLetters = []; // 누락된 편지 배열 초기화
+        let lettersToAdd = []; // 추가할 편지 배열 초기화
 
-      for (let i = 0; i < poolLetters.length; i++) {
-        currentLetters.push(poolLetters[i].dataset.letter); // 현재 편지 배열에 편지 추가
+        for (let i = 0; i < poolLetters.length; i++) {
+          currentLetters.push(poolLetters[i].dataset.letter); // 현재 편지 배열에 편지 추가
+        }
+
+        missingLetters = [...missingLetters, ...this.findMissingLetters(currentLetters, nSets, false)]; // 소문자 누락된 편지 배열 추가
+        missingLetters = [...missingLetters, ...this.findMissingLetters(currentLetters, nSets, true)]; // 대문자 누락된 편지 배열 추가
+
+        for (let i = 0; i < missingLetters.length; i++) {
+          const val = missingLetters[i]; // 누락된 편지 값
+          lettersToAdd.push(this.createLetter('pool-letter', val)); // 추가할 편지 배열에 편지 추가
+        }
+        this.setRandLetterPaths(lettersToAdd); // 랜덤 편지 경로 설정
+      }catch (error){
+        console.log("replenishLetterPool : ", error)
       }
 
-      missingLetters = [...missingLetters, ...this.findMissingLetters(currentLetters, nSets, false)]; // 소문자 누락된 편지 배열 추가
-      missingLetters = [...missingLetters, ...this.findMissingLetters(currentLetters, nSets, true)]; // 대문자 누락된 편지 배열 추가
-
-      for (let i = 0; i < missingLetters.length; i++) {
-        const val = missingLetters[i]; // 누락된 편지 값
-        lettersToAdd.push(this.createLetter('pool-letter', val)); // 추가할 편지 배열에 편지 추가
-      }
-      this.setRandLetterPaths(lettersToAdd); // 랜덤 편지 경로 설정
     },
     /**
      * 누락된 편지를 찾습니다.
@@ -611,58 +616,63 @@ export default {
      * @param {boolean} isReceived - 수신 여부
      */
     animateMessageLetters(message, isReceived) {
-      const content = message.getElementsByClassName('content')[0]; // 콘텐츠 참조
-      if (!content) {
-													  
-        return;
-      }
+      try {
+        const content = message.getElementsByClassName('content')[0]; // 콘텐츠 참조
+        if (!content) {
 
-      const contentText = content.getElementsByClassName('text')[0]; // 콘텐츠 텍스트 참조
-      if (!contentText) {
-														   
-        return;
-      }
-
-      const textContent = contentText.textContent; // 텍스트 내용
-      if (!textContent) {
-												  
-        return;
-      }
-
-      contentText.innerHTML = ''; // 콘텐츠 텍스트 초기화
-      const letters = []; // 편지 배열 초기화
-
-      for (let char of textContent) {
-        const span = document.createElement('span'); // 각 글자를 위한 span 요소 생성
-        span.textContent = char; // span 요소에 글자 설정
-        span.dataset.letter = char; // span 요소에 data-letter 속성 설정
-        contentText.appendChild(span); // 콘텐츠 텍스트에 span 요소 추가
-        letters.push(span); // 편지 배열에 span 요소 추가
-      }
-
-      if (letters.length === 0) {
-															 
-        return;
-      }
-
-      for (let i = 0; i < letters.length; i++) {
-        const letter = letters[i]; // 편지 요소
-        const targetLetter = this.findLetterInPool(letter.dataset.letter); // 편지 풀에서 편지 찾기
-        const finalPos = letter.getBoundingClientRect(); // 최종 위치 계산
-        if (targetLetter) {
-          this.animateOverlayLetter(targetLetter, contentText, finalPos, isReceived); // 오버레이 편지 애니메이션
-        } else {
-          const tempLetter = this.createLetter('temp-letter', letter.dataset.letter); // 임시 편지 생성
-          const pos = this.getRandPosOffScreen(); // 랜덤 위치 설정
-          this.addClass(tempLetter, 'invisible'); // 임시 편지에 invisible 클래스 추가
-          this.setElPos(tempLetter, pos.x, pos.y); // 임시 편지 위치 설정
-          this.$refs.tempLetterPool.appendChild(tempLetter); // 임시 편지를 임시 편지 풀에 추가
-          this.animateOverlayLetter(tempLetter, contentText, finalPos, isReceived); // 오버레이 편지 애니메이션
-          setTimeout(() => {
-            this.removeChild(this.$refs.tempLetterPool, tempLetter); // 임시 편지 제거
-          }, 100);
+          return;
         }
+
+        const contentText = content.getElementsByClassName('text')[0]; // 콘텐츠 텍스트 참조
+        if (!contentText) {
+
+          return;
+        }
+
+        const textContent = contentText.textContent; // 텍스트 내용
+        if (!textContent) {
+
+          return;
+        }
+
+        contentText.innerHTML = ''; // 콘텐츠 텍스트 초기화
+        const letters = []; // 편지 배열 초기화
+
+        for (let char of textContent) {
+          const span = document.createElement('span'); // 각 글자를 위한 span 요소 생성
+          span.textContent = char; // span 요소에 글자 설정
+          span.dataset.letter = char; // span 요소에 data-letter 속성 설정
+          contentText.appendChild(span); // 콘텐츠 텍스트에 span 요소 추가
+          letters.push(span); // 편지 배열에 span 요소 추가
+        }
+
+        if (letters.length === 0) {
+
+          return;
+        }
+
+        for (let i = 0; i < letters.length; i++) {
+          const letter = letters[i]; // 편지 요소
+          const targetLetter = this.findLetterInPool(letter.dataset.letter); // 편지 풀에서 편지 찾기
+          const finalPos = letter.getBoundingClientRect(); // 최종 위치 계산
+          if (targetLetter) {
+            this.animateOverlayLetter(targetLetter, contentText, finalPos, isReceived); // 오버레이 편지 애니메이션
+          } else {
+            const tempLetter = this.createLetter('temp-letter', letter.dataset.letter); // 임시 편지 생성
+            const pos = this.getRandPosOffScreen(); // 랜덤 위치 설정
+            this.addClass(tempLetter, 'invisible'); // 임시 편지에 invisible 클래스 추가
+            this.setElPos(tempLetter, pos.x, pos.y); // 임시 편지 위치 설정
+            this.$refs.tempLetterPool.appendChild(tempLetter); // 임시 편지를 임시 편지 풀에 추가
+            this.animateOverlayLetter(tempLetter, contentText, finalPos, isReceived); // 오버레이 편지 애니메이션
+            setTimeout(() => {
+              this.removeChild(this.$refs.tempLetterPool, tempLetter); // 임시 편지 제거
+            }, 100);
+          }
+        }
+      }catch(error){
+        console.log("animateMessageLetters : " + error)
       }
+
     },
     /**
      * 오버레이 편지를 애니메이션합니다.
@@ -705,17 +715,23 @@ export default {
      * @returns {HTMLElement|null} 찾은 편지 또는 null
      */
     findLetterInPool(targetLetter) {
-      const letters = Array.from(this.$refs.letterPool.childNodes); // 편지 풀의 자식 요소 배열 생성
-      let foundLetter = null; // 찾은 편지 초기화
-      for (let i = 0; i < letters.length; i++) {
-        const nextLetter = letters[i]; // 편지 요소
-        if (nextLetter.dataset.letter === targetLetter && !nextLetter.dataset.found) {
-          foundLetter = letters[i]; // 찾은 편지 설정
-          this.setAttr(foundLetter, 'data-found', true); // 찾은 편지에 data-found 속성 설정
-          break;
+      try{
+        const letters = Array.from(this.$refs.letterPool.childNodes); // 편지 풀의 자식 요소 배열 생성
+        let foundLetter = null; // 찾은 편지 초기화
+        for (let i = 0; i < letters.length; i++) {
+          const nextLetter = letters[i]; // 편지 요소
+          if (nextLetter.dataset.letter === targetLetter && !nextLetter.dataset.found) {
+            foundLetter = letters[i]; // 찾은 편지 설정
+            this.setAttr(foundLetter, 'data-found', true); // 찾은 편지에 data-found 속성 설정
+            break;
+          }
         }
+        return foundLetter; // 찾은 편지 반환
+      }catch(error){
+        console.log(error)
       }
-      return foundLetter; // 찾은 편지 반환
+
+
     },
     /**
      * 편지를 풀에서 제거합니다.

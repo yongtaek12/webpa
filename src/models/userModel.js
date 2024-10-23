@@ -30,7 +30,7 @@ const exportObject = {
                loginPass: payload.loginPass,
            })
            .then(async (res) => {
-                // console.log("console : ", res)
+                console.log("Login success : ", res)
                // 정상적으로 응답을 받은경우, processLogin 함수를 실행합니다.
                await exportObject.processLogin(res.data)
            })
