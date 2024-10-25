@@ -3,6 +3,7 @@ import store from '@/store'
 import axios from '@/plugins/axios'
 let vueInstance = null;
 
+
 const exportObject = {
     /**
      * Vue 인스턴스를 초기화합니다.
@@ -30,10 +31,22 @@ const exportObject = {
                loginPass: payload.loginPass,
            })
            .then(async (res) => {
-                console.log("Login success : ", res)
-               // 정상적으로 응답을 받은경우, processLogin 함수를 실행합니다.
-               await exportObject.processLogin(res.data)
+               console.log("Login : ", res)
+
+
+               if(res.status ===200){
+
+                   // window.location.replace("/");
+                   // 정상적으로 응답을 받은경우, processLogin 함수를 실행합니다
+
+                   await exportObject.processLogin2(res.data)
+
+               }
+
            })
+            .catch(error => {
+                console.error('Error during login:', error);
+            });
    },
     /*
     * REST API 서버로 회원가입 요청을 보냅니다.
@@ -55,7 +68,26 @@ const exportObject = {
                 // await exportObject.processLogin(res.data)
             })
     },
+    /**
+     * 로그인이 완료 된경우, 응답데이타를 이용하여 클라이언트에 토큰을 저장합니다. session 기반
+     */
+    processLogin2: async (result) => {
+        console.log("만다라 : ", result);
+        // vuex 상태관리에서 현재 로그인 상태를 TRUE 로 변경합니다.
+        localStorage.setItem('accessToken', result.cookie);
 
+        store.commit('authorize/setLogin', true);
+        // res 객체를 선언 및 초기화
+        const res = {
+            id: 10,
+            nickname: '너의번호를', // 회원 닉네임
+            auth: 0 // 권한 레벨
+        };
+
+        store.commit('authorize/setUserInfo', res);
+
+
+    },
    /**
     * 로그인이 완료 된경우, 응답데이타를 이용하여 클라이언트에 토큰을 저장합니다.
     */
@@ -118,7 +150,8 @@ const exportObject = {
         }).catch(err => {
             console.error('Error fetching user info:', err);
         });
-    }
+    },
+
 }
 
 export default exportObject     

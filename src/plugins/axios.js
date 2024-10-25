@@ -1,6 +1,8 @@
 import $axios from 'axios'
 import store from '@/store'
 import userModel from '@/models/userModel'
+//모든 axios 요청에 세션 쿠키 포함
+$axios.defaults.withCredentials = true;
 let vueInstance = null;
 
 class AxiosExtend {
@@ -20,7 +22,8 @@ class AxiosExtend {
     constructor() {
         this.instance = $axios.create({
             baseURL: process.env.NODE_ENV === 'production' ? '릴리즈서버 REST API URI' : 'http://127.0.0.1:3000',
-            timeout: 10000,
+            //timeout: 10000,
+            timeout: 100000000000,
             withCredentials: true
         })
 

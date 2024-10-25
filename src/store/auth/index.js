@@ -14,13 +14,15 @@ export default {
   mutations: {
     // 사용자의 로그인 상태를 체크합니다.
     setLogin(state) {
-      // console.log("세션저장확인", state);
+
+      console.log("세션저장확인", state);
       state.isLogin = UserModel.isLogin()
+
     },
     // 사용자의 정보를 저장합니다.
     setUserInfo(state, payload) {
-      // console.log("세션저장확인2", payload);
-      // console.log("세션저장확인2", payload);
+      console.log("세션저장확인1", state);
+      console.log("세션저장확인2", payload);
       state.loginUser.id = payload?.id ?? 0;
       state.loginUser.nickname = payload?.nickname ?? '';
       state.loginUser.auth = payload?.auth ?? 0;
