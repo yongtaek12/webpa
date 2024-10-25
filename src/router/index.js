@@ -7,6 +7,7 @@ import UserLogin from '@/views/member/UserLogin.vue';
 import Signup from '@/views/member/Signup.vue';
 import Signin from '@/views/member/Signin.vue';
 import ChatbotQuestion from '@/views/common/ChatbotQuestion.vue';
+import usersModel from "@/models/userModel";
 
 const routes = [
   {
@@ -25,19 +26,19 @@ const routes = [
     path: '/board/list',
     name: 'BoardList',
     component: BoardList,
-    meta: { showHeaderFooter: true }
+    meta: { showHeaderFooter: true , requiredLogin: true}
   },
   {
     path: '/board/detail',
     name: 'BoardDetail',
     component: BoardDetail,
-    meta: { showHeaderFooter: true }
+    meta: { showHeaderFooter: true, requiredLogin: true}
   },
   {
     path: '/board/write',
     name: 'BoardWrite',
     component: BoardWrite,
-    meta: { showHeaderFooter: true }
+    meta: { showHeaderFooter: true, requiredLogin: true}
   },
   {
     path: '/login',
@@ -61,13 +62,24 @@ const routes = [
     path: '/question',
     name: 'Question',
     component: ChatbotQuestion,
-    meta: { showHeaderFooter: true }
+    meta: { showHeaderFooter: true,requiredLogin: true }
   }
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
-});
+})
+router.beforeEach((to,from, next) => {
+  const isRequiredLogin = to.meta?.requiredLogin === true;
+
+  // 로그인이 필요한 페이지인데 로그인이 되어 있지 않다면
+  if(isRequiredLogin && ! usersModel.isLogin()) {
+    next('/signin')
+  }
+  else {
+    next();
+  }
+})
 
 export default router;
