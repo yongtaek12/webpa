@@ -14,19 +14,19 @@ const routes = [
     path: '/',
     name: 'PageHome',
     component: PageHome,
-    meta: { showHeaderFooter: false } // 홈 페이지에서 헤더와 푸터를 숨깁니다.
+    meta: { showHeaderFooter: false, requiredLogin: false } // 홈 페이지에서 헤더와 푸터를 숨깁니다.
   },
   {
     path: '/about',
     name: 'PageAbout',
     component: () => import(/* webpackChunkName: "about" */ '../views/PageAbout.vue'),
-    meta: { showHeaderFooter: true }
+    meta: { showHeaderFooter: true, requiredLogin: false }
   },
   {
     path: '/board/list',
     name: 'BoardList',
     component: BoardList,
-    meta: { showHeaderFooter: true , requiredLogin: true}
+    meta: { showHeaderFooter: true , requiredLogin: true} // 로그인 필수 여부//
   },
   {
     path: '/board/detail',
@@ -44,19 +44,19 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: UserLogin,
-    meta: { showHeaderFooter: true }
+    meta: { showHeaderFooter: true, requiredLogin: false }
   },
   {
     path: '/signup',
     name: 'Signup',
     component: Signup,
-    meta: { showHeaderFooter: true }
+    meta: { showHeaderFooter: true, requiredLogin: false }
   },
   {
     path: '/signin',
     name: 'Signin',
     component: Signin,
-    meta: { showHeaderFooter: true }
+    meta: { showHeaderFooter: true, requiredLogin: false}
   },
   {
     path: '/question',
