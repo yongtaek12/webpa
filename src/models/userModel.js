@@ -123,11 +123,23 @@ const exportObject = {
     /**
      * 로그아웃 처리
      */
-    processLogOut: () => {
+    processLogOut: async () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         store.commit('authorize/setLogin', false);
         store.commit('authorize/setUserInfo', null);
+
+        //세션기반 로그아웃 추가로직
+        const serverUrl = vueInstance.config.globalProperties.$serverUrl;
+        return await axios
+            .get(serverUrl + '/users/logout', {
+
+            })
+            .then(async (res) => {
+                console.log("console : ", res)
+                // 정상적으로 응답을 받은경우, processLogin 함수를 실행합니다.
+                // await exportObject.processLogin(res.data)
+            })
     }, 
 
     /**
