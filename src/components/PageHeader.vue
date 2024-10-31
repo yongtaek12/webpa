@@ -93,6 +93,9 @@ export default {
     signOut () {
                 if(! confirm('로그아웃 하시겠습니까?')) return
                   userModel.processLogOut();
+    },
+    adminPage() {
+      this.$router.push('/admin');
     }
   },
   computed: {
