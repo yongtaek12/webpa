@@ -54,10 +54,12 @@
         <template v-if="isLogin">
           안녕하세요! {{ loginUser.nickname }}
           <button type="button" @click="signOut">로그아웃</button>
+          <!-- ROLE_ADMIN일 때만 관리자 버튼 표시 -->
+          <button v-if="loginUser.auth && loginUser.auth.includes('ROLE_ADMIN')" type="button" @click="adminPage">관리자 화면</button>
+
         </template>
         <template v-else>
           <router-link to="/signin" >로그인</router-link>
-          
         </template>
       </div>
     </div>

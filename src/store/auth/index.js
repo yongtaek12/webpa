@@ -25,7 +25,7 @@ export default {
       // console.log("세션저장확인2", payload);
       state.loginUser.id = payload?.id ?? 0;
       state.loginUser.nickname = payload?.nickname ?? '';
-      state.loginUser.auth = payload?.auth ?? 0;
+      state.loginUser.auth = payload?.auth ?? '';
     }
   },
   getters: {

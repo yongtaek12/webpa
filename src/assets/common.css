@@ -1,11 +1,15 @@
 /* common.css */
 .nav-links {
   display: flex;
+  flex-direction: column; /* 세로 정렬 */
   justify-content: center;
   align-items: center;
+  //margin-top: 8px;
   padding: 10px 20px;
 }
-
+.nav-links > button {
+  margin-top: 8px; /* 버튼 간의 간격 */
+}
 .nav-links > a {
   margin: 0 10px;
 }

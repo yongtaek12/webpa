@@ -25,6 +25,7 @@
     "assert": "^2.1.0",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
+    "bootstrap-vue": "^2.23.1",
     "bootstrap-vue-3": "^0.5.1",
     "browserify-zlib": "^0.2.0",
     "ckeditor5": "^43.0.0",

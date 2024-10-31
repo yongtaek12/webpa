@@ -7,6 +7,7 @@ import UserLogin from '@/views/member/UserLogin.vue';
 import Signup from '@/views/member/Signup.vue';
 import Signin from '@/views/member/Signin.vue';
 import ChatbotQuestion from '@/views/common/ChatbotQuestion.vue';
+import Admin from '@/views/admin/Admin.vue';
 import usersModel from "@/models/userModel";
 
 const routes = [
@@ -63,6 +64,12 @@ const routes = [
     name: 'Question',
     component: ChatbotQuestion,
     meta: { showHeaderFooter: true,requiredLogin: true }
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: Admin,
+    meta: { showHeaderFooter: true,requiredLogin: false }
   }
 ];
 

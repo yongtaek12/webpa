@@ -72,7 +72,7 @@ const exportObject = {
      * 로그인이 완료 된경우, 응답데이타를 이용하여 클라이언트에 토큰을 저장합니다. session 기반
      */
     processLogin2: async (result) => {
-        console.log("만다라 : ", result);
+        console.log("로그인정보 : ", result);
         // vuex 상태관리에서 현재 로그인 상태를 TRUE 로 변경합니다.
         localStorage.setItem('accessToken', result.cookie);
 
@@ -80,8 +80,8 @@ const exportObject = {
         // res 객체를 선언 및 초기화
         const res = {
             id: 10,
-            nickname: '너의번호를', // 회원 닉네임
-            auth: 0 // 권한 레벨
+            nickname: result.loginId+'  님         ',// 회원 닉네임
+            auth: result.roles// 권한 레벨
         };
 
         store.commit('authorize/setUserInfo', res);
