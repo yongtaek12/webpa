@@ -56,7 +56,7 @@
               <td>{{ role.status }}</td>
               <td>{{ role.roleDesc }}</td>
               <td>{{ role.roleName }}</td>
-              <td>{{ role.createAt }}</td>
+              <td>{{ role.createdAt }}</td>
             </tr>
             </tbody>
           </table>
