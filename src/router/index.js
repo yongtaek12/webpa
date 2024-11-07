@@ -8,6 +8,7 @@ import Signup from '@/views/member/Signup.vue';
 import Signin from '@/views/member/Signin.vue';
 import ChatbotQuestion from '@/views/common/ChatbotQuestion.vue';
 import Admin from '@/views/admin/Admin.vue';
+import UserDetail from '@/views/admin/detail/usersDetail.vue';
 import usersModel from "@/models/userModel";
 
 const routes = [
@@ -69,6 +70,12 @@ const routes = [
     path: '/admin',
     name: 'Admin',
     component: Admin,
+    meta: { showHeaderFooter: true,requiredLogin: false }
+  },
+  {
+    path: '/admin/user/:id', // :id로 동적 경로 설정
+    name: 'UserDetail',
+    component: UserDetail,
     meta: { showHeaderFooter: true,requiredLogin: false }
   }
 ];

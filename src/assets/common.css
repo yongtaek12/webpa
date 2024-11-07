@@ -1158,3 +1158,82 @@ section.notice {
 .add-role-button:hover {
   background-color: #45a049;
 }
+
+/* 관리자 디테일에서만 쓰는 css */
+/* 전체 폼 스타일 */
+.tbl_wrp {
+  background-color: #2c2f33; /* 어두운 배경색 */
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 80%;
+  margin: 20px auto; /* 중앙 정렬 */
+  font-family: 'Roboto', sans-serif; /* Roboto 폰트 사용 */
+  color: #ffffff; /* 기본 텍스트 색상 */
+}
+
+/* 레이블 스타일 */
+.form-group2 label {
+  font-weight: 500; /* Roboto 500 굵기 */
+  color: #b0b3b8; /* 회색 텍스트 */
+  margin-bottom: 5px;
+  display: block; /* 블록으로 표시 */
+  text-align: left; /* 레이블 왼쪽 정렬 */
+}
+
+/* 입력 필드 스타일 */
+.form-control2 {
+  background-color: #ffffff; /* 입력 필드 배경색을 하얀색으로 설정 */
+  border: 1px solid #555; /* 테두리 색상 */
+  border-radius: 5px;
+  color: #2c2f33; /* 텍스트 색상 */
+  padding: 8px; /* 패딩을 줄여서 컴팩트하게 */
+  font-size: 14px;
+  margin-bottom: 15px;
+  width: 100%; /* 입력 필드 너비를 100%로 설정 */
+}
+/* 체크박스와 권한 라벨 정렬 */
+.form-group2 span {
+  display: flex;
+  align-items: center;
+}
+input[type="checkbox"] {
+  margin-right: 5px; /* 체크박스와 라벨 간격 */
+}
+
+
+
+/* 목록 버튼 */
+.form-group2 .col-sm-offset-1 .btn {
+  background-color: #4a4e69;
+  color: #ffffff;
+  padding: 8px 16px; /* 버튼 크기를 줄이기 */
+  font-size: 14px;
+  border-radius: 5px;
+  text-decoration: none;
+  margin-left: 10px;
+  transition: background-color 0.3s;
+}
+
+.form-group2 .col-sm-offset-1 .btn:hover {
+  background-color: #6a6f89; /* 호버 시 색상 */
+}
+
+/* 폼 그룹 스타일 */
+.form-group2 {
+  margin-bottom: 15px; /* 그룹 간격을 줄이기 */
+}
+
+.select-wrapper {
+  width: 100%;
+}
+
+/* 셀렉트 박스 스타일 */
+select.form-control2 {
+  background-color: #1e2125; /* 셀렉트 박스 배경색 */
+  color: #ffffff; /* 셀렉트 박스 텍스트 색상 */
+  border: 1px solid #555; /* 테두리 색상 */
+  border-radius: 5px;
+  padding: 8px; /* 패딩을 줄이기 */
+  width: 100%; /* 너비를 100%로 설정 */
+}
+/* 관리자 디테일에서만 쓰는 css */

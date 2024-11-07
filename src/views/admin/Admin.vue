@@ -50,7 +50,9 @@
             </thead>
             <tbody>
             <tr v-for="role in roles" :key="role.name" class="role-row">
-              <td>{{ role.userId }}</td>
+              <td @click="navigateToUser(role.id)" style="cursor: pointer;">
+              {{ role.userId }}
+              </td>
               <td>{{ role.nickname }}</td>
               <td>{{ role.phone }}</td>
               <td>{{ role.status }}</td>
@@ -92,16 +94,25 @@
 
 <script>
 import axios from "axios";
+
 import { ref, onMounted } from 'vue';
 
 export default {
+  methods: {
+    navigateToUser(id) {
+      this.$store.commit('SET_ROLES', this.roles); // 정확히 정의된 이름 사용
+      this.$router.push(`/admin/user/${id}`); // 페이지 이동
+    }
+  },
   setup() {
+
     const activeTab = ref(0);
     const tabs = ref([
       {name: '권한 관리'},
       {name: '회원 관리'},
       {name: '자원 관리'},
     ]);
+
 
     const roles = ref([]); // 빈 배열로 초기화
 
