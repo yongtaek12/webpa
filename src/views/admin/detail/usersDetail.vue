@@ -27,7 +27,7 @@
       submitForm() {
         // 폼 제출 처리 로직
         console.log('폼 데이터:', this.user);
-        // 서버에 폼 데이터를 보내는 로직을 구현하세요.
+        // 서버에 폼 데이터를 보내는 로직을 구현하세요.1
       },
       //role list 가져오는 로직
       fnGetView(){
