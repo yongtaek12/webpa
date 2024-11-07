@@ -14,7 +14,7 @@
     mounted() {
       // URL에서 전달된 roles 데이터를 가져와서 복원
       const rolesData = this.$store.state.roles // Vuex에서 roles 데이터 가져오기
-      // console.log('rolesData111 :', rolesData.userId);1
+      // console.log('rolesData111 :', rolesData.userId);
       // 배열의 첫 번째 항목을 this.role에 할당
 
       this.role.userId = rolesData.userId || ''; // 닉네임이 필요하면 추가;
