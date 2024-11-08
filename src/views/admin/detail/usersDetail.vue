@@ -6,7 +6,8 @@
           id: '',
           userId: '',
           password: '',
-          age: ''
+          memo: '',
+
         },
         roleList: []
       };
@@ -33,8 +34,24 @@
       fnGetView(){
         this.$axios.get(this.$serverUrl + '/admin/resources/' + this.role.id, {
         }).then((res) => {
-          console.log("수신확인", res.data);
-          this.roleList = res.data.map(role => ({ roleName: role.roleName }));
+
+          // 현재 사용자에 해당하는 roleNames 설정
+          const myRoles = res.data.myRoles || [];
+          // myRoles에서 roleName만 추출하여 배열로 만듦
+          const myRoleNames = myRoles.map(role => role.roleName);
+
+
+          this.roleList = res.data.allRoles.map(role => ({
+            roleName: role.roleName,
+            roleId: role.roleId,
+            checked: myRoleNames.includes(role.roleName)
+
+          }));
+
+
+          console.log("eppepp1 , ", this.roleList)
+
+
 
         }).catch((err) => {
           if (err.message.indexOf('Network Error') > -1) {
@@ -59,6 +76,7 @@
                 type="text"
                 class="form-control2 input-large"
                 v-model="role.userId"
+                readonly
             />
           </div>
         </div>
@@ -70,20 +88,19 @@
                 type="password"
                 class="form-control2 input-large"
                 v-model="role.password"
-                placeholder="비밀번호를 입력하세요"
-                required
+                readonly
             />
           </div>
         </div>
 
         <div class="form-group2">
-          <label for="age" class="col-sm-2 control-label">나이</label>
+          <label for="age" class="col-sm-2 control-label">특이사항(미구현)</label>
           <div class="col-sm-10">
             <input
                 type="number"
                 class="form-control2 input-large"
-                v-model="role.age"
-                placeholder="나이를 입력하세요"
+                v-model="role.memo"
+                placeholder="글을 입력하세요"
                 required
             />
           </div>
@@ -95,8 +112,10 @@
             <span v-for="role in roleList" :key="role.roleName">
               <input
                   type="checkbox"
-                  :value="role.roleName"
+                  :value="role.roleId"
                   v-model="role.roles"
+                  :checked="role.checked"
+
               />
               <label>{{ role.roleName }}</label>
             </span>

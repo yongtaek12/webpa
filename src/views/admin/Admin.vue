@@ -100,7 +100,7 @@ import { ref, onMounted } from 'vue';
 export default {
   methods: {
     navigateToUser(role) {
-      console.log("보내기전 data , : ", role)
+      // console.log("보내기전 data , : ", role)
       this.$store.commit('SET_ROLES', role); // 정확히 정의된 이름 사용
       this.$router.push(`/admin/user/${role.id}`); // 페이지 이동
     }
@@ -136,7 +136,7 @@ export default {
         } else if (activeTab.value === 2) {
           response = await axios.get(`${serverUrl}/admin/resources`);
         }
-        console.log("response : ", response.data)
+        // console.log("response : ", response.data)
         roles.value = response.data; // roles 데이터 설정
       } catch (error) {
         console.error('Error fetching roles:', error);
