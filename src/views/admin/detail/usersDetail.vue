@@ -27,8 +27,22 @@
     methods: {
       submitForm() {
         // 폼 제출 처리 로직
-        console.log('폼 데이터:', this.user);
-        // 서버에 폼 데이터를 보내는 로직을 구현하세요.1
+        const payload = {
+          id: this.role.id,
+          roles: this.roleList
+              .filter(role => role.checked) // checked가 true인 role만 선택
+              .map(role => role.roleId)    // roleId만 추출
+        };
+        console.log("payload" , this.roleList);
+        this.$axios.post(this.$serverUrl + '/admin/users', payload)
+            .then(response => {
+              console.log('전송 성공:', response.data);
+              alert('데이터가 성공적으로 전송되었습니다.');
+            })
+            .catch(error => {
+              console.error('전송 실패:', error);
+              alert('데이터 전송에 실패했습니다.');
+            });
       },
       //role list 가져오는 로직
       fnGetView(){
@@ -113,8 +127,7 @@
               <input
                   type="checkbox"
                   :value="role.roleId"
-                  v-model="role.roles"
-                  :checked="role.checked"
+                  v-model="role.checked"
 
               />
               <label>{{ role.roleName }}</label>
@@ -124,7 +137,7 @@
 
         <div class="form-group2">
           <div class="col-sm-offset-1 col-sm-10">
-            <button type="submit" class="btn btn-dark btn-lg">등록</button>
+            <button type="submit" @click="submitForm" class="btn btn-dark btn-lg">등록</button>
             <a class="btn btn-dark btn-lg" href="/admin/users">목록</a>
           </div>
         </div>
