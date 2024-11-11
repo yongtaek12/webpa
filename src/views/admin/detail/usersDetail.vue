@@ -33,14 +33,14 @@
               .filter(role => role.checked) // checked가 true인 role만 선택
               .map(role => role.roleId)    // roleId만 추출
         };
-        console.log("payload" , this.roleList);
+        // console.log("payload" , this.roleList);
         this.$axios.post(this.$serverUrl + '/admin/users', payload)
             .then(response => {
-              console.log('전송 성공:', response.data);
+              // console.log('전송 성공:', response.data);
               alert('데이터가 성공적으로 전송되었습니다.');
             })
             .catch(error => {
-              console.error('전송 실패:', error);
+              // console.error('전송 실패:', error);
               alert('데이터 전송에 실패했습니다.');
             });
       },
@@ -63,7 +63,7 @@
           }));
 
 
-          console.log("eppepp1 , ", this.roleList)
+
 
 
 
@@ -95,17 +95,17 @@
           </div>
         </div>
 
-        <div class="form-group2">
-          <label for="password" class="col-sm-2 control-label">비밀번호</label>
-          <div class="col-sm-10">
-            <input
-                type="password"
-                class="form-control2 input-large"
-                v-model="role.password"
-                readonly
-            />
-          </div>
-        </div>
+<!--        <div class="form-group2">-->
+<!--          <label for="password" class="col-sm-2 control-label">비밀번호</label>-->
+<!--          <div class="col-sm-10">-->
+<!--            <input-->
+<!--                type="password"-->
+<!--                class="form-control2 input-large"-->
+<!--                v-model="role.password"-->
+<!--                readonly-->
+<!--            />-->
+<!--          </div>-->
+<!--        </div>-->
 
         <div class="form-group2">
           <label for="age" class="col-sm-2 control-label">특이사항(미구현)</label>
