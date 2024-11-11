@@ -32,7 +32,7 @@
             </tr>
             </tbody>
           </table>
-          <button class="add-role-button">권한 등록</button>
+          <button class="add-role-button" @click="navigateToUserAuth(null)">권한 등록</button>
         </div>
       </div>
 
@@ -109,8 +109,15 @@ export default {
     },
     navigateToUserAuth(role) {
       console.log("보내기전2 data , : ", role)
-      this.$store.commit('SET_ROLES', role); // 정확히 정의된 이름 사용
-      this.$router.push(`/admin/role/${role.roleId}`); // 페이지 이동
+
+      if (!role) {
+        // role이 null인 경우 권한 등록 페이지로 이동
+        this.$router.push(`/admin/role/insert`);
+      } else {
+        // role이 null이 아닌 경우 해당 role의 상세 페이지로 이동
+        this.$store.commit('SET_ROLES', role);
+        this.$router.push(`/admin/role/${role.roleId}`);
+      }
     }
   },
   setup() {

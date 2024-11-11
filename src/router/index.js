@@ -81,7 +81,13 @@ const routes = [
   },
   {
     path: '/admin/role/:id', // :id로 동적 경로 설정
-    name: 'RolesDetail',
+    name: 'RolesDetail1',
+    component: RolesDetail,
+    meta: { showHeaderFooter: true,requiredLogin: false }
+  },
+  {
+  path: '/admin/role/insert', // :id로 동적 경로 설정
+    name: 'RolesDetail2',
     component: RolesDetail,
     meta: { showHeaderFooter: true,requiredLogin: false }
   }

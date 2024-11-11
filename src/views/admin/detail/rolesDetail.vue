@@ -12,14 +12,21 @@
     },
     mounted() {
       // URL에서 전달된 roles 데이터를 가져와서 복원
-      const rolesData = this.$store.state.roles // Vuex에서 roles 데이터 가져오기
-      console.log('rolesData111 :', rolesData);
-      // 배열의 첫 번째 항목을 this.role에 할당
+      try {
+        console.log("현재 라우트 이름:", this.$route.name); // 라우트 이름 확인
 
-      this.role.roleId = rolesData.roleId || ''; // 닉네임이 필요하면 추가;
-      this.role.roleDesc = rolesData.roleDesc || '';
-      this.role.isExpression = rolesData.isExpression || '';
-      this.role.roleName = rolesData.roleName || '';
+        const rolesData = this.$store.state.roles // Vuex에서 roles 데이터 가져오기
+        console.log('rolesData111 :', rolesData);
+        // 배열의 첫 번째 항목을 this.role에 할당
+
+        this.role.roleId = rolesData.roleId || ''; // 닉네임이 필요하면 추가;
+        this.role.roleDesc = rolesData.roleDesc || '';
+        this.role.isExpression = rolesData.isExpression || '';
+        this.role.roleName = rolesData.roleName || '';
+      }catch (error){
+        console.log("error loading" , error)
+      }
+
 
       this.fnGetView();
 
@@ -27,22 +34,42 @@
     methods: {
       submitForm() {
         // 폼 제출 처리 로직
-        const payload = {
-          roleId: this.role.roleId,
-          roleDesc: this.role.roleDesc,
-          isExpression: this.role.isExpression,
-          roleName : this.role.roleName
-        };
-        console.log("payLoad", payload)
-        this.$axios.put(this.$serverUrl + '/admin/roles', payload)
-            .then(response => {
-              // console.log('전송 성공:', response.data);
-              alert('데이터가 성공적으로 전송되었습니다.');
-            })
-            .catch(error => {
-              // console.error('전송 실패:', error);
-              alert('데이터 전송에 실패했습니다.');
-            });
+        let payload={};
+        if(this.$route.name === "RolesDetail1"){
+          payload = {
+            roleId: this.role.roleId,
+            roleDesc: this.role.roleDesc,
+            isExpression: this.role.isExpression,
+            roleName : this.role.roleName
+          };
+          console.log("payLoad", payload)
+          this.$axios.put(this.$serverUrl + '/admin/roles', payload)
+              .then(response => {
+                // console.log('전송 성공:', response.data);
+                alert('데이터가 성공적으로 전송되었습니다.');
+              })
+              .catch(error => {
+                // console.error('전송 실패:', error);
+                alert('데이터 전송에 실패했습니다.');
+              });
+        }else if(this.$route.name === "RolesDetail2"){
+          payload = {
+            roleDesc: this.role.roleDesc,
+            isExpression: this.role.isExpression,
+            roleName : this.role.roleName
+          };
+          this.$axios.post(this.$serverUrl + '/admin/roles', payload)
+              .then(response => {
+                // console.log('전송 성공:', response.data);
+                alert('데이터가 성공적으로 전송되었습니다.');
+              })
+              .catch(error => {
+                // console.error('전송 실패:', error);
+                alert('데이터 전송에 실패했습니다.');
+              });
+        }
+
+
       },
       //role list 가져오는 로직
       fnGetView(){
@@ -118,22 +145,6 @@
             />
           </div>
         </div>
-
-<!--        <div class="form-group2">-->
-<!--          <label for="roles" class="col-sm-2 control-label">권한</label>-->
-<!--          <div class="col-sm-10">-->
-<!--            <span v-for="role in roleList" :key="role.roleName">-->
-<!--              <input-->
-<!--                  type="checkbox"-->
-<!--                  :value="role.roleId"-->
-<!--                  v-model="role.checked"-->
-
-<!--              />-->
-<!--              <label>{{ role.roleName }}</label>-->
-<!--            </span>-->
-<!--          </div>-->
-<!--        </div>-->
-
         <div class="form-group2">
           <div class="col-sm-offset-1 col-sm-10">
             <button type="submit"  class="btn btn-dark btn-lg">등록</button>
