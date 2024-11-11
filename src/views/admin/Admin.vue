@@ -24,7 +24,9 @@
             </thead>
             <tbody>
             <tr v-for="role in roles" :key="role.name" class="role-row">
-              <td>{{ role.roleName }}</td>
+              <td @click="navigateToUserAuth(role)" style="cursor: pointer;">
+              {{ role.roleName }}
+              </td>
               <td>{{ role.roleDesc }}</td>
               <td>{{ role.isExpression }}</td>
             </tr>
@@ -100,9 +102,15 @@ import { ref, onMounted } from 'vue';
 export default {
   methods: {
     navigateToUser(role) {
-      // console.log("보내기전 data , : ", role)
+      console.log("보내기전1 data , : ", role)
+
       this.$store.commit('SET_ROLES', role); // 정확히 정의된 이름 사용
       this.$router.push(`/admin/user/${role.id}`); // 페이지 이동
+    },
+    navigateToUserAuth(role) {
+      console.log("보내기전2 data , : ", role)
+      this.$store.commit('SET_ROLES', role); // 정확히 정의된 이름 사용
+      this.$router.push(`/admin/role/${role.roleId}`); // 페이지 이동
     }
   },
   setup() {
