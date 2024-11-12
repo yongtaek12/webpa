@@ -81,7 +81,7 @@ const exportObject = {
         const res = {
             id: 10,
             nickname: result.loginId+'  님         ',// 회원 닉네임
-            auth: result.roles// 권한 레벨
+            auth: result.rolesList// 권한 레벨
         };
 
         store.commit('authorize/setUserInfo', res);

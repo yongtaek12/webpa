@@ -55,7 +55,7 @@
           안녕하세요! {{ loginUser.nickname }} ㅎㅎ
           <img @click="signOut" class="company-logo" src="@/assets/images/logout.gif" alt="logout" style="cursor: pointer;" />
           <!-- ROLE_ADMIN일 때만 관리자 이미지 표시 -->
-          <img v-if="loginUser.auth && loginUser.auth.includes('ROLE_ADMIN')" type="button" @click="adminPage" class="company-logo" src="@/assets/images/admin.png" alt="administrator" style="cursor: pointer;" />
+          <img v-if="isAdmin" type="button" @click="adminPage" class="company-logo" src="@/assets/images/admin.png" alt="administrator" style="cursor: pointer;" />
 
         </template>
         <template v-else>
@@ -76,6 +76,7 @@
 import { mapGetters } from 'vuex'
 import userModel from '@/models/userModel'
 export default {
+
   data() {
     return {
       isSearchActive: false,
@@ -99,6 +100,10 @@ export default {
     }
   },
   computed: {
+    isAdmin() {
+      //roop 돌아서 admin 있는경우 관리자 페이지 이동 아이콘 보이기
+      return this.loginUser.auth && this.loginUser.auth.some(role => role.roleName === 'ROLE_ADMIN');
+    },
     ...mapGetters('authorize', ['isLogin', 'loginUser'])
   }
 }
