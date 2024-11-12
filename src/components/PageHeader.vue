@@ -52,10 +52,10 @@
     <div class="top-bar">
       <div id="nav" class="nav-links">
         <template v-if="isLogin">
-          안녕하세요! {{ loginUser.nickname }}
-          <button type="button" @click="signOut">로그아웃</button>
-          <!-- ROLE_ADMIN일 때만 관리자 버튼 표시 -->
-          <button v-if="loginUser.auth && loginUser.auth.includes('ROLE_ADMIN')" type="button" @click="adminPage">관리자 화면</button>
+          안녕하세요! {{ loginUser.nickname }} ㅎㅎ
+          <img @click="signOut" class="company-logo" src="@/assets/images/logout.gif" alt="logout" style="cursor: pointer;" />
+          <!-- ROLE_ADMIN일 때만 관리자 이미지 표시 -->
+          <img v-if="loginUser.auth && loginUser.auth.includes('ROLE_ADMIN')" type="button" @click="adminPage" class="company-logo" src="@/assets/images/admin.png" alt="administrator" style="cursor: pointer;" />
 
         </template>
         <template v-else>
