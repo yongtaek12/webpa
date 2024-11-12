@@ -71,6 +71,19 @@
 
 
       },
+      deleteRole() {
+        if (confirm("정말로 삭제하시겠습니까?")) {
+          this.$axios.delete(`${this.$serverUrl}/admin/roles/${this.role.roleId}`)
+              .then(() => {
+                alert("삭제가 완료되었습니다.");
+                this.$router.push('/admin'); // 목록 페이지로 이동
+              })
+              .catch(error => {
+                console.error("삭제 실패:", error);
+                alert("삭제에 실패했습니다.");
+              });
+        }
+      },
       //role list 가져오는 로직
       fnGetView(){
         this.$axios.get(this.$serverUrl + '/admin/resources/' + this.role.id, {
@@ -149,6 +162,13 @@
           <div class="col-sm-offset-1 col-sm-10">
             <button type="submit"  class="btn btn-dark btn-lg">등록</button>
             <a class="btn btn-dark btn-lg" href="/admin">목록</a>
+            <button
+                v-if="$route.name === 'RolesDetail1'"
+                @click="deleteRole"
+                class="btn btn-danger btn-lg"
+            >
+              삭제
+            </button>
           </div>
         </div>
       </form>
