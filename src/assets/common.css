@@ -1236,4 +1236,8 @@ select.form-control2 {
   padding: 8px; /* 패딩을 줄이기 */
   width: 100%; /* 너비를 100%로 설정 */
 }
+.hover-underline:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
 /* 관리자 디테일에서만 쓰는 css */

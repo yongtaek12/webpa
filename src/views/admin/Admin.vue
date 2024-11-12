@@ -24,7 +24,7 @@
             </thead>
             <tbody>
             <tr v-for="role in roles" :key="role.name" class="role-row">
-              <td @click="navigateToUserAuth(role)" style="cursor: pointer;">
+              <td @click="navigateToUserAuth(role)" class="hover-underline">
               {{ role.roleName }}
               </td>
               <td>{{ role.roleDesc }}</td>
@@ -52,7 +52,7 @@
             </thead>
             <tbody>
             <tr v-for="role in roles" :key="role.name" class="role-row">
-              <td @click="navigateToUser(role)" style="cursor: pointer;">
+              <td @click="navigateToUser(role)" class="hover-underline">
               {{ role.userId }}
               </td>
               <td>{{ role.nickname }}</td>
@@ -80,14 +80,16 @@
               </thead>
               <tbody>
               <tr v-for="role in roles" :key="role.name" class="role-row">
-                <td>{{ role.resourceName }}</td>
+                <td @click="navigateToResource(role)" class="hover-underline">
+                  {{ role.resourceName }}
+                </td>
                 <td>{{ role.resourceType }}</td>
                 <td>{{ role.httpMethod }}</td>
                 <td>{{ role.orderNum }}</td>
               </tr>
               </tbody>
             </table>
-            <button class="add-role-button">리소스 등록</button>
+            <button class="add-role-button" @click="navigateToResource(null)">리소스 등록</button>
           </div>
         </div>
     </div>
@@ -102,13 +104,13 @@ import { ref, onMounted } from 'vue';
 export default {
   methods: {
     navigateToUser(role) {
-      console.log("보내기전1 data , : ", role)
+      // console.log("보내기전1 data , : ", role)
 
       this.$store.commit('SET_ROLES', role); // 정확히 정의된 이름 사용
       this.$router.push(`/admin/user/${role.id}`); // 페이지 이동
     },
     navigateToUserAuth(role) {
-      console.log("보내기전2 data , : ", role)
+
 
       if (!role) {
         // role이 null인 경우 권한 등록 페이지로 이동
@@ -117,6 +119,17 @@ export default {
         // role이 null이 아닌 경우 해당 role의 상세 페이지로 이동
         this.$store.commit('SET_ROLES', role);
         this.$router.push(`/admin/role/${role.roleId}`);
+      }
+    },
+    navigateToResource(role){
+      console.log("보내기전2 data , : ", role)
+      if (!role) {
+        // role이 null인 경우 권한 등록 페이지로 이동
+        this.$router.push(`/admin/resource/insert`);
+      } else {
+        // role이 null이 아닌 경우 해당 role의 상세 페이지로 이동
+        this.$store.commit('SET_ROLES', role);
+        this.$router.push(`/admin/resource/${role.resourceId}`);
       }
     }
   },

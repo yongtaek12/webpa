@@ -10,6 +10,7 @@ import ChatbotQuestion from '@/views/common/ChatbotQuestion.vue';
 import Admin from '@/views/admin/Admin.vue';
 import UserDetail from '@/views/admin/detail/usersDetail.vue';
 import RolesDetail from '@/views/admin/detail/rolesDetail.vue';
+import ResourcesDetail from "@/views/admin/detail/resourcesDetail.vue";
 import usersModel from "@/models/userModel";
 
 const routes = [
@@ -89,6 +90,18 @@ const routes = [
   path: '/admin/role/insert', // :id로 동적 경로 설정
     name: 'RolesDetail2',
     component: RolesDetail,
+    meta: { showHeaderFooter: true,requiredLogin: false }
+  },
+  {
+    path: '/admin/resource/:id', // :id로 동적 경로 설정
+    name: 'ResourcesDetail1',
+    component: ResourcesDetail,
+    meta: { showHeaderFooter: true,requiredLogin: false }
+  },
+  {
+    path: '/admin/resource/insert', // :id로 동적 경로 설정
+    name: 'ResourcesDetail2',
+    component: ResourcesDetail,
     meta: { showHeaderFooter: true,requiredLogin: false }
   }
 ];
