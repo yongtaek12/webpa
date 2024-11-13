@@ -26,7 +26,7 @@
                 placeholder="검색어를 입력해주세요."
                 @keyup.enter="fnPage()"
               />
-              <button type="submit" class="btn btn-dark" @click.prevent="fnPage()">검색</button>
+              <button type="submit" class="btn btn-dark" @click.prevent="fnPage(1)">검색</button>
             </div>
           </form>
         </div>
