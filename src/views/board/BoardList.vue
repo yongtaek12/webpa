@@ -69,7 +69,7 @@
           >&lt;</a
         >
         <template v-for="(n, index) in paginavigation()">
-          <template v-if="paging.page == n">
+          <template v-if="paging.page === n">
             <strong class="w3-button w3-bar-item w3-border w3-green" :key="index">{{ n }}</strong>
           </template>
           <template v-else>
@@ -156,7 +156,7 @@ export default {
         params: this.requestBody,
         headers: {}
       }).then((res) => {      
-         console.log("테스트입니다.", this.$serverUrl);
+         // console.log("테스트입니다.", this.$serverUrl);
          console.log(res.data);
 
         if (res.data.resultCode === "OK") {
@@ -184,8 +184,14 @@ export default {
       })
     },
     fnPage(n) {
+      if (!this.search_key) {
+        alert("검색 조건을 선택하고 검색하세요.");
+        return;
+      }
+
       if (this.page !== n) {
         this.page = n
+        console.log("페이지 클릭 ", n);
         
       }
       this.fnGetList()
