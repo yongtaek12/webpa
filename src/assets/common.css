@@ -914,7 +914,7 @@ section.notice {
 
 .board-table th, .board-table td {
   padding: 14px;
-  text-align: left;
+  /*text-align: left;*/
   border-bottom: 1px solid #ddd;
 }
 
@@ -1017,6 +1017,15 @@ section.notice {
   width: 1700px;
   /* height: 170px; */
   margin: 0 auto;
+}
+.container-right {
+  width: 1700px;
+  /* height: 170px; */
+  margin: 0 auto;
+  text-align: right;
+  padding: 20px 0; /* 위아래 20px, 좌우 0 */
+
+
 }
 .blind {
   position: absolute;

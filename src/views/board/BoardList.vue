@@ -26,7 +26,7 @@
                 placeholder="검색어를 입력해주세요."
                 @keyup.enter="fnPage()"
               />
-              <button type="submit" class="btn btn-dark" @click.prevent="fnPage(1)">검색</button>
+              <button type="submit" class="btn btn-dark" @click.prevent="fnPage(1, true)">검색</button>
             </div>
           </form>
         </div>
@@ -99,8 +99,9 @@
     </div>
 
     <!-- 글쓰기 버튼 -->
-    <div class="container">
-      <button type="button" class="btn btn-primary" @click="fnWrite">글쓰기</button>
+    <div class="container-right">
+      <img @click="fnWrite" class="company-logo" src="@/assets/images/feather-pen.gif" alt="btn btn-primary" style="cursor: pointer;" />
+<!--      <button type="button" class="btn btn-primary" @click="fnWrite">글쓰기</button>-->
     </div>
   </section>
 </template>
@@ -183,8 +184,9 @@ export default {
         path: './write'
       })
     },
-    fnPage(n) {
-      if (!this.search_key) {
+    fnPage(n, isSearch = false) {
+
+      if (isSearch && !this.search_key) {
         alert("검색 조건을 선택하고 검색하세요.");
         return;
       }
