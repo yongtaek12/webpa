@@ -100,11 +100,18 @@
       },
       //role list 가져오는 로직
       fnGetView(){
-        this.$axios.get(this.$serverUrl + '/admin/resources/' + this.role.resourceId, {
+        //insert update 구분하는 거 의미 없는데 혹시몰라서 이거 파라미터 쓰이지도 않음..권한전체조회여서
+        let id = this.role.resourceId;
+        if(id===""){
+         id =1000
+        }
+        this.$axios.get(this.$serverUrl + '/admin/resources/' + id, {
         }).then((res) => {
           // roleList가 로드된 후 role.roleId와 매칭되는 값이 있는지 확인
 
+
           this.roleList = res.data; // roleList에 데이터 할당
+          console.log("? :", this.roleList)
         }).catch((err) => {
           if (err.message.indexOf('Network Error') > -1) {
             alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
