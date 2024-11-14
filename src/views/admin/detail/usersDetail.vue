@@ -95,30 +95,30 @@
           </div>
         </div>
 
-<!--        <div class="form-group2">-->
-<!--          <label for="password" class="col-sm-2 control-label">비밀번호</label>-->
-<!--          <div class="col-sm-10">-->
-<!--            <input-->
-<!--                type="password"-->
-<!--                class="form-control2 input-large"-->
-<!--                v-model="role.password"-->
-<!--                readonly-->
-<!--            />-->
-<!--          </div>-->
-<!--        </div>-->
-
         <div class="form-group2">
-          <label for="age" class="col-sm-2 control-label">특이사항(미구현)</label>
+          <label for="password" class="col-sm-2 control-label">비밀번호</label>
           <div class="col-sm-10">
             <input
-                type="number"
+                type="password"
                 class="form-control2 input-large"
-                v-model="role.memo"
-                placeholder="글을 입력하세요"
-                required
+                v-model="role.password"
+
             />
           </div>
         </div>
+
+<!--        <div class="form-group2">-->
+<!--          <label for="age" class="col-sm-2 control-label">특이사항(미구현)</label>-->
+<!--          <div class="col-sm-10">-->
+<!--            <input-->
+<!--                type="number"-->
+<!--                class="form-control2 input-large"-->
+<!--                v-model="role.memo"-->
+<!--                placeholder="글을 입력하세요"-->
+<!--                required-->
+<!--            />-->
+<!--          </div>-->
+<!--        </div>-->
 
         <div class="form-group2">
           <label for="roles" class="col-sm-2 control-label">권한</label>

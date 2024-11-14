@@ -13,10 +13,9 @@
     mounted() {
       // URL에서 전달된 roles 데이터를 가져와서 복원
       try {
-        console.log("현재 라우트 이름:", this.$route.name); // 라우트 이름 확인
 
         const rolesData = this.$store.state.roles // Vuex에서 roles 데이터 가져오기
-        console.log('rolesData111 :', rolesData);
+        // 배열의 첫 번째 항목을 this.role에 할당
         // 배열의 첫 번째 항목을 this.role에 할당
 
         this.role.roleId = rolesData.roleId || ''; // 닉네임이 필요하면 추가;
@@ -86,9 +85,10 @@
       },
       //role list 가져오는 로직
       fnGetView(){
-        this.$axios.get(this.$serverUrl + '/admin/resources/' + this.role.id, {
+        this.$axios.get(this.$serverUrl + '/admin/roles/' + this.role.id, {
         }).then((res) => {
 
+          console.log("res :" , res);
           // 현재 사용자에 해당하는 roleNames 설정
           const myRoles = res.data.myRoles || [];
           // myRoles에서 roleName만 추출하여 배열로 만듦

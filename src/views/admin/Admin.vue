@@ -83,7 +83,7 @@
                 <td @click="navigateToResource(role)" class="hover-underline">
                   {{ role.resourceName }}
                 </td>
-                <td>{{ role.resourceType }}</td>
+                <td>{{ role.resourcesType }}</td>
                 <td>{{ role.httpMethod }}</td>
                 <td>{{ role.orderNum }}</td>
               </tr>
@@ -122,7 +122,7 @@ export default {
       }
     },
     navigateToResource(role){
-      console.log("보내기전2 data , : ", role)
+      // console.log("보내기전2 data , : ", role)
       if (!role) {
         // role이 null인 경우 권한 등록 페이지로 이동
         this.$router.push(`/admin/resource/insert`);
@@ -164,7 +164,7 @@ export default {
         } else if (activeTab.value === 2) {
           response = await axios.get(`${serverUrl}/admin/resources`);
         }
-        // console.log("response : ", response.data)
+         console.log("response : ", response.data)
         roles.value = response.data; // roles 데이터 설정
       } catch (error) {
         console.error('Error fetching roles:', error);

@@ -5,32 +5,38 @@
         role: {
           resourceId: '',
           resourceName: '',
-          resourceType: '',
+          resourcesType: '',
           httpMethod: '',
           orderNum: '',
-        }
+          roleDesc: '',
+          roleId: '',
+          roleName: '',
+        },
+        roleList: [] // 역할 리스트 초기화
+
+
+
       };
     },
     mounted() {
       // URL에서 전달된 roles 데이터를 가져와서 복원
       try {
-        console.log("현재 라우트 이름:", this.$route.name); // 라우트 이름 확인
-
         const rolesData = this.$store.state.roles // Vuex에서 roles 데이터 가져오기
-        console.log('rolesData111 :', rolesData);
         // 배열의 첫 번째 항목을 this.role에 할당
-
         this.role.resourceId = rolesData.resourceId || ''; // 닉네임이 필요하면 추가;
         this.role.resourceName = rolesData.resourceName || '';
-        this.role.resourceType = rolesData.resourceType || '';
+        this.role.resourcesType = rolesData.resourcesType || '';
         this.role.httpMethod = rolesData.httpMethod || '';
         this.role.orderNum = rolesData.orderNum || '';
-      }catch (error){
-        console.log("error loading" , error)
+        this.role.roleDesc = rolesData.roleDesc || '';
+        this.role.roleId = rolesData.roleId || '';
+        this.role.roleName = rolesData.roleName || '';
+
+      }catch (error) {
+        console.log("error loading", error)
       }
-
-
-      // this.fnGetView();
+        //권한 조회조건 가지고 오는로직
+      this.fnGetView();
 
     },
     methods: {
@@ -42,11 +48,13 @@
           payload = {
             resourceId: this.role.resourceId,
             resourceName: this.role.resourceName,
-            resourceType: this.role.resourceType,
+            resourcesType: this.role.resourcesType,
             httpMethod : this.role.httpMethod,
-            orderNum : this.role.orderNum
+            orderNum : this.role.orderNum,
+            roleId: this.role.roleId,
           };
-          console.log("payLoad", payload)
+          console.log("payLoad1 ", payload)
+
           this.$axios.put(this.$serverUrl + '/admin/resources', payload)
               .then(response => {
                 // console.log('전송 성공:', response.data);
@@ -60,7 +68,7 @@
         }else if(this.$route.name === "ResourcesDetail2"){
           payload = {
             resourceName: this.role.resourceName,
-            resourceType: this.role.resourceType,
+            resourcesType: this.role.resourcesType,
             httpMethod : this.role.httpMethod,
             orderNum : this.role.orderNum
           };
@@ -90,6 +98,23 @@
               });
         }
       },
+      //role list 가져오는 로직
+      fnGetView(){
+        this.$axios.get(this.$serverUrl + '/admin/resources/' + this.role.resourceId, {
+        }).then((res) => {
+          // roleList가 로드된 후 role.roleId와 매칭되는 값이 있는지 확인
+
+          this.roleList = res.data; // roleList에 데이터 할당
+        }).catch((err) => {
+          if (err.message.indexOf('Network Error') > -1) {
+            alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+          }
+        })
+      },
+      bindRoleId(event){
+        // console.log("value : ", event.target.value);
+        this.role.roleId = event.target.value;
+      }
     }
   };
 </script>
@@ -118,8 +143,8 @@
             <input
                 type="text"
                 class="form-control2 input-large"
-                v-model="role.resourceType"
-                required
+                v-model="role.resourcesType"
+
             />
           </div>
         </div>
@@ -144,6 +169,16 @@
                 v-model="role.orderNum"
                 required
             />
+          </div>
+        </div>
+        <div class="form-group2">
+          <label for="roleName" class="col-sm-2 control-label">권한</label>
+          <div class="col-sm-10">
+            <select class="form-control2" v-model="role.roleId" @change="bindRoleId($event)">
+              <option v-for="role in roleList" :key="role.roleId" :value="role.roleId">
+                {{ role.roleName }}
+              </option>
+            </select>
           </div>
         </div>
         <div class="form-group2">
