@@ -42,6 +42,10 @@
     methods: {
       submitForm() {
         // 폼 제출 처리 로직
+        if (!this.role.roleId) {
+          alert("권한을 선택해 주세요.");
+          return;
+        }
         let payload={};
         //수정
         if(this.$route.name === "ResourcesDetail1"){
@@ -53,7 +57,6 @@
             orderNum : this.role.orderNum,
             roleId: this.role.roleId,
           };
-          console.log("payLoad1 ", payload)
 
           this.$axios.put(this.$serverUrl + '/admin/resources', payload)
               .then(response => {
@@ -70,8 +73,11 @@
             resourceName: this.role.resourceName,
             resourcesType: this.role.resourcesType,
             httpMethod : this.role.httpMethod,
-            orderNum : this.role.orderNum
+            orderNum : this.role.orderNum,
+            roleId: this.role.roleId
           };
+          console.log("payLoad1 ", payload)
+
           this.$axios.post(this.$serverUrl + '/admin/resources', payload)
               .then(response => {
                 // console.log('전송 성공:', response.data);
