@@ -7,6 +7,7 @@
           userId: '',
           password: '',
           memo: '',
+          roleId: ''
 
         },
         roleList: []
@@ -14,14 +15,16 @@
     },
     mounted() {
       // URL에서 전달된 roles 데이터를 가져와서 복원
-      const rolesData = this.$store.state.roles // Vuex에서 roles 데이터 가져오기
-      // console.log('rolesData111 :', rolesData.userId);1
-      // 배열의 첫 번째 항목을 this.role에 할당
-
-      this.role.userId = rolesData.userId || ''; // 닉네임이 필요하면 추가;
-      this.role.id = rolesData.id || '';
-
-      this.fnGetView();
+      try {
+        const rolesData = this.$store.state.roles; // Vuex에서 roles 데이터 가져오기
+        console.log("rolesData : ", rolesData);
+        this.role.userId = rolesData.userId || '';
+        this.role.id = rolesData.id || '';
+        this.role.roleId = rolesData.roleId || '';
+      } catch (error) {
+        console.error('Error loading roles data:', error);
+      }
+      this.fnGetView(); // 권한 목록 가져오기
 
     },
     methods: {
@@ -29,10 +32,10 @@
         // 폼 제출 처리 로직
         const payload = {
           id: this.role.id,
-          roles: this.roleList
-              .filter(role => role.checked) // checked가 true인 role만 선택
-              .map(role => role.roleId)    // roleId만 추출
+          roleId : this.role.roleId
+
         };
+        console.log("payload", payload);
         // console.log("payload" , this.roleList);
         this.$axios.post(this.$serverUrl + '/admin/users', payload)
             .then(response => {
@@ -48,30 +51,19 @@
       fnGetView(){
         this.$axios.get(this.$serverUrl + '/admin/resources/' + this.role.id, {
         }).then((res) => {
+          console.log("rest : ", res);
 
           // 현재 사용자에 해당하는 roleNames 설정
-          const myRoles = res.data.myRoles || [];
-          // myRoles에서 roleName만 추출하여 배열로 만듦
-          const myRoleNames = myRoles.map(role => role.roleName);
-
-
-          this.roleList = res.data.allRoles.map(role => ({
-            roleName: role.roleName,
-            roleId: role.roleId,
-            checked: myRoleNames.includes(role.roleName)
-
-          }));
-
-
-
-
-
-
+          this.roleList = res.data; // roleList에 데이터 할당
         }).catch((err) => {
           if (err.message.indexOf('Network Error') > -1) {
             alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
           }
         })
+      },
+      bindRoleId(event){
+        // console.log("value : ", event.target.value);
+        this.role.roleId = event.target.value;
       }
     }
   };
@@ -94,18 +86,27 @@
             />
           </div>
         </div>
-
         <div class="form-group2">
-          <label for="password" class="col-sm-2 control-label">비밀번호</label>
+          <label for="roleName" class="col-sm-2 control-label">권한</label>
           <div class="col-sm-10">
-            <input
-                type="password"
-                class="form-control2 input-large"
-                v-model="role.password"
-
-            />
+            <select class="form-control2" v-model="role.roleId" @change="bindRoleId($event)">
+              <option v-for="role in roleList" :key="role.roleId" :value="role.roleId">
+                {{ role.roleName }}
+              </option>
+            </select>
           </div>
         </div>
+<!--        <div class="form-group2">-->
+<!--          <label for="password" class="col-sm-2 control-label">비밀번호</label>-->
+<!--          <div class="col-sm-10">-->
+<!--            <input-->
+<!--                type="password"-->
+<!--                class="form-control2 input-large"-->
+<!--                v-model="role.password"-->
+
+<!--            />-->
+<!--          </div>-->
+<!--        </div>-->
 
 <!--        <div class="form-group2">-->
 <!--          <label for="age" class="col-sm-2 control-label">특이사항(미구현)</label>-->
@@ -120,20 +121,20 @@
 <!--          </div>-->
 <!--        </div>-->
 
-        <div class="form-group2">
-          <label for="roles" class="col-sm-2 control-label">권한</label>
-          <div class="col-sm-10">
-            <span v-for="role in roleList" :key="role.roleName">
-              <input
-                  type="checkbox"
-                  :value="role.roleId"
-                  v-model="role.checked"
+<!--        <div class="form-group2">-->
+<!--          <label for="roles" class="col-sm-2 control-label">권한</label>-->
+<!--          <div class="col-sm-10">-->
+<!--            <span v-for="role in roleList" :key="role.roleName">-->
+<!--              <input-->
+<!--                  type="checkbox"-->
+<!--                  :value="role.roleId"-->
+<!--                  v-model="role.checked"-->
 
-              />
-              <label>{{ role.roleName }}</label>
-            </span>
-          </div>
-        </div>
+<!--              />-->
+<!--              <label>{{ role.roleName }}</label>-->
+<!--            </span>-->
+<!--          </div>-->
+<!--        </div>-->
 
         <div class="form-group2">
           <div class="col-sm-offset-1 col-sm-10">

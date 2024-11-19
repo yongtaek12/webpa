@@ -18,10 +18,11 @@
         // 배열의 첫 번째 항목을 this.role에 할당
         // 배열의 첫 번째 항목을 this.role에 할당
 
-        this.role.roleId = rolesData.roleId || ''; // 닉네임이 필요하면 추가;
+        this.role.roleId = rolesData.roleId;
         this.role.roleDesc = rolesData.roleDesc || '';
         this.role.isExpression = rolesData.isExpression || '';
-        this.role.roleName = rolesData.roleName || '';
+        this.role.roleName = rolesData.roleName || ''
+        console.log("rolesData : ", rolesData);
       }catch (error){
         console.log("error loading" , error)
       }
@@ -48,7 +49,7 @@
                 alert('데이터가 성공적으로 전송되었습니다.');
               })
               .catch(error => {
-                // console.error('전송 실패:', error);
+                console.error('전송 실패:', error);
                 alert('데이터 전송에 실패했습니다.');
               });
         }else if(this.$route.name === "RolesDetail2"){
@@ -85,33 +86,31 @@
       },
       //role list 가져오는 로직
       fnGetView(){
-        this.$axios.get(this.$serverUrl + '/admin/roles/' + this.role.id, {
-        }).then((res) => {
+        console.log("fnGetView1 : ",  this.role.roleId)
+        if(this.role.roleId !==undefined){
+          console.log("fnGetView 2: ",  this.role.roleId)
+          this.$axios.get(this.$serverUrl + '/admin/roles/' + this.role.roleId, {
+          }).then((res) => {
 
-          console.log("res :" , res);
-          // 현재 사용자에 해당하는 roleNames 설정
-          const myRoles = res.data.myRoles || [];
-          // myRoles에서 roleName만 추출하여 배열로 만듦
-          const myRoleNames = myRoles.map(role => role.roleName);
-
-
-          this.roleList = res.data.allRoles.map(role => ({
-            roleName: role.roleName,
-            roleId: role.roleId,
-            checked: myRoleNames.includes(role.roleName)
-
-          }));
+            console.log("res :" , res);
+            // 현재 사용자에 해당하는 roleNames 설정
+            const myRoles = res.data.myRoles || [];
+            // myRoles에서 roleName만 추출하여 배열로 만듦
+            const myRoleNames = myRoles.map(role => role.roleName);
 
 
+            this.roleList = res.data.allRoles.map(role => ({
+              roleName: role.roleName,
+              roleId: role.roleId,
+              checked: myRoleNames.includes(role.roleName)
+            }));
 
-
-
-
-        }).catch((err) => {
-          if (err.message.indexOf('Network Error') > -1) {
-            alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
-          }
-        })
+          }).catch((err) => {
+            if (err.message.indexOf('Network Error') > -1) {
+              alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+            }
+          })
+        }
       }
     }
   };
