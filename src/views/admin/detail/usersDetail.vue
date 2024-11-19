@@ -29,6 +29,9 @@
     },
     methods: {
       submitForm() {
+        if (!this.role.roleId) {
+          return alert("권한을 선택해 주세요.");
+        }
         // 폼 제출 처리 로직
         const payload = {
           id: this.role.id,
@@ -62,7 +65,6 @@
         })
       },
       bindRoleId(event){
-        // console.log("value : ", event.target.value);
         this.role.roleId = event.target.value;
       }
     }
@@ -90,6 +92,7 @@
           <label for="roleName" class="col-sm-2 control-label">권한</label>
           <div class="col-sm-10">
             <select class="form-control2" v-model="role.roleId" @change="bindRoleId($event)">
+              <option disabled value="">권한을 선택하세요</option> <!-- 기본 옵션 -->
               <option v-for="role in roleList" :key="role.roleId" :value="role.roleId">
                 {{ role.roleName }}
               </option>

@@ -17,9 +17,8 @@ import { CkeditorPlugin } from '@ckeditor/ckeditor5-vue';
 import userModel from '@/models/userModel'
 if(userModel.isLogin())
 {
-  //세션기반이라 stateless 상태가 아니라 일단 주석 처리 나중에 활성화 예정 jWT
-  //store.commit('authorize/setLogin', true)
-  //userModel.requestMyInfo()
+  store.commit('authorize/setLogin', true)
+  userModel.requestMyInfo()
 } 
 const app = createApp(App)
 

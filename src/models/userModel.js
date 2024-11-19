@@ -39,7 +39,7 @@ const exportObject = {
                    // window.location.replace("/");
                    // 정상적으로 응답을 받은경우, processLogin 함수를 실행합니다
 
-                   await exportObject.processLogin2(res.data)
+                    await exportObject.processLogin(res.data)
 
                }
 
@@ -65,7 +65,7 @@ const exportObject = {
             .then(async (res) => {
                 // console.log("console : ", res)
                 // 정상적으로 응답을 받은경우, processLogin 함수를 실행합니다.
-                // await exportObject.processLogin(res.data)
+                await exportObject.processLogin(res.data)
             })
     },
     /**
@@ -130,16 +130,16 @@ const exportObject = {
         store.commit('authorize/setUserInfo', null);
 
         //세션기반 로그아웃 추가로직
-        const serverUrl = vueInstance.config.globalProperties.$serverUrl;
-        return await axios
-            .get(serverUrl + '/users/logout', {
-
-            })
-            .then(async (res) => {
-                console.log("console : ", res)
-                // 정상적으로 응답을 받은경우, processLogin 함수를 실행합니다.
-                // await exportObject.processLogin(res.data)
-            })
+        // const serverUrl = vueInstance.config.globalProperties.$serverUrl;
+        // return await axios
+        //     .get(serverUrl + '/users/logout', {
+        //
+        //     })
+        //     .then(async (res) => {
+        //         console.log("console : ", res)
+        //         // 정상적으로 응답을 받은경우, processLogin 함수를 실행합니다.
+        //         // await exportObject.processLogin(res.data)
+        //     })
     }, 
 
     /**
@@ -149,14 +149,15 @@ const exportObject = {
         // console.log("requestMyInfo", this.$serverUrl )
 
         // const serverUrl = vueInstance.config.globalProperties.$serverUrl;
-        
+
         const accessToken = localStorage.getItem('accessToken');
-        // console.log("requestMyInfo2", accessToken )
+        console.log("requestMyInfo", accessToken )
         return await axios.get('//localhost:8085/users', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
         }).then(res => {
+            // console.log("requestMyInfo sucesses", res )
 
             store.commit('authorize/setUserInfo', res.data);
         }).catch(err => {

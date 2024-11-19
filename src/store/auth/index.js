@@ -7,7 +7,7 @@ export default {
     loginUser: {
       id: 0, //회원 고유 pk
       nickname: '', // 회원 닉네임
-      auth: 0 // 권한 레벨
+      auth: '' // 권한 레벨
     }
   }),
   // mutations: state를 변경하기 위해 실행되는 것으로 비동기를 해야할 경우
@@ -21,11 +21,11 @@ export default {
     },
     // 사용자의 정보를 저장합니다.
     setUserInfo(state, payload) {
-      // console.log("세션저장확인1", state);
-      // console.log("세션저장확인2", payload);
+
       state.loginUser.id = payload?.id ?? 0;
-      state.loginUser.nickname = payload?.nickname ?? '';
-      state.loginUser.auth = payload?.auth ?? '';
+      state.loginUser.nickname = payload?.nickName ?? '';
+      state.loginUser.auth = payload?.roles ?? '';
+      console.log("세션저장확인2", state);
     }
   },
   getters: {

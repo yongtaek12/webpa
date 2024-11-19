@@ -52,7 +52,7 @@
     <div class="top-bar">
       <div id="nav" class="nav-links">
         <template v-if="isLogin">
-          안녕하세요! {{ loginUser.nickname }} ㅎㅎ
+          안녕하세요! {{ loginUser.nickname }} 님
           <img @click="signOut" class="company-logo" src="@/assets/images/logout.gif" alt="logout" style="cursor: pointer;" />
           <!-- ROLE_ADMIN일 때만 관리자 이미지 표시 -->
           <img v-if="isAdmin" type="button" @click="adminPage" class="company-logo" src="@/assets/images/admin.png" alt="administrator" style="cursor: pointer;" />
@@ -102,7 +102,7 @@ export default {
   computed: {
     isAdmin() {
       //roop 돌아서 admin 있는경우 관리자 페이지 이동 아이콘 보이기
-      return this.loginUser.auth && this.loginUser.auth.some(role => role.roleName === 'ROLE_ADMIN');
+      return this.loginUser.auth === 'ROLE_ADMIN';
     },
     ...mapGetters('authorize', ['isLogin', 'loginUser'])
   }
