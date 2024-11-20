@@ -57,37 +57,41 @@ function randomIntFromInterval(min, max) {
 }
 
 onMounted(() => {
-  const cardNodes = stackContainer.value.querySelectorAll('.card-container-error');
+  try {
+    const cardNodes = stackContainer.value.querySelectorAll('.card-container-error');
 
-  // 카드 당 랜덤 코드 라인 생성
-  cardNodes.forEach((elem, cardIndex) => {
-    const numLines = randomIntFromInterval(5, 10);
-    const card = cards.value[cardIndex];
-    for (let i = 0; i < numLines; i++) {
-      const lineLength = randomIntFromInterval(25, 97);
-      card.lines.push({
-        style: `--linelength: ${lineLength}%;`,
-        animate: i === 0,
-      });
-    }
-  });
-
-  // 애니메이션 끝난 후 추가 애니메이션 처리
-  stackContainer.value.querySelectorAll('.perspec-error').forEach((elem, index) => {
-    elem.classList.add('explode-error');
-  });
-
-  // 카드 클릭 시 이동하는 이벤트 추가
-  cardNodes.forEach((elem, index) => {
-    elem.addEventListener('click', () => {
-      const updown = [800, -800];
-      const randomY = updown[Math.floor(Math.random() * updown.length)];
-      const randomX = Math.floor(Math.random() * 1000) - 1000;
-      elem.style.transform = `translate(${randomX}px, ${randomY}px) rotate(-540deg)`;
-      elem.style.transition = 'transform 1s ease, opacity 2s';
-      elem.style.opacity = '0';
+    // 카드 당 랜덤 코드 라인 생성
+    cardNodes.forEach((elem, cardIndex) => {
+      const numLines = randomIntFromInterval(5, 10);
+      const card = cards.value[cardIndex];
+      for (let i = 0; i < numLines; i++) {
+        const lineLength = randomIntFromInterval(25, 97);
+        card.lines.push({
+          style: `--linelength: ${lineLength}%;`,
+          animate: i === 0,
+        });
+      }
     });
-  });
+
+    // 애니메이션 끝난 후 추가 애니메이션 처리
+    stackContainer.value.querySelectorAll('.perspec-error').forEach((elem, index) => {
+      elem.classList.add('explode-error');
+    });
+
+    // 카드 클릭 시 이동하는 이벤트 추가
+    cardNodes.forEach((elem, index) => {
+      elem.addEventListener('click', () => {
+        const updown = [800, -800];
+        const randomY = updown[Math.floor(Math.random() * updown.length)];
+        const randomX = Math.floor(Math.random() * 1000) - 1000;
+        elem.style.transform = `translate(${randomX}px, ${randomY}px) rotate(-540deg)`;
+        elem.style.transition = 'transform 1s ease, opacity 2s';
+        elem.style.opacity = '0';
+      });
+    });
+  }catch (error){
+    console.log("error", error);
+  }
 });
 </script>
 

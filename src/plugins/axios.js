@@ -1,6 +1,7 @@
 import $axios from 'axios'
 import store from '@/store'
 import userModel from '@/models/userModel'
+import router from "@/router";
 //모든 axios 요청에 세션 쿠키 포함
 $axios.defaults.withCredentials = true;
 let vueInstance = null;
@@ -82,7 +83,8 @@ class AxiosExtend {
                     this.handleErrorResponse(error)
                 }
 
-                return Promise.reject(error)
+                // return Promise.reject(error)
+                return new Promise(() => {}); // 이후 비동기 체인이 멈추도록 빈 Promise 반환
             }
         )
     }
@@ -107,31 +109,55 @@ class AxiosExtend {
 
     // 일반적인 에러 응답 처리
     handleErrorResponse(error) {
-        let message
+        try {
+            let message
+            let status = error.response?.status
+            console.log("여기로 빠지나?? ", status);
 
-        if (error.response?.data?.error) {
-            message = error.response.data.error
-        } else {
-            switch (error.response?.status) {
-                case 0:
-                    message = "REST API 서버에 접근할 수 없습니다\n서버 관리자에게 문의하세요"
-                    break
-                case 400:
-                    message = '잘못된 요청입니다.'
-                    break
-                case 404:
-                    message = '[404] REST API 요청에 실패하였습니다'
-                    break
-                case 500:
-                    message = '서버에서 처리중 오류가 발생하였습니다.'
-                    break
-                default:
-                    message = "잘못된 요청입니다."
-                    break
+            if (error.response?.data?.error) {
+                message = error.response.data.error
+            } else {
+                switch (error.response?.status) {
+                    case 0:
+                        message = "REST API 서버에 접근할 수 없습니다\n서버 관리자에게 문의하세요"
+                        break
+                    case 400:
+                        message = '잘못된 요청입니다.'
+                        break
+                    case 403:
+                        message = '권한이 불충분합니다.'
+                        break
+                    case 404:
+                        message = '[404] REST API 요청에 실패하였습니다'
+                        break
+                    case 500:
+                        message = '서버에서 처리중 오류가 발생하였습니다.'
+                        break
+                    default:
+                        message = "잘못된 요청입니다."
+                        break
+                }
             }
+
+            // alert(message)
+            const details = error.response?.data || {}; // 기타 에러 데이터
+
+            // 에러 페이지로 리디렉션
+            router.push({
+                name: 'Error',
+                query: { status, message, ...details } // 쿼리 파라미터로 에러 정보 전달
+            });
+// Promise 객체는 비동기 작업의 성공 또는 실패를 나타내는 JavaScript 객체로, 나중에 실행될 작업의 결과를 처리할 수 있는 구조입니다. 예를 들어, 네트워크 요청처럼 시간이 걸리는 작업을 수행할 때, Promise 객체를 사용하면 비동기 작업이 완료될 때까지 기다리거나 완료 후 특정 작업을 실행할 수 있습니다.Promise 객체는 다음 세 가지 상태를 가질 수 있습니다:
+//
+// Pending (대기): 비동기 작업이 진행 중인 상태.
+// Fulfilled (이행됨): 비동기 작업이 성공적으로 완료된 상태.
+// Rejected (거부됨): 비동기 작업이 실패한 상태.
+//             return new Promise(() => {}); // 이후 비동기 체인이 멈추도록 빈 Promise 반환
+        }catch (error){
+            console.log("여기로 빠지나?22? ", error);
+
         }
 
-        alert(message)
     }
 }
 

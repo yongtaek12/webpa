@@ -25,7 +25,7 @@ export default {
       state.loginUser.id = payload?.id ?? 0;
       state.loginUser.nickname = payload?.nickName ?? '';
       state.loginUser.auth = payload?.roles ?? '';
-      console.log("세션저장확인2", state);
+      // console.log("세션저장확인2", state);
     }
   },
   getters: {
