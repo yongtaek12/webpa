@@ -218,8 +218,12 @@ export default {
      * @param {HTMLElement} child - 자식 요소
      */
     removeChild(parent, child) {
-      if (child.parentNode === parent) {
-        parent.removeChild(child); // 부모 요소에서 자식 요소 제거
+      try {
+        if (child.parentNode === parent) {
+          parent.removeChild(child); // 부모 요소에서 자식 요소 제거
+        }
+      }catch{
+        console.log("스크립트 페이지 이동")
       }
     },
     /**
@@ -373,32 +377,38 @@ export default {
      * @param {boolean} isReceived - 수신 여부
      */
     addChatMessage(text, isReceived) {
-      const message = this.createChatMessage(text, isReceived); // 채팅 메시지 생성
-      const chatBox = this.$refs.chatBox; // 채팅 박스 참조
+      try {
+        const message = this.createChatMessage(text, isReceived); // 채팅 메시지 생성
+        const chatBox = this.$refs.chatBox; // 채팅 박스 참조
+        // 기존 메시지들을 위로 이동시키는 코드
+        this.$nextTick(() => {
+          // DOM 업데이트가 완료된 후 실행될 코드
 
-      // 기존 메시지들을 위로 이동시키는 코드
-      this.$nextTick(() => {
-        // DOM 업데이트가 완료된 후 실행될 코드
-
-        // 새 메시지를 이동 후 추가
-        setTimeout(() => {
-          chatBox.prepend(message); // 메시지를 채팅 박스에 추가
-        }, 1); // 3초 후에 새 메시지 추가
-      });
-
-      this.toggleInput(); // 입력 토글
-      setTimeout(() => {
-        const profileIcon = message.querySelector('.profile-icon'); // 프로필 아이콘 참조
-        const content = message.querySelector('.content'); // 콘텐츠 참조
-        this.removeClass(profileIcon, 'invisible'); // 프로필 아이콘에서 invisible 클래스 제거
-        setTimeout(() => {
-          this.removeClass(content, 'invisible'); // 콘텐츠에서 invisible 클래스 제거
+          // 새 메시지를 이동 후 추가
           setTimeout(() => {
-            this.animateMessageLetters(message, isReceived); // 메시지의 편지 애니메이션
-            setTimeout(() => this.replenishLetterPool(this.nLetterSets), 2500); // 편지 풀 보충
-          }, 1000);
+            try {
+              chatBox.prepend(message); // 메시지를 채팅 박스에 추가
+            }catch (innerError){
+              console.error("setTimeout 내부 에러:", innerError);
+            }
+          }, 1); // 3초 후에 새 메시지 추가
+        });
+        this.toggleInput(); // 입력 토글
+        setTimeout(() => {
+          const profileIcon = message.querySelector('.profile-icon'); // 프로필 아이콘 참조
+          const content = message.querySelector('.content'); // 콘텐츠 참조
+          this.removeClass(profileIcon, 'invisible'); // 프로필 아이콘에서 invisible 클래스 제거
+          setTimeout(() => {
+            this.removeClass(content, 'invisible'); // 콘텐츠에서 invisible 클래스 제거
+            setTimeout(() => {
+              this.animateMessageLetters(message, isReceived); // 메시지의 편지 애니메이션
+              setTimeout(() => this.replenishLetterPool(this.nLetterSets), 2500); // 편지 풀 보충
+            }, 1000);
+          }, 250);
         }, 250);
-      }, 250);
+      }catch (error){
+        console.log("스크립트 에러 : ", error)
+      }
     },
     /**
      * 메시지 창을 맨 아래로 스크롤합니다.
@@ -739,10 +749,14 @@ export default {
      * @param {HTMLElement} letter - 제거할 편지
      */
     removePoolLetter(letter) {
-      this.addClass(letter, 'invisible'); // 편지에 invisible 클래스 추가
-      setTimeout(() => {
-        this.removeChild(this.$refs.letterPool, letter); // 편지 풀에서 편지 제거
-      }, 500);
+      try {
+        this.addClass(letter, 'invisible'); // 편지에 invisible 클래스 추가
+        setTimeout(() => {
+          this.removeChild(this.$refs.letterPool, letter); // 편지 풀에서 편지 제거
+        }, 500);
+      }catch (error){
+        console.log("스크립트 에러 : ", error);
+      }
     },
     /**
      * 오른쪽에서부터 요소의 위치를 설정합니다.
