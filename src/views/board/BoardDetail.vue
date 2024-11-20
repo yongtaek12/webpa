@@ -111,6 +111,7 @@
 	Undo
 } from 'ckeditor5';
 import 'ckeditor5/ckeditor5.css';
+import axios from '@/plugins/axios.js';
 import translations from 'ckeditor5/translations/ko.js';
   export default {
     data() { //변수생성
@@ -293,7 +294,7 @@ import translations from 'ckeditor5/translations/ko.js';
     },
     methods: {
       fnGetView() {
-        this.$axios.get(this.$serverUrl + '/board/' + this.idx, {
+        axios.get(this.$serverUrl + '/board/' + this.idx, {
           params: this.requestBody
         }).then((res) => {
           this.title = res.data.title
@@ -322,7 +323,7 @@ import translations from 'ckeditor5/translations/ko.js';
       fnDelete() {
         if (!confirm("삭제하시겠습니까?")) return
   
-        this.$axios.delete(this.$serverUrl + '/board/' + this.idx, {})
+        axios.delete(this.$serverUrl + '/board/' + this.idx, {})
             .then(() => {
               alert('삭제되었습니다.')
               this.fnList();

@@ -1,4 +1,5 @@
 <script>
+import axios from '@/plugins/axios.js';
   export default {
     data() {
       return {
@@ -40,7 +41,7 @@
         };
         console.log("payload", payload);
         // console.log("payload" , this.roleList);
-        this.$axios.post(this.$serverUrl + '/admin/users', payload)
+        axios.post(this.$serverUrl + '/admin/users', payload)
             .then(response => {
               // console.log('전송 성공:', response.data);
               alert('데이터가 성공적으로 전송되었습니다.');
@@ -52,7 +53,7 @@
       },
       //role list 가져오는 로직
       fnGetView(){
-        this.$axios.get(this.$serverUrl + '/admin/resources/' + this.role.id, {
+        axios.get(this.$serverUrl + '/admin/resources/' + this.role.id, {
         }).then((res) => {
           console.log("rest : ", res);
 
@@ -99,45 +100,6 @@
             </select>
           </div>
         </div>
-<!--        <div class="form-group2">-->
-<!--          <label for="password" class="col-sm-2 control-label">비밀번호</label>-->
-<!--          <div class="col-sm-10">-->
-<!--            <input-->
-<!--                type="password"-->
-<!--                class="form-control2 input-large"-->
-<!--                v-model="role.password"-->
-
-<!--            />-->
-<!--          </div>-->
-<!--        </div>-->
-
-<!--        <div class="form-group2">-->
-<!--          <label for="age" class="col-sm-2 control-label">특이사항(미구현)</label>-->
-<!--          <div class="col-sm-10">-->
-<!--            <input-->
-<!--                type="number"-->
-<!--                class="form-control2 input-large"-->
-<!--                v-model="role.memo"-->
-<!--                placeholder="글을 입력하세요"-->
-<!--                required-->
-<!--            />-->
-<!--          </div>-->
-<!--        </div>-->
-
-<!--        <div class="form-group2">-->
-<!--          <label for="roles" class="col-sm-2 control-label">권한</label>-->
-<!--          <div class="col-sm-10">-->
-<!--            <span v-for="role in roleList" :key="role.roleName">-->
-<!--              <input-->
-<!--                  type="checkbox"-->
-<!--                  :value="role.roleId"-->
-<!--                  v-model="role.checked"-->
-
-<!--              />-->
-<!--              <label>{{ role.roleName }}</label>-->
-<!--            </span>-->
-<!--          </div>-->
-<!--        </div>-->
 
         <div class="form-group2">
           <div class="col-sm-offset-1 col-sm-10">

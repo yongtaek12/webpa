@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from '@/plugins/axios.js';
 
 import { ref, onMounted } from 'vue';
 

@@ -1,4 +1,5 @@
 <script>
+import axios from '@/plugins/axios.js';
   export default {
     data() {
       return {
@@ -58,7 +59,7 @@
             roleId: this.role.roleId,
           };
 
-          this.$axios.put(this.$serverUrl + '/admin/resources', payload)
+          axios.put(this.$serverUrl + '/admin/resources', payload)
               .then(response => {
                 // console.log('전송 성공:', response.data);
                 alert('데이터가 성공적으로 전송되었습니다.');
@@ -78,7 +79,7 @@
           };
           console.log("payLoad1 ", payload)
 
-          this.$axios.post(this.$serverUrl + '/admin/resources', payload)
+          axios.post(this.$serverUrl + '/admin/resources', payload)
               .then(response => {
                 // console.log('전송 성공:', response.data);
                 alert('데이터가 성공적으로 전송되었습니다.');
@@ -93,7 +94,7 @@
       },
       deleteRole() {
         if (confirm("정말로 삭제하시겠습니까?")) {
-          this.$axios.delete(`${this.$serverUrl}/admin/resources/${this.role.resourceId}`)
+          axios.delete(`${this.$serverUrl}/admin/resources/${this.role.resourceId}`)
               .then(() => {
                 alert("삭제가 완료되었습니다.");
                 this.$router.push('/admin'); // 목록 페이지로 이동
@@ -111,7 +112,7 @@
         if(id===""){
          id =1000
         }
-        this.$axios.get(this.$serverUrl + '/admin/resources/' + id, {
+        axios.get(this.$serverUrl + '/admin/resources/' + id, {
         }).then((res) => {
           // roleList가 로드된 후 role.roleId와 매칭되는 값이 있는지 확인
 

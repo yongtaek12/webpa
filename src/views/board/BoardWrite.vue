@@ -131,7 +131,7 @@ import {
 } from 'ckeditor5';
 import translations from 'ckeditor5/translations/ko.js';
 import UploadAdapter from '@/views/board/UploadAdapter';
-
+import axios from '@/plugins/axios.js';
 
 import 'ckeditor5/ckeditor5.css';
 
@@ -447,7 +447,7 @@ export default {
     },
     fnGetView() {
       if (this.idx !== undefined) {
-        this.$axios
+        axios
           .get(this.$serverUrl + '/board/' + this.idx, {
             params: this.requestBody,
           })
@@ -493,7 +493,7 @@ export default {
       };
 
       if (this.idx === undefined) {
-        this.$axios
+        axios
           .post(apiUrl, this.form)
           .then((res) => {
             alert('글이 저장되었습니다.');
@@ -505,7 +505,7 @@ export default {
             }
           });
       } else {
-        this.$axios
+        axios
           .patch(apiUrl, this.form)
           .then((res) => {
             alert('글이 저장되었습니다.');

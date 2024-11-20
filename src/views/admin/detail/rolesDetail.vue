@@ -1,4 +1,5 @@
 <script>
+import axios from '@/plugins/axios.js';
   export default {
     data() {
       return {
@@ -43,7 +44,7 @@
             roleName : this.role.roleName
           };
           console.log("payLoad", payload)
-          this.$axios.put(this.$serverUrl + '/admin/roles', payload)
+          axios.put(this.$serverUrl + '/admin/roles', payload)
               .then(response => {
                 // console.log('전송 성공:', response.data);
                 alert('데이터가 성공적으로 전송되었습니다.');
@@ -58,7 +59,7 @@
             isExpression: this.role.isExpression,
             roleName : this.role.roleName
           };
-          this.$axios.post(this.$serverUrl + '/admin/roles', payload)
+          axios.post(this.$serverUrl + '/admin/roles', payload)
               .then(response => {
                 // console.log('전송 성공:', response.data);
                 alert('데이터가 성공적으로 전송되었습니다.');
@@ -73,7 +74,7 @@
       },
       deleteRole() {
         if (confirm("정말로 삭제하시겠습니까?")) {
-          this.$axios.delete(`${this.$serverUrl}/admin/roles/${this.role.roleId}`)
+          axios.delete(`${this.$serverUrl}/admin/roles/${this.role.roleId}`)
               .then(() => {
                 alert("삭제가 완료되었습니다.");
                 this.$router.push('/admin'); // 목록 페이지로 이동
@@ -89,7 +90,7 @@
         console.log("fnGetView1 : ",  this.role.roleId)
         if(this.role.roleId !==undefined){
           console.log("fnGetView 2: ",  this.role.roleId)
-          this.$axios.get(this.$serverUrl + '/admin/roles/' + this.role.roleId, {
+          axios.get(this.$serverUrl + '/admin/roles/' + this.role.roleId, {
           }).then((res) => {
 
             console.log("res :" , res);

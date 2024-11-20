@@ -38,7 +38,8 @@
 
 
 <script>
-import axios from 'axios'; // axios 임포트
+import axios from '@/plugins/axios.js';
+// import axios from 'axios'; // axios 임포트
 import { throttle } from 'lodash'; // lodash의 throttle 함수 임포트
 
 export default {

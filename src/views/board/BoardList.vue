@@ -107,6 +107,7 @@
 </template>
 
 <script>
+import axios from '@/plugins/axios.js';
 export default {
   data() { //변수생성
     return {
@@ -153,7 +154,7 @@ export default {
         size: this.size
       }
 
-      this.$axios.get(this.$serverUrl + "/board/list", {
+      axios.get(this.$serverUrl + "/board/list", {
         params: this.requestBody,
         headers: {}
       }).then((res) => {      
