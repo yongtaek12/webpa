@@ -223,7 +223,7 @@ export default {
           parent.removeChild(child); // 부모 요소에서 자식 요소 제거
         }
       }catch{
-        console.log("스크립트 페이지 이동")
+        console.log("removeChild error")
       }
     },
     /**
@@ -862,60 +862,6 @@ export default {
         num = this.getRand(min, max); // 최소값과 최대값 사이의 랜덤 숫자 생성
       } while (num === except); // 제외할 숫자가 나오지 않을 때까지 반복
       return num; // 랜덤 숫자 반환
-    },
-    /**
-     * 요소에 클래스를 추가합니다.
-     * @param {HTMLElement} el - 요소
-     * @param {string} className - 클래스 이름
-     */
-    addClass(el, className) {
-      el.classList.add(className); // 요소에 클래스 추가
-    },
-    /**
-     * 요소에서 클래스를 제거합니다.
-     * @param {HTMLElement} el - 요소
-     * @param {string} className - 클래스 이름
-     */
-    removeClass(el, className) {
-      el.classList.remove(className); // 요소에서 클래스 제거
-    },
-    /**
-     * 요소에 속성을 설정합니다.
-     * @param {HTMLElement} el - 요소
-     * @param {string} attr - 속성 이름
-     * @param {string} value - 속성 값
-     */
-    setAttr(el, attr, value) {
-      el.setAttribute(attr, value); // 요소에 속성 설정
-    },
-    /**
-     * 요소의 위치를 설정합니다.
-     * @param {HTMLElement} el - 요소
-     * @param {number} x - X 좌표
-     * @param {number} y - Y 좌표
-     */
-    setElPos(el, x, y) {
-      el.style.left = `${x}px`; // 요소의 왼쪽 위치 설정
-      el.style.top = `${y}px`; // 요소의 위쪽 위치 설정
-    },
-    /**
-     * 요소의 스타일을 설정합니다.
-     * @param {HTMLElement} el - 요소
-     * @param {string} style - 스타일 이름
-     * @param {string} value - 스타일 값
-     */
-    setStyle(el, style, value) {
-      el.style[style] = value; // 요소의 스타일 설정
-    },
-    /**
-     * 부모 요소에서 자식 요소를 제거합니다.
-     * @param {HTMLElement} parent - 부모 요소
-     * @param {HTMLElement} child - 자식 요소
-     */
-    removeChild(parent, child) {
-      if (child.parentNode === parent) {
-        parent.removeChild(child); // 부모 요소에서 자식 요소 제거
-      }
     },
     /**
      * 편지 풀을 초기화합니다.
