@@ -45,7 +45,7 @@
               <th scope="col">이름</th>
               <th scope="col">핸드폰 번호</th>
               <th scope="col">상태</th>
-              <th scope="col">권한</th>
+              <th scope="col">권한설명</th>
               <th scope="col">권한</th>
               <th scope="col">등록일</th>
             </tr>

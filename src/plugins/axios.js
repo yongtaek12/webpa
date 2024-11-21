@@ -47,13 +47,14 @@ class AxiosExtend {
 
             response => response,
             async error => {
+                console.log("비동기 error : ", error);
 
 
                 // 응답 코드가 401일 경우에 처리합니다.
                 if (error.response?.status === 401) {
                     const { config } = error
                     const originalRequest = config // 토큰 재발급후 원래 요청을 다시 보내기 위해 사용합니다.
-                    console.log("originalRequest1 : ", originalRequest);
+                    console.log("originalRequest1 : ", originalRequest.url);
                     // const serverUrl = vueInstance?.config?.globalProperties?.$serverUrl;
 
                     // 토큰재발급 요청을 보낸적이 없을경우
@@ -62,7 +63,7 @@ class AxiosExtend {
                         // 토큰 재발급 요청을 보냅니다.
 
 
-                        await this.instance.post('//localhost:8085'+'/users/authorize/token', {
+                         this.instance.post('//localhost:8085'+'/users/authorize/token', {
                             refreshToken: localStorage.getItem('refreshToken')
                         }).then(r => {
                             // 토큰 재발급 요청에 성공하면 flag는 다시 true로 변경해줍니다.
@@ -89,9 +90,9 @@ class AxiosExtend {
                         // return this.retryOriginalRequest(originalRequest)
                     }
                     // 로그인된 상태라면 내 정보를 다시 가져옵니다.
-                    if (userModel.isLogin()) {
-                        // await userModel.requestMyInfo()
-                    }
+                    // if (userModel.isLogin()) {
+                    //     await userModel.requestMyInfo()
+                    // }
                     return this.retryOriginalRequest(originalRequest);
                 } else {
                     this.handleErrorResponse(error)
@@ -115,16 +116,41 @@ class AxiosExtend {
 
     // 원래 요청 재시도
     retryOriginalRequest(originalRequest) {
-        console.log("originalRequest 2 : " , originalRequest.url);
-        console.log("Original Request BaseURL:", originalRequest.baseURL);
-
         return new Promise(resolve => {
             this.subscribers.push(accessToken => {
-                originalRequest.headers.Authorization = `Bearer ${accessToken}`
-                resolve(this.instance(originalRequest))
-            })
-        })
+                // Authorization 헤더 업데이트
+                originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+
+                // 요청 전 로그 출력
+                console.log("=== Retry Original Request ===");
+                console.log("URL:", originalRequest.url);
+                console.log("Method:", originalRequest.method);
+                console.log("Headers:", originalRequest.headers);
+                console.log("Params:", originalRequest.params || {});
+                console.log("Data (Body):", originalRequest.data || {});
+                console.log("==============================");
+
+                // 요청 실행 및 결과 확인
+                this.instance(originalRequest)
+                    .then(response => {
+                        console.log("=== Request Success ===");
+                        console.log("Response Data:", response.data);
+                        console.log("Response Status:", response.status);
+                        console.log("=======================");
+                        resolve(response);
+                    })
+                    .catch(error => {
+                        console.error("=== Request Failed ===");
+                        console.error("Error Message:", error.message);
+                        console.error("Response Status:", error.response?.status || "Unknown");
+                        console.error("Response Data:", error.response?.data || {});
+                        console.error("======================");
+                        resolve(Promise.reject(error)); // 에러를 그대로 전달
+                    });
+            });
+        });
     }
+
 
     // 일반적인 에러 응답 처리
     handleErrorResponse(error) {
