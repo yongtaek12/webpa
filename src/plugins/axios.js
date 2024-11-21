@@ -1,7 +1,7 @@
 import $axios from 'axios'
 import store from '@/store'
-import userModel from '@/models/userModel'
 import router from "@/router";
+import GlobalState from "@/global";
 //모든 axios 요청에 세션 쿠키 포함
 $axios.defaults.withCredentials = true;
 // eslint-disable-next-line no-unused-vars
@@ -63,7 +63,7 @@ class AxiosExtend {
                         // 토큰 재발급 요청을 보냅니다.
 
 
-                         this.instance.post('//localhost:8085'+'/users/authorize/token', {
+                         this.instance.post(GlobalState.serverUrl+'/users/authorize/token', {
                             refreshToken: localStorage.getItem('refreshToken')
                         }).then(r => {
                             // 토큰 재발급 요청에 성공하면 flag는 다시 true로 변경해줍니다.

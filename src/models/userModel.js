@@ -72,7 +72,6 @@ const exportObject = {
      * 로그인이 완료 된경우, 응답데이타를 이용하여 클라이언트에 토큰을 저장합니다. session 기반
      */
     processLogin2: async (result) => {
-        console.log("로그인정보 : ", result);
         // vuex 상태관리에서 현재 로그인 상태를 TRUE 로 변경합니다.
         localStorage.setItem('accessToken', result.cookie);
 
@@ -134,12 +133,8 @@ const exportObject = {
     * REST API로 내 정보를 가져옵니다.
     */
     requestMyInfo: async () => {
-        // console.log("requestMyInfo", this.$serverUrl )
-
-        // const serverUrl = vueInstance.config.globalProperties.$serverUrl;
 
         const accessToken = localStorage.getItem('accessToken');
-        console.log("requestMyInfo", accessToken )
         return await axios.get('//localhost:8085/users', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`

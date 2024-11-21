@@ -309,6 +309,7 @@ export default {
 
         axios.post('http://localhost:8085/chat-gpt/chat', requestPayload).then((result) => {
           const botContent = result.data.choices[0].message.content; // 챗봇 응답 내용
+          console.log("응답 내용 챗봇 : ", botContent);
           setTimeout(() => {
             this.addChatMessage(botContent, true); // 챗봇 메시지 추가
           }, 2000); // 3초 후에 새 메시지 추가
