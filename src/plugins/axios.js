@@ -81,12 +81,15 @@ class AxiosExtend {
                     }
 
                     else {
-                        console.log("재요청안함.");
+                        // console.log("refresh token 만료 재요청안함.");
                         window.localStorage.removeItem('accessToken')
                         window.localStorage.removeItem('refreshToken')
                         originalRequest.headers.Authorization = null
                         store.commit('authorize/setLogin', false)
                         store.commit('authorize/setUserInfo', null)
+                        // 리디렉션 처리
+                        alert("토큰이 만료되었습니다. 다시 로그인 해주세요")
+                        return router.push({ name: 'Signin' }); // 'Signin'은 Vue Router에 등록된 라우트의 이름
                         // return this.retryOriginalRequest(originalRequest)
                     }
                     // 로그인된 상태라면 내 정보를 다시 가져옵니다.
