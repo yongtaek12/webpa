@@ -4,11 +4,12 @@ import userModel from '@/models/userModel'
 import router from "@/router";
 //모든 axios 요청에 세션 쿠키 포함
 $axios.defaults.withCredentials = true;
+// eslint-disable-next-line no-unused-vars
 let vueInstance = null;
 
 class AxiosExtend {
     instance = null
-    
+
     /**
      * Vue 인스턴스를 초기화합니다.
      */
@@ -43,20 +44,25 @@ class AxiosExtend {
 
         // 응답 인터셉터 설정
         this.instance.interceptors.response.use(
+
             response => response,
             async error => {
-                const { config } = error
-                const originalRequest = config // 토큰 재발급후 원래 요청을 다시 보내기 위해 사용합니다.
+
 
                 // 응답 코드가 401일 경우에 처리합니다.
                 if (error.response?.status === 401) {
+                    const { config } = error
+                    const originalRequest = config // 토큰 재발급후 원래 요청을 다시 보내기 위해 사용합니다.
+                    console.log("originalRequest1 : ", originalRequest);
+                    // const serverUrl = vueInstance?.config?.globalProperties?.$serverUrl;
+
                     // 토큰재발급 요청을 보낸적이 없을경우
                     if (!this.isAlreadyFetchingAccessToken) {
                         this.isAlreadyFetchingAccessToken = true // 토큰 재발급요청 flag 를 TRUE로 변경해둡니다.
-
                         // 토큰 재발급 요청을 보냅니다.
-                        const serverUrl = vueInstance.config.globalProperties.$serverUrl;
-                        await this.instance.post(serverUrl+'/users/authorize/token', {
+
+
+                        await this.instance.post('//localhost:8085'+'/users/authorize/token', {
                             refreshToken: localStorage.getItem('refreshToken')
                         }).then(r => {
                             // 토큰 재발급 요청에 성공하면 flag는 다시 true로 변경해줍니다.
@@ -71,19 +77,27 @@ class AxiosExtend {
                         }).catch(() => {
                             this.handleRefreshTokenError()
                         })
-                    } else {
-                        return this.retryOriginalRequest(originalRequest)
                     }
 
+                    else {
+                        console.log("재요청안함.");
+                        window.localStorage.removeItem('accessToken')
+                        window.localStorage.removeItem('refreshToken')
+                        originalRequest.headers.Authorization = null
+                        store.commit('authorize/setLogin', false)
+                        store.commit('authorize/setUserInfo', null)
+                        // return this.retryOriginalRequest(originalRequest)
+                    }
                     // 로그인된 상태라면 내 정보를 다시 가져옵니다.
                     if (userModel.isLogin()) {
-                        await userModel.requestMyInfo()
+                        // await userModel.requestMyInfo()
                     }
+                    return this.retryOriginalRequest(originalRequest);
                 } else {
                     this.handleErrorResponse(error)
                 }
 
-                // return Promise.reject(error)
+                 // return Promise.reject(error)
                 return new Promise(() => {}); // 이후 비동기 체인이 멈추도록 빈 Promise 반환
             }
         )
@@ -91,6 +105,8 @@ class AxiosExtend {
 
     // 토큰 재발급 에러 처리
     handleRefreshTokenError() {
+
+        console.log("handleRefreshTokenError")
         window.localStorage.removeItem('accessToken')
         window.localStorage.removeItem('refreshToken')
         store.commit('authorize/setLogin', false)
@@ -99,6 +115,9 @@ class AxiosExtend {
 
     // 원래 요청 재시도
     retryOriginalRequest(originalRequest) {
+        console.log("originalRequest 2 : " , originalRequest.url);
+        console.log("Original Request BaseURL:", originalRequest.baseURL);
+
         return new Promise(resolve => {
             this.subscribers.push(accessToken => {
                 originalRequest.headers.Authorization = `Bearer ${accessToken}`
@@ -112,7 +131,7 @@ class AxiosExtend {
         try {
             let message
             let status = error.response?.status
-            console.log("여기로 빠지나?? ", status);
+            console.log("여기로 빠지나?? ", error.response?.status);
 
             if (error.response?.data?.error) {
                 message = error.response.data.error
@@ -134,6 +153,7 @@ class AxiosExtend {
                         message = '서버에서 처리중 오류가 발생하였습니다.'
                         break
                     default:
+                        console.log("default ", error.response?.status);
                         message = "잘못된 요청입니다."
                         break
                 }
@@ -147,12 +167,12 @@ class AxiosExtend {
                 name: 'Error',
                 query: { status, message, ...details } // 쿼리 파라미터로 에러 정보 전달
             });
-// Promise 객체는 비동기 작업의 성공 또는 실패를 나타내는 JavaScript 객체로, 나중에 실행될 작업의 결과를 처리할 수 있는 구조입니다. 예를 들어, 네트워크 요청처럼 시간이 걸리는 작업을 수행할 때, Promise 객체를 사용하면 비동기 작업이 완료될 때까지 기다리거나 완료 후 특정 작업을 실행할 수 있습니다.Promise 객체는 다음 세 가지 상태를 가질 수 있습니다:
-//
-// Pending (대기): 비동기 작업이 진행 중인 상태.
-// Fulfilled (이행됨): 비동기 작업이 성공적으로 완료된 상태.
-// Rejected (거부됨): 비동기 작업이 실패한 상태.
-//             return new Promise(() => {}); // 이후 비동기 체인이 멈추도록 빈 Promise 반환
+        // Promise 객체는 비동기 작업의 성공 또는 실패를 나타내는 JavaScript 객체로, 나중에 실행될 작업의 결과를 처리할 수 있는 구조입니다. 예를 들어, 네트워크 요청처럼 시간이 걸리는 작업을 수행할 때, Promise 객체를 사용하면 비동기 작업이 완료될 때까지 기다리거나 완료 후 특정 작업을 실행할 수 있습니다.Promise 객체는 다음 세 가지 상태를 가질 수 있습니다:
+        //
+        // Pending (대기): 비동기 작업이 진행 중인 상태.
+        // Fulfilled (이행됨): 비동기 작업이 성공적으로 완료된 상태.
+        // Rejected (거부됨): 비동기 작업이 실패한 상태.
+        //             return new Promise(() => {}); // 이후 비동기 체인이 멈추도록 빈 Promise 반환
         }catch (error){
             console.log("여기로 빠지나?22? ", error);
 
