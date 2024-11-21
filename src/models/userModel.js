@@ -1,6 +1,7 @@
 // import store from './vuex/store'  //1. store 추가
 import store from '@/store'
 import axios from '@/plugins/axios'
+import router from "@/router";
 let vueInstance = null;
 
 
@@ -127,7 +128,8 @@ const exportObject = {
         localStorage.removeItem('refreshToken');
         store.commit('authorize/setLogin', false);
         store.commit('authorize/setUserInfo', null);
-    }, 
+        return router.push({ path: '/' });
+    },
 
     /**
     * REST API로 내 정보를 가져옵니다.

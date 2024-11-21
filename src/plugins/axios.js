@@ -88,7 +88,7 @@ class AxiosExtend {
                         store.commit('authorize/setLogin', false)
                         store.commit('authorize/setUserInfo', null)
                         // 리디렉션 처리
-                        alert("토큰이 만료되었습니다. 다시 로그인 해주세요")
+                        alert("사용자 정보가 만료되었습니다. 다시 로그인 해주세요")
                         return router.push({ name: 'Signin' }); // 'Signin'은 Vue Router에 등록된 라우트의 이름
                         // return this.retryOriginalRequest(originalRequest)
                     }
@@ -110,7 +110,6 @@ class AxiosExtend {
     // 토큰 재발급 에러 처리
     handleRefreshTokenError() {
 
-        console.log("handleRefreshTokenError")
         window.localStorage.removeItem('accessToken')
         window.localStorage.removeItem('refreshToken')
         store.commit('authorize/setLogin', false)
@@ -125,29 +124,16 @@ class AxiosExtend {
                 originalRequest.headers.Authorization = `Bearer ${accessToken}`;
 
                 // 요청 전 로그 출력
-                console.log("=== Retry Original Request ===");
-                console.log("URL:", originalRequest.url);
-                console.log("Method:", originalRequest.method);
-                console.log("Headers:", originalRequest.headers);
-                console.log("Params:", originalRequest.params || {});
-                console.log("Data (Body):", originalRequest.data || {});
-                console.log("==============================");
+
 
                 // 요청 실행 및 결과 확인
                 this.instance(originalRequest)
                     .then(response => {
-                        console.log("=== Request Success ===");
-                        console.log("Response Data:", response.data);
-                        console.log("Response Status:", response.status);
-                        console.log("=======================");
+     
                         resolve(response);
                     })
                     .catch(error => {
-                        console.error("=== Request Failed ===");
-                        console.error("Error Message:", error.message);
-                        console.error("Response Status:", error.response?.status || "Unknown");
-                        console.error("Response Data:", error.response?.data || {});
-                        console.error("======================");
+
                         resolve(Promise.reject(error)); // 에러를 그대로 전달
                     });
             });
