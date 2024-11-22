@@ -11,7 +11,7 @@
     <div v-if="this.loginUser">
       <input
         type="text"
-        v-model="nickname"
+        v-model="author"
         class="w3-input w3-border"
         readonly
         style="resize: none; width: 25%;"
@@ -143,7 +143,6 @@ export default {
       idx: this.$route.query.idx,
       title: '',
       author: '',
-      nickname: '',
       contents: '',
       created_at: '',
       isLayoutReady: false,
@@ -424,8 +423,7 @@ export default {
 		};
     this.isLayoutReady = true;
     if (this.loginUser) {
-      this.author = this.loginUser.id; // 실제 작성자 ID
-      this.nickname = this.loginUser.nickname; // 보여줄 닉네임
+      this.author = this.loginUser.nickname;
     }
 
   },

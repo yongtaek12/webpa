@@ -85,7 +85,6 @@ export default {
   },
   methods:{
     toggleSearch() {
-      console.log("안녕")
       this.isSearchActive = !this.isSearchActive;
     },    
     toggleMobileMenu() {
