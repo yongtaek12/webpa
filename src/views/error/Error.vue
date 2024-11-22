@@ -1,7 +1,7 @@
 <template>
   <div class="container-error">
     <div class="error-error">
-      <h1 :style="{ color: 'black' }">{{ status }}</h1>
+      <h1 :style="{ color: 'black', cursor: 'pointer' }" @click="goToAbout">{{ status }}</h1>
       <h2>{{ message }}</h2>
       <p>Ruh-roh, something just isn't right... Time to paw through your logs and get down and dirty in your stack-trace ;)</p>
     </div>
@@ -35,9 +35,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router'; // useRoute 추가
+import { useRouter, useRoute } from 'vue-router'; // useRouter 추가
 // 쿼리 파라미터로 전달된 에러 정보 가져오기
 const route = useRoute();
+const router = useRouter(); // useRouter로 라우터 인스턴스 가져오기
 const status = route.query.status;
 const message = route.query.message;
 // 카드와 코드 라인 관련 데이터 설정
@@ -50,7 +51,9 @@ const cards = ref([
   { spreaddist: '25px', scaledist: '0.95', vertdist: '-5px', lines: [] },
   { spreaddist: '0px', scaledist: '1', vertdist: '0px', lines: [] },
 ]);
-
+function goToAbout() {
+  router.push('/about'); // about 페이지로 이동
+}
 // 랜덤 숫자 생성 함수
 function randomIntFromInterval(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
