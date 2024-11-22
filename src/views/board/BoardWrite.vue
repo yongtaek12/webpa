@@ -428,6 +428,13 @@ export default {
 
   },
   methods: {
+    fnView(idx) {
+      this.requestBody.idx = idx
+      this.$router.push({
+        path: './detail',
+        query: this.requestBody
+      })
+    },
 	// myCustomUploadAdapterPlugin(editor) {
 	// 	console.log("myCustomUploadAdapterPlugin" , editor)
     //   // CKEditor에서 플러그인으로 인식할 수 있도록 설정
