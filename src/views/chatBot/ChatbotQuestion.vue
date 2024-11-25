@@ -8,15 +8,22 @@
     <div id="letter-overlay" ref="letterOverlay"></div> <!-- 편지 오버레이 div -->
     <div id="chat-message-window"> <!-- 채팅 메시지 창 div -->
       <div id="message-input-wrapper"> <!-- 메시지 입력 래퍼 div -->
+        <!-- 음성 인식 버튼 -->
+        <button id="voice-recognition-button" @click="toggleVoiceRecognition">
+          <i :class="isVoiceRecognitionActive ? 'fas fa-microphone' : 'fas fa-microphone-slash'"></i>
+        </button>
         <div id="message-input" :class="{ 'send-enabled': !isLoading && userInput.trim() }"> <!-- 메시지 입력 div -->
           <input id="message-input-field" ref="messageInputField" type="text" placeholder="Type a message" maxlength="100" v-model="userInput" @keyup.enter="sendMessage" :disabled="isLoading"> <!-- 메시지 입력 필드 -->
+
           <div id="send-message-button" @click="sendMessage" :class="{ 'send-enabled': !isLoading && userInput.trim() }"> <!-- 메시지 전송 버튼 div -->
             <i class="far fa-arrow-alt-circle-right"></i> <!-- 전송 아이콘 -->
           </div>
         </div>
+
       </div>
       <div id="chat-message-column-wrapper" class="scroll-bar" ref="chatMessageColumnWrapper"> <!-- 채팅 메시지 열 래퍼 div -->
         <div id="chat-message-container"> <!-- 채팅 메시지 컨테이너 div -->
+
           <div id="chat-message-column" class="static" ref="chatBox"> <!-- 채팅 메시지 열 div -->
             <div v-for="(message, index) in chatMessages" :key="index" :class="messageClass(message)"> <!-- 각 메시지 div -->
               <div class="profile-icon"> <!-- 프로필 아이콘 div -->
@@ -50,6 +57,8 @@ export default {
       chatMessages: [], // 채팅 메시지 배열
       model: 'gpt-3.5-turbo', // 모델 이름
       isLoading: false, // 로딩 상태
+      isVoiceRecognitionActive: false, // 음성 인식 활성화 상태
+      recognition: null, // 음성 인식 객체
       moodLabel: 'Neutral', // 감정 레이블
       currentMood: 'friendly', // 현재 감정 상태
       moods: ['friendly', 'suspicious', 'boastful'], // 감정 상태 배열
@@ -110,6 +119,61 @@ export default {
         this.setChatbotMood(); // 챗봇 감정 상태를 설정합니다
         this.setMoodInterval(this.getRandMoodInterval()); // 랜덤 감정 상태 간격을 설정합니다
       }, time);
+    },
+    // 음성 인식 활성화/비활성화 토글
+    toggleVoiceRecognition() {
+      if (!this.recognition) {
+        this.initVoiceRecognition(); // 음성 인식 초기화
+      }
+      if (this.isVoiceRecognitionActive) {
+        this.recognition.stop(); // 음성 인식 중지
+        this.isVoiceRecognitionActive = false;
+      } else {
+        // 음성 인식이 이미 시작되지 않았다면 시작
+        try {
+          this.recognition.start();
+          this.isVoiceRecognitionActive = true;
+        } catch (error) {
+          console.warn('음성 인식 시작 중 에러:', error.message);
+        }
+      }
+    },
+    // 음성 인식 초기화
+    initVoiceRecognition() {
+      if (!('webkitSpeechRecognition' in window)) {
+        alert('음성 인식이 지원되지 않는 브라우저입니다.');
+        return;
+      }
+      const recognition = new webkitSpeechRecognition();
+      recognition.lang = 'ko-KR'; // 한국어 설정
+      recognition.continuous = true; // 연속 인식
+      recognition.interimResults = true; // 중간 결과 반환
+      recognition.onresult = (event) => {
+        let interimTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript.trim();
+          if (event.results[i].isFinal) {
+            this.userInput += transcript; // 최종 텍스트를 userInput에 추가
+          } else {
+            interimTranscript += transcript; // 중간 텍스트
+          }
+        }
+        this.userInput = this.userInput + interimTranscript; // 실시간 반영
+      };
+      recognition.onerror = (event) => {
+        console.error('음성 인식 에러:', event.error);
+        this.isVoiceRecognitionActive = false;
+      };
+      recognition.onend = () => {
+        if (this.isVoiceRecognitionActive) {
+          try {
+            recognition.start(); // 음성 인식 재시작 (연속 모드)
+          } catch (error) {
+            console.warn('음성 인식 재시작 중 에러:', error.message);
+          }
+        }
+      };
+      this.recognition = recognition;
     },
     /**
      * 채팅 메시지를 생성합니다.

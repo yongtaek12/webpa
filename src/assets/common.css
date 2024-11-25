@@ -88,6 +88,24 @@
 
 /* chatbotQuestion.vue */
 /* 전체 컨테이너 스타일 */
+#voice-recognition-button {
+  position: absolute;
+  right: 50px; /* 전송 버튼과 겹치지 않도록 위치 조정 */
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #555;
+}
+#voice-recognition-button i {
+  font-size: 18px;
+}
+
+#voice-recognition-button:hover {
+  background-color: #e0e0e0;
+}
 .chatbot-interface {
     display: flex;
     justify-content: center; /* 수평 중앙 정렬 */
