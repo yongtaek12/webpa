@@ -157,13 +157,13 @@ export default {
     // 음성 인식 초기화
     initVoiceRecognition() {
       if (!('webkitSpeechRecognition' in window)) {
-        alert('음성 인식이 지원되지 않는 브라우저입니다.!');
+        alert('음성 인식이 지원되지 않는 브라우저입니다.');
         return;
       }
       const recognition = new webkitSpeechRecognition();
-      recognition.lang = 'en-US'; // 한국어 설정
+      recognition.lang = 'en-US'; // 영어 설정
       recognition.continuous = true; // 연속 인식
-      recognition.interimResults = false; // 중간 결과 반환
+      recognition.interimResults = false; // 중간 결과 비활성화
       recognition.onresult = (event) => {
         let finalTranscript = ''; // 최종 텍스트만 저장
         for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -172,9 +172,9 @@ export default {
             finalTranscript += transcript; // 최종 결과만 추가
           }
         }
+        // 중복 제거 후 userInput 업데이트
         this.userInput = finalTranscript;
         console.log("최종 인식된 텍스트:", this.userInput);
-
       };
       recognition.onerror = (event) => {
         console.error('음성 인식 에러:', event.error);
