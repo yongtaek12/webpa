@@ -157,7 +157,7 @@ export default {
     // 음성 인식 초기화
     initVoiceRecognition() {
       if (!('webkitSpeechRecognition' in window)) {
-        alert('음성 인식이 지원되지 않는 브라우저입니다.');
+        alert('음성 인식이 지원되지 않는 브라우저입니다.!');
         return;
       }
       const recognition = new webkitSpeechRecognition();
