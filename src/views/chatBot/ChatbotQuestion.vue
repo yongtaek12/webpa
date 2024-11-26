@@ -83,7 +83,7 @@ export default {
       },
       convo: { // 대화 객체
         friendly: [
-          "안녕하세요 챗봇입니다.",
+          "Hello! How can I assist you today?",
 																		  
 																		  
 																							 
@@ -91,7 +91,7 @@ export default {
 																										   
         ],
         suspicious: [
-          "안녕하세요 챗봇입니다.",
+          "Hello! How can I assist you today??",
 																			
 																	
 																															   
@@ -99,7 +99,7 @@ export default {
 														 
         ],
         boastful: [
-          "안녕하세요 챗봇입니다.",
+          "Hello! How can I assist you today???.",
 																																		   
 																																							  
 																														   
@@ -109,6 +109,22 @@ export default {
     };
   },
   methods: {
+    // 음성 말하기 기능 추가
+    speakText(text) {
+      if (!window.speechSynthesis) {
+        console.warn("이 브라우저는 Web Speech API를 지원하지 않습니다.");
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      // utterance.lang = 'ko-KR'; // 한국어 설정
+      utterance.lang = 'en-US'; // 영어 설정
+      utterance.rate = 1.0; // 말하기 속도
+      utterance.pitch = 1.2; // 음 높이
+
+      // 음성 재생
+      window.speechSynthesis.speak(utterance);
+    },
     /**
      * 감정 상태를 설정합니다.
      * @param {number} time - 간격 시간
@@ -346,6 +362,8 @@ export default {
       const text = this.getChatbotMessageText(); // 챗봇 메시지 텍스트 생성
       this.isChatBotSendingMessage = true; // 챗봇 메시지 전송 상태 설정
       this.addChatMessage(text, true); // 챗봇 메시지 추가
+      // 챗봇 메시지를 음성으로 읽음
+      this.speakText(text);
       setTimeout(() => {
         this.isChatBotSendingMessage = false; // 챗봇 메시지 전송 상태 해제
         this.toggleInput(); // 입력 토글
@@ -376,6 +394,10 @@ export default {
           console.log("응답 내용 챗봇 : ", botContent);
           setTimeout(() => {
             this.addChatMessage(botContent, true); // 챗봇 메시지 추가
+            // 챗봇 메시지를 음성으로 읽음
+
+            this.speakText(botContent);
+
           }, 2000); // 3초 후에 새 메시지 추가
         }).finally(() => {
           this.isLoading = false; // 로딩 상태 해제
