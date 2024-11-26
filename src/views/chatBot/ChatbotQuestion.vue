@@ -161,20 +161,20 @@ export default {
         return;
       }
       const recognition = new webkitSpeechRecognition();
-      recognition.lang = 'ko-KR'; // 한국어 설정
+      recognition.lang = 'en-US'; // 한국어 설정
       recognition.continuous = true; // 연속 인식
-      recognition.interimResults = true; // 중간 결과 반환
+      recognition.interimResults = false; // 중간 결과 반환
       recognition.onresult = (event) => {
-        let interimTranscript = '';
+        let finalTranscript = ''; // 최종 텍스트만 저장
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const transcript = event.results[i][0].transcript.trim();
           if (event.results[i].isFinal) {
-            this.userInput += transcript; // 최종 텍스트를 userInput에 추가
-          } else {
-            interimTranscript += transcript; // 중간 텍스트
+            finalTranscript += transcript; // 최종 결과만 추가
           }
         }
-        this.userInput = this.userInput + interimTranscript; // 실시간 반영
+        this.userInput = finalTranscript;
+        console.log("최종 인식된 텍스트:", this.userInput);
+
       };
       recognition.onerror = (event) => {
         console.error('음성 인식 에러:', event.error);
