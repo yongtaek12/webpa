@@ -67,6 +67,10 @@ export default {
       nLetterSets: 4, // 편지 세트 수
       letterPoolIntervals: [], // 편지 풀 인터벌 배열
       resetTimeout: null, // 리셋 타임아웃
+      systemMessage: {
+        role: "system",
+        content: "You are an English conversation teacher. Your goal is to help students improve their English speaking skills by practicing conversations, correcting their grammar, and providing clear explanations when needed. Always respond in simple and clear English suitable for learners."
+      }, // 시스템 메시지
       greetings: { // 인사말 객체
         friendly: [
           "Hiya, pal. I hope you're having a terrific day!",
@@ -109,6 +113,31 @@ export default {
     };
   },
   methods: {
+    // 시스템 메시지를 서버로 전송
+    sendSystemMessage() {
+      const payload = {
+        model: this.model,
+        messages: [this.systemMessage] // 시스템 메시지만 포함
+      }
+      this.isLoading = true;
+
+      axios.post('http://localhost:8085/chat-gpt/chat', payload)
+          .then(response => {
+            const botContent = response.data.choices[0].message.content;
+            console.log('시스템 메시지 응답:', botContent);
+            this.chatMessages.push({
+              role: 'assistant',
+              content: botContent,
+              timestamp: new Date().toISOString()
+            });
+          })
+          .catch(error => {
+            console.error('시스템 메시지 전송 중 오류:', error);
+          })
+          .finally(() => {
+            this.isLoading = false;
+          });
+    },
     // 음성 말하기 기능 추가
     speakText(text) {
       if (!window.speechSynthesis) {
@@ -1010,9 +1039,11 @@ export default {
     }
   },
   mounted() {
+    this.sendSystemMessage(); // 컴포넌트가 마운트될 때 시스템 메시지 전송
+
     this.setChatbotMood(); // 챗봇 감정 상태 설정
     this.initLetterPool(); // 편지 풀 초기화
-    this.sendChatbotMessage(); // 챗봇 메시지 전송
+    // this.sendChatbotMessage(); // 챗봇 메시지 전송
     this.toggleInput(); // 입력 토글
     this.setMoodInterval(this.getRandMoodInterval()); // 랜덤 감정 상태 간격 설정
     window.addEventListener('focus', this.resetLetterPool); // 포커스 이벤트 리스너 추가
