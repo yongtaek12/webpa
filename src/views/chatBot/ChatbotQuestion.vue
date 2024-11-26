@@ -71,45 +71,6 @@ export default {
         role: "system",
         content: "You are an English conversation teacher. Your goal is to help students improve their English speaking skills by practicing conversations, correcting their grammar, and providing clear explanations when needed. Always respond in simple and clear English suitable for learners."
       }, // 시스템 메시지
-      greetings: { // 인사말 객체
-        friendly: [
-          "Hiya, pal. I hope you're having a terrific day!",
-          "Good day to you, friend!"
-        ],
-        suspicious: [
-          "Hmm, I would introduce myself, but I'm not so sure thats a good idea.",
-          "Hello, how are you? Wait, don't answer that, I have no way of verifying your response!"
-        ],
-        boastful: [
-          "Hey, did I mention I am built on JavaScript? Which is the greatest language ever by the way!",
-          "Good day to you. Though I must say that I am having a GREAT day!"
-        ]
-      },
-      convo: { // 대화 객체
-        friendly: [
-          "Hello! How can I assist you today?",
-																		  
-																		  
-																							 
-																			  
-																										   
-        ],
-        suspicious: [
-          "Hello! How can I assist you today??",
-																			
-																	
-																															   
-																														 
-														 
-        ],
-        boastful: [
-          "Hello! How can I assist you today???.",
-																																		   
-																																							  
-																														   
-																																   
-        ]
-      }
     };
   },
   methods: {
@@ -124,7 +85,9 @@ export default {
       axios.post('http://localhost:8085/chat-gpt/chat', payload)
           .then(response => {
             const botContent = response.data.choices[0].message.content;
-            console.log('시스템 메시지 응답:', botContent);
+
+
+            this.speakText(botContent);
             this.chatMessages.push({
               role: 'assistant',
               content: botContent,
@@ -140,6 +103,7 @@ export default {
     },
     // 음성 말하기 기능 추가
     speakText(text) {
+      console.log("speakText : ", text);
       if (!window.speechSynthesis) {
         console.warn("이 브라우저는 Web Speech API를 지원하지 않습니다.");
         return;
@@ -161,7 +125,7 @@ export default {
     setMoodInterval(time) {
       this.moodInterval = setInterval(() => {
         clearInterval(this.moodInterval); // 이전 간격을 지웁니다
-        this.setChatbotMood(); // 챗봇 감정 상태를 설정합니다
+        // this.setChatbotMood(); // 챗봇 감정 상태를 설정합니다
         this.setMoodInterval(this.getRandMoodInterval()); // 랜덤 감정 상태 간격을 설정합니다
       }, time);
     },
@@ -1041,7 +1005,7 @@ export default {
   mounted() {
     this.sendSystemMessage(); // 컴포넌트가 마운트될 때 시스템 메시지 전송
 
-    this.setChatbotMood(); // 챗봇 감정 상태 설정
+    // this.setChatbotMood(); // 챗봇 감정 상태 설정
     this.initLetterPool(); // 편지 풀 초기화
     // this.sendChatbotMessage(); // 챗봇 메시지 전송
     this.toggleInput(); // 입력 토글
