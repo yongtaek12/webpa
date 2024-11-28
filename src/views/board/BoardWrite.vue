@@ -423,7 +423,6 @@ export default {
     if (this.loginUser) {
       this.author = this.loginUser.id;
       this.nickname = this.loginUser.nickname;
-      console.log("안녕 난 ", );
     }
 
   },
