@@ -77,6 +77,30 @@ export default {
     };
   },
   methods: {
+    // 사용자 리뷰 메서드
+    proofreading(){
+      const chatBox = this.$refs.chatBox; // 채팅 박스 참조
+      if(chatBox){
+        const userMessages = [];
+        const messages = Array.from(chatBox.querySelectorAll('.content .text')); // NodeList를 배열로 변환
+        messages.reverse().forEach((message, index) => {
+          const messageText = message.innerText.trim();
+
+          console.log(`[${index + 1}] ${message.innerText}`); // 각 말풍선 텍스트 출력
+          const isUserMessage = message.parentElement.parentElement.classList.contains("sent");
+          if (isUserMessage) {
+            userMessages.push(messageText);
+          }
+
+          // 사용자가 작성한 내용이 없으면 알림을 띄우고 함수 종료
+          if (userMessages.length === 0) {
+            return;
+          }
+          const lastUserMessage = userMessages[userMessages.length - 1];
+          console.log("사용자의 마지막 메시지:", lastUserMessage);
+        });
+      }
+    },
     // 리뷰 버튼 클릭 메서드
     reviewChatMessages() {
       const chatBox = this.$refs.chatBox; // 채팅 박스 참조
@@ -443,13 +467,27 @@ export default {
       this.userInput = ''; // 입력 필드 초기화
       this.isLoading = true; // 로딩 상태 설정
       try {
+
+
+        const chatBox = this.$refs.chatBox; // 채팅 박스 참조
+
+        const messages = Array.from(chatBox.querySelectorAll('.message'))
+            .reverse() // 배열을 역순으로 정렬
+            .map((message) => {
+              return {
+                role: message.classList.contains('received') ? 'assistant' : 'user', // 클래스 확인
+                content: message.querySelector('.text').textContent.trim() // 텍스트 내용 가져오기
+              };
+            })
+        // userMessage를 마지막에 추가
+        messages.push({
+          role: userMessage.role,
+          content: userMessage.content,
+          timestamp: userMessage.timestamp
+        });
         const requestPayload = {
           model: this.model,
-          messages: [...this.chatMessages, userMessage].map(message => ({
-            role: message.role === 'user' ? 'user' : 'assistant',
-            content: message.content,
-            timestamp: message.timestamp
-          }))
+          messages: messages
         };
 
         axios.post('http://localhost:8085/chat-gpt/chat', requestPayload).then((result) => {
