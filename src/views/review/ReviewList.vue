@@ -47,7 +47,7 @@
           </thead>
           <tbody>
             <tr v-for="(row, idx) in list" :key="idx">
-              <td>{{ row.idx }}</td>
+              <td>{{ row.rnum }}</td>
               <td><a v-on:click="fnView(`${row.idx}`)">{{ row.title }}</a></td>
               <td>{{ row.author }}</td>
               <td>{{ row.createdAt }}</td>
