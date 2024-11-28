@@ -9,8 +9,8 @@
     <!-- 검색 영역 -->
     <div id="board-search">
       <div class="container">
-        <div class="search-window">                
-          <form @submit.prevent="fnPage()">
+        <div class="search-window">
+          <form @submit.prevent="fnPage(1,true)">
             <div class="search-wrap">
               <label for="search" class="blind">리뷰 내용 검색</label>
               <select v-model="search_key" class="search-select">
@@ -24,7 +24,7 @@
                 type="search"
                 v-model="search_value"
                 placeholder="검색어를 입력해주세요."
-                @keyup.enter="fnPage()"
+                @keyup.enter="fnPage(1,true)"
               />
               <button type="submit" class="btn btn-dark" @click.prevent="fnPage(1, true)">검색</button>
             </div>
@@ -160,7 +160,7 @@ export default {
         headers: {}
       }).then((res) => {      
          // console.log("테스트입니다.", this.$serverUrl);
-         console.log(res.data);
+         // console.log(res.data);
 
         if (res.data.resultCode === "OK") {
           this.list = res.data.data

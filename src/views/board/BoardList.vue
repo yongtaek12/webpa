@@ -10,7 +10,7 @@
     <div id="board-search">
       <div class="container">
         <div class="search-window">                
-          <form @submit.prevent="fnPage()">
+          <form @submit.prevent="fnPage(1,true)">
             <div class="search-wrap">
               <label for="search" class="blind">공지사항 내용 검색</label>
               <select v-model="search_key" class="search-select">
@@ -24,7 +24,7 @@
                 type="search"
                 v-model="search_value"
                 placeholder="검색어를 입력해주세요."
-                @keyup.enter="fnPage()"
+                @keyup.enter="fnPage(1,true)"
               />
               <button type="submit" class="btn btn-dark" @click.prevent="fnPage(1, true)">검색</button>
             </div>
@@ -154,6 +154,7 @@ export default {
         size: this.size,
         category: 1 // 카테고리 추가
       }
+      // console.log("page : " , this.page);
 
       axios.get(this.$serverUrl + "/board/list", {
         params: this.requestBody,
@@ -195,7 +196,7 @@ export default {
 
       if (this.page !== n) {
         this.page = n
-        console.log("페이지 클릭 ", n);
+        // console.log("페이지 클릭 ", n);
         
       }
       this.fnGetList()
