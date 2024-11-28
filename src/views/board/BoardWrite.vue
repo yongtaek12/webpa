@@ -32,11 +32,7 @@
       </div>
     </div>
     <div class="common-buttons">
-      <button
-        type="button"
-        class="w3-button w3-round w3-blue-gray"
-        v-on:click="fnSave"
-      >
+      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnSave">
         저장
       </button>
       &nbsp;
@@ -141,6 +137,7 @@ export default {
     return {
       requestBody: this.$route.query,
       idx: this.$route.query.idx,
+      isSaving: false, // 저장 중 상태 관리 플래그 추가
       title: '',
       author: '',
       contents: '',
@@ -482,51 +479,56 @@ export default {
       });
     },
     fnSave() {
+      if (this.isSaving) return; // 이미 저장 중이면 실행되지 않도록 방지
+      this.isSaving = true; // 저장 중 상태 활성화
+
       let apiUrl = this.$serverUrl + '/board';
 
       if (this.title.length === 0) {
-        alert('글 제목은 필수로 입력하십시오');
+        alert('글 제목은 필수로 입력하십시오'); // 제목 필수 입력 경고
         return;
       }
-	  console.log("글저장 값 : ", this.config.initialData)
-	//   return;
-    //   if (this.contents.length === 0) {
-    //     alert('글 내용을 입력하십시오');
-    //     return;
-    //   }
 
-
+      // 저장할 데이터 준비
       this.form = {
         idx: this.idx,
         title: this.title,
-        contents: this.config.initialData,
+        contents: this.config.initialData, // CKEditor 내용 저장
         author: this.author,
       };
 
       if (this.idx === undefined) {
+        // 새 글 저장
         axios
-          .post(apiUrl, this.form)
-          .then((res) => {
-            alert('글이 저장되었습니다.');
-            this.fnView(res.data.idx);
-          })
-          .catch((err) => {
-            if (err.message.indexOf('Network Error') > -1) {
-              alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
-            }
-          });
+            .post(apiUrl, this.form)
+            .then((res) => {
+              alert('글이 저장되었습니다.');
+              this.fnView(res.data.idx); // 저장 후 글 상세 보기로 이동
+            })
+            .catch((err) => {
+              if (err.message.indexOf('Network Error') > -1) {
+                alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
+              }
+            })
+            .finally(() => {
+              this.isSaving = false; // 저장 중 상태 해제
+            });
       } else {
+        // 글 수정
         axios
-          .patch(apiUrl, this.form)
-          .then((res) => {
-            alert('글이 저장되었습니다.');
-            this.fnView(res.data.idx);
-          })
-          .catch((err) => {
-            if (err.message.indexOf('Network Error') > -1) {
-              alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
-            }
-          });
+            .patch(apiUrl, this.form)
+            .then((res) => {
+              alert('글이 저장되었습니다.');
+              this.fnView(res.data.idx); // 수정 후 글 상세 보기로 이동
+            })
+            .catch((err) => {
+              if (err.message.indexOf('Network Error') > -1) {
+                alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
+              }
+            })
+            .finally(() => {
+              this.isSaving = false; // 저장 중 상태 해제
+            });
       }
     },
   },
@@ -534,48 +536,4 @@ export default {
 </script>
 
 <style>
-/**textarea 크기 조절 */
-.ck-editor__editable {
-  min-height: 1200px !important;
-  min-width: 1200px !important;
-  /* color: black !important; */
-
-  /* min-width: 800; */
-}
-.ck-content {
-    color: black !important;
-}
-/** CKEditor의 p 태그(Paragraph)의 색상을 검정색으로 강제 설정 */
-.ck-content p {
-  color: black !important;
-}
-.ck-content h1 {
-  color: black !important;
-}
-/*Toolbar*/
-.ck-editor__top {
-	min-width: 1200px;
-}
-.ck-content p.ck-heading_paragraph {
-  text-align: left !important;
-  color: #000000 !important;
-}
-.ck.ck-content ul,
-.ck.ck-content ul li {
-  list-style-type: inherit;
-}
-
-.ck.ck-content ul {
-  /* Default user agent stylesheet, you can change it to your needs. */
-  padding-left: 40px;
-}
-
-.ck.ck-content ol,
-.ck.ck-content ol li {
-  list-style-type: decimal;
-}
-.ck.ck-content ol {
-  /* Default user agent stylesheet, you can change it to your needs. */
-  padding-left: 40px;
-}
 </style>

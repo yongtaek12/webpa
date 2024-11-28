@@ -14,7 +14,7 @@
           <li class="nav-item"><router-link to="/">Home</router-link></li>
           <li class="nav-item"><router-link to="/about">About</router-link></li>
           <li class="nav-item"><router-link to="/board/list">Board</router-link></li>
-          <li class="nav-item"><router-link to="/about">Careers</router-link></li>
+          <li class="nav-item"><router-link to="/review/list">Reviews</router-link></li>
           <li class="nav-item"><router-link to="/question">Chatbot Inquiry</router-link></li>
           <i class="fas fa-search" id="search-icon" @click="toggleSearch"></i>
           <input class="search-input" type="text" placeholder="검색어를 " :class="{ 'search-active': isSearchActive }" />

@@ -2,7 +2,7 @@
   <section class="notice">
     <div class="page-title">
       <div class="container">
-        <h3>공지사항</h3>
+        <h3>리뷰</h3>
       </div>
     </div>
 
@@ -12,7 +12,7 @@
         <div class="search-window">                
           <form @submit.prevent="fnPage()">
             <div class="search-wrap">
-              <label for="search" class="blind">공지사항 내용 검색</label>
+              <label for="search" class="blind">리뷰 내용 검색</label>
               <select v-model="search_key" class="search-select">
                 <option value="">- 선택 -</option>
                 <option value="title">제목</option>
@@ -152,14 +152,15 @@ export default {
         value: this.search_value,
         page: this.page,
         size: this.size,
-        category: 1 // 카테고리 추가
+        category: 2 // 카테고리 추가
       }
 
       axios.get(this.$serverUrl + "/board/list", {
         params: this.requestBody,
         headers: {}
       }).then((res) => {      
-
+         // console.log("테스트입니다.", this.$serverUrl);
+         console.log(res.data);
 
         if (res.data.resultCode === "OK") {
           this.list = res.data.data
@@ -175,7 +176,6 @@ export default {
     },
     fnView(idx) {
       this.requestBody.idx = idx
-      this.requestBody.category = 1
       this.$router.push({
         path: './detail',
         query: this.requestBody

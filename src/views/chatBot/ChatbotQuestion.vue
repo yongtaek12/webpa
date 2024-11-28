@@ -12,6 +12,8 @@
         <button id="voice-recognition-button" @click="toggleVoiceRecognition">
           <i :class="isVoiceRecognitionActive ? 'fas fa-microphone' : 'fas fa-microphone-slash'"></i>
         </button>
+        <!-- 리뷰 버튼 추가 -->
+        <button id="review-button" @click="reviewChatMessages">리뷰</button>
         <div id="message-input" :class="{ 'send-enabled': !isLoading && userInput.trim() }"> <!-- 메시지 입력 div -->
           <input id="message-input-field" ref="messageInputField" type="text" placeholder="Type a message" maxlength="100" v-model="userInput" @keyup.enter="sendMessage" :disabled="isLoading"> <!-- 메시지 입력 필드 -->
 
@@ -19,6 +21,7 @@
             <i class="far fa-arrow-alt-circle-right"></i> <!-- 전송 아이콘 -->
           </div>
         </div>
+
 
       </div>
       <div id="chat-message-column-wrapper" class="scroll-bar" ref="chatMessageColumnWrapper"> <!-- 채팅 메시지 열 래퍼 div -->
@@ -74,6 +77,73 @@ export default {
     };
   },
   methods: {
+    // 리뷰 버튼 클릭 메서드
+    reviewChatMessages() {
+      const chatBox = this.$refs.chatBox; // 채팅 박스 참조
+
+      if (chatBox) {
+        const messages = Array.from(chatBox.querySelectorAll('.content .text')); // NodeList를 배열로 변환
+        const userMessages = [];
+        const allMessages = [];
+
+        console.log('=== 모든 대화 내용 ===')
+
+        messages.reverse().forEach((message, index) => {
+          const messageText = message.innerText.trim();
+          allMessages.push(messageText); // 전체 메시지 추가
+
+          console.log(`[${index + 1}] ${message.innerText}`); // 각 말풍선 텍스트 출력
+          const isUserMessage = message.parentElement.parentElement.classList.contains("sent");
+          if (isUserMessage) {
+            userMessages.push(message.innerText.trim());
+          }
+        });
+        console.log('전체 메시지:', allMessages);
+        console.log('사용자 메시지:', userMessages);
+        // 사용자가 작성한 내용이 없으면 알림을 띄우고 함수 종료
+        if (userMessages.length === 0) {
+          alert("사용자가 작성한 메시지가 없습니다.");
+          return;
+        }
+        // 서버 요청 payload 생성
+        const payload = {
+          model: this.model,
+          allMessages: allMessages.join("\n"), // 전체 메시지를 합침
+          userMessages: userMessages.join("\n"), // 사용자 메시지만 합침
+          messages: [
+            {
+              role: "system",
+              content:
+                  "Please correct the following sentences for grammar mistakes and improve them to sound more natural, as if written by a native English speaker. " +
+                  "Additionally, explain why the correction was made and provide reasons why native speakers would choose these expressions."
+            },
+            {
+              role: "user",
+              content: userMessages.join("\n"), // 사용자가 작성한 메시지 합치기
+            },
+          ],
+        }
+        // 서버에 요청
+        axios
+            .post("http://localhost:8085/chat-gpt/chatEnd", payload)
+            .then((response) => {
+              const correctedMessages =
+                  response.data.choices[0].message.content || "교정된 메시지가 없습니다.";
+
+              console.log("=== 교정된 메시지 ===");
+              console.log(correctedMessages);
+
+              // 결과를 화면에 표시하거나 알림
+              alert("교정 결과:\n" + correctedMessages);
+            })
+            .catch((error) => {
+              console.error("교정 요청 중 오류 발생:", error);
+            });
+      } else {
+        console.error('chatBox를 찾을 수 없습니다.');
+      }
+
+    },
     // 시스템 메시지를 서버로 전송
     sendSystemMessage() {
       const payload = {
@@ -103,7 +173,7 @@ export default {
     },
     // 음성 말하기 기능 추가
     speakText(text) {
-      console.log("speakText : ", text);
+      // console.log("speakText : ", text);
       if (!window.speechSynthesis) {
         console.warn("이 브라우저는 Web Speech API를 지원하지 않습니다.");
         return;
@@ -388,7 +458,6 @@ export default {
           setTimeout(() => {
             this.addChatMessage(botContent, true); // 챗봇 메시지 추가
             // 챗봇 메시지를 음성으로 읽음
-
             this.speakText(botContent);
 
           }, 2000); // 3초 후에 새 메시지 추가
