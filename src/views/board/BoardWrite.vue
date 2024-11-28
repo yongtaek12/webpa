@@ -11,7 +11,7 @@
     <div v-if="this.loginUser">
       <input
         type="text"
-        v-model="author"
+        v-model="nickname"
         class="w3-input w3-border"
         readonly
         style="resize: none; width: 25%;"
@@ -140,6 +140,7 @@ export default {
       isSaving: false, // 저장 중 상태 관리 플래그 추가
       title: '',
       author: '',
+      nickname:'',
       contents: '',
       created_at: '',
       isLayoutReady: false,
@@ -420,13 +421,16 @@ export default {
 		};
     this.isLayoutReady = true;
     if (this.loginUser) {
-      this.author = this.loginUser.nickname;
+      this.author = this.loginUser.id;
+      this.nickname = this.loginUser.nickname;
+      console.log("안녕 난 ", );
     }
 
   },
   methods: {
     fnView(idx) {
       this.requestBody.idx = idx
+      this.requestBody.category = 1
       this.$router.push({
         path: './detail',
         query: this.requestBody
