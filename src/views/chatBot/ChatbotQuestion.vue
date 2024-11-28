@@ -49,7 +49,6 @@
 
 <script>
 import axios from '@/plugins/axios.js';
-// import axios from 'axios'; // axios 임포트
 import { throttle } from 'lodash'; // lodash의 throttle 함수 임포트
 
 export default {
@@ -70,7 +69,7 @@ export default {
       nLetterSets: 4, // 편지 세트 수
       letterPoolIntervals: [], // 편지 풀 인터벌 배열
       resetTimeout: null, // 리셋 타임아웃
-      systemMessage: {
+      systemMessage: { // 초기 세팅 메세지..
         role: "system",
         content: "You are an English conversation teacher. Your goal is to help students improve their English speaking skills by practicing conversations, correcting their grammar, and providing clear explanations when needed. Always respond in simple and clear English suitable for learners."
       }, // 시스템 메시지
@@ -168,7 +167,7 @@ export default {
       }
 
     },
-    // 시스템 메시지를 서버로 전송
+    // init 초기 시스템 메시지를 서버로 전송
     sendSystemMessage() {
       const payload = {
         model: this.model,
@@ -178,7 +177,8 @@ export default {
 
       axios.post('http://localhost:8085/chat-gpt/chat', payload)
           .then(response => {
-            const botContent = response.data.choices[0].message.content;
+            const conversationResponse = response.data.conversationResponse; // conversationResponse 추출
+            const botContent = JSON.parse(conversationResponse).choices[0].message.content; // 응답에서 content 가져오기
 
 
             this.speakText(botContent);
@@ -284,7 +284,7 @@ export default {
      * @param {boolean} isReceived - 수신 여부
      * @returns {HTMLElement} 생성된 채팅 메시지
      */
-    createChatMessage(text, isReceived) {
+    createChatMessage(text, isReceived, proofread) {
       const message = document.createElement('div'); // 메시지 div 생성
       const profileIcon = document.createElement('div'); // 프로필 아이콘 div 생성
       const icon = document.createElement('i'); // 아이콘 생성
@@ -306,6 +306,11 @@ export default {
 
       this.addClass(message, 'message'); // 메시지에 클래스 추가
       this.addClass(message, direction); // 메시지에 방향 클래스 추가
+
+      // Proofread-specific class
+      if (proofread) {
+        this.addClass(message, 'proofread'); // Proofread 메시지에 클래스 추가
+      }
 
       if (isReceived) {
         this.addClass(icon, 'fab'); // 수신 메시지의 아이콘에 fab 클래스 추가
@@ -441,29 +446,13 @@ export default {
     getRandMoodInterval() {
       return this.getRand(20000, 40000); // 20000과 40000 사이의 랜덤 간격 반환
     },
-    /**
-     * 채팅봇 메시지를 전송합니다.
-     */
-    sendChatbotMessage() {
-																									
-      const text = this.getChatbotMessageText(); // 챗봇 메시지 텍스트 생성
-      this.isChatBotSendingMessage = true; // 챗봇 메시지 전송 상태 설정
-      this.addChatMessage(text, true); // 챗봇 메시지 추가
-      // 챗봇 메시지를 음성으로 읽음
-      this.speakText(text);
-      setTimeout(() => {
-        this.isChatBotSendingMessage = false; // 챗봇 메시지 전송 상태 해제
-        this.toggleInput(); // 입력 토글
-        this.scrollToBottom(); // 메시지 창을 맨 아래로 스크롤
-      }, 4000);
-		  
-    },
+
     sendMessage() {
       if (!this.userInput.trim()) return; // 입력이 없으면 반환
 
       const timestamp = new Date().toISOString(); // 타임스탬프 생성
       const userMessage = { role: 'user', content: this.userInput, timestamp: timestamp }; // 사용자 메시지 객체 생성
-      this.addChatMessage(userMessage.content, false); // 사용자 메시지 추가
+      this.addChatMessage(userMessage.content, false, false); // 사용자 메시지 추가
       this.userInput = ''; // 입력 필드 초기화
       this.isLoading = true; // 로딩 상태 설정
       try {
@@ -473,6 +462,10 @@ export default {
 
         const messages = Array.from(chatBox.querySelectorAll('.message'))
             .reverse() // 배열을 역순으로 정렬
+            .filter((message) => {
+              // 'sent'와 'proofread'를 모두 포함하는 메시지는 제외
+              return !(message.classList.contains('sent') && message.classList.contains('proofread'));
+            })
             .map((message) => {
               return {
                 role: message.classList.contains('received') ? 'assistant' : 'user', // 클래스 확인
@@ -491,10 +484,18 @@ export default {
         };
 
         axios.post('http://localhost:8085/chat-gpt/chat', requestPayload).then((result) => {
-          const botContent = result.data.choices[0].message.content; // 챗봇 응답 내용
-          console.log("응답 내용 챗봇 : ", botContent);
+          const conversationResponse = result.data.conversationResponse; // conversationResponse 추출
+          const proofreadResponse = result.data.proofreadResponse;
+
+          const proofreadContent = JSON.parse(proofreadResponse).choices[0].message.content; // 응답에서 content 가져오기
+
+          console.log("응답 내용 챗봇 : ", proofreadContent)
+          const botContent = JSON.parse(conversationResponse).choices[0].message.content; // 응답에서 content 가져오기
+          const botContent2 = JSON.parse(proofreadResponse).choices[0].message.content; // 응답에서 content 가져오기
+
           setTimeout(() => {
-            this.addChatMessage(botContent, true); // 챗봇 메시지 추가
+            this.addChatMessage(botContent2, false, true); // 챗봇 교정
+            this.addChatMessage(botContent, true, false); // 챗봇 메시지 추가
             // 챗봇 메시지를 음성으로 읽음
             this.speakText(botContent);
 
@@ -562,10 +563,12 @@ export default {
      * 채팅 메시지를 추가합니다.
      * @param {string} text - 메시지 내용
      * @param {boolean} isReceived - 수신 여부
+     * @param {boolean} proofread - 교정
      */
-    addChatMessage(text, isReceived) {
+    addChatMessage(text, isReceived, proofread) {
       try {
-        const message = this.createChatMessage(text, isReceived); // 채팅 메시지 생성
+
+        const message = this.createChatMessage(text, isReceived,proofread); // 채팅 메시지 생성
         const chatBox = this.$refs.chatBox; // 채팅 박스 참조
         // 기존 메시지들을 위로 이동시키는 코드
         this.$nextTick(() => {
@@ -597,39 +600,6 @@ export default {
         console.log("스크립트 에러 : ", error)
       }
     },
-    /**
-     * 메시지 창을 맨 아래로 스크롤합니다.
-     */
-    // scrollToBottomOfMessages() {
-      // console.log("scrollToBottomOfMessages");
-      // this.$nextTick(() => {
-      //   const chatMessageColumnWrapper = this.$refs.chatBox; // 채팅 메시지 열 래퍼 참조
-      //   if (chatMessageColumnWrapper) {
-      //     chatMessageColumnWrapper.scrollTop = chatMessageColumnWrapper.scrollHeight; // 메시지 창을 맨 아래로 스크롤
-
-      //     const messages = chatMessageColumnWrapper.querySelectorAll('.message.received, .message.sent'); // 수신 및 발신 메시지 선택
-																		   
-
-      //     let totalHeight = 0; // 총 높이 초기화
-
-      //     messages.forEach((message) => {
-      //       const currentTop = message.style.top ? parseInt(message.style.top, 10) : 0; // 현재 상단 위치 계산
-      //       message.style.top = `${currentTop - message.offsetHeight}px`; // 각 메시지의 상단 위치 설정
-      //       totalHeight += message.offsetHeight; // 총 높이 증가
-      //     });
-
-      //     const newMessage = document.createElement('div'); // 새로운 메시지 div 생성
-      //     newMessage.classList.add('message', 'received'); // 새로운 메시지에 클래스 추가
-      //     newMessage.innerText = ''; // 새로운 메시지 텍스트 설정
-      //     chatMessageColumnWrapper.appendChild(newMessage); // 새로운 메시지를 채팅 메시지 열 래퍼에 추가
-
-      //     newMessage.style.position = 'relative'; // 새로운 메시지의 위치 상대적으로 설정
-      //     newMessage.style.top = `${totalHeight}px`; // 새로운 메시지의 상단 위치 설정
-      //   }
-      // });									  
-	   
-	   
-    // },
     /**
      * 편지 풀을 보충합니다.
      * @param {number} nSets - 채울 편지 세트 수
@@ -678,7 +648,6 @@ export default {
           }
         }
       }
-	 
       return missingLetters; // 누락된 편지 배열 반환
     },
     /**
