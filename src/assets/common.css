@@ -1403,6 +1403,7 @@ select.form-control2 {
   color: black !important;
 }
 .ck-content h1 {
+  text-align: left;
   color: black !important;
 }
 /*Toolbar*/

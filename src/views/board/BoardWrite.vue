@@ -149,12 +149,23 @@ export default {
   
     };
   },
-  mounted() {
-    if (this.loginUser) {
-      console.log("loginUser" , this.loginUser);
-      this.author = this.loginUser.id;
-      this.nickname = this.loginUser.nickname;
-    }
+  created() {
+    setTimeout(() => {
+      if (this.idx === undefined && this.loginUser) {
+        console.log("ddddd3")
+        this.nickname = this.loginUser.nickname;
+      }
+    }, 100); // 5000ms = 5초
+  },
+  mounted(){
+    console.log("ddddd1", this.idx)
+    console.log("ddddd2", this.loginUser)
+
+    // if (this.loginUser) {
+    //   console.log("loginUser" , this.loginUser);
+    //   this.author = this.loginUser.id;
+    //   this.nickname = this.loginUser.nickname;
+    // }
     this.fnGetView();
     // CKEditor 초기화
     this.config = {
@@ -383,7 +394,7 @@ export default {
 				]
 			},
 
-			initialData: ' ',
+			initialData: '....',
 
 			language: 'ko',
 			link: {
@@ -437,13 +448,7 @@ export default {
         query: this.requestBody
       })
     },
-	// myCustomUploadAdapterPlugin(editor) {
-	// 	console.log("myCustomUploadAdapterPlugin" , editor)
-    //   // CKEditor에서 플러그인으로 인식할 수 있도록 설정
-    //   editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-    //     return new UploadAdapter(loader);
-    //   };
-    // },
+
     onEditorReady(editor) {
 
         // CKEditor가 준비된 후에 uploader 설정
@@ -464,11 +469,17 @@ export default {
             params: this.requestBody,
           })
           .then((res) => {
+            console.log("fnGetView : ", res)
             this.title = res.data.title;
-            this.author = res.data.author;
-            //this.contents = res.data.contents;
-			this.config.initialData = res.data.contents;
+            this.author = res.data.authorId;
+            this.nickname = res.data.author;
+			      this.config.initialData = res.data.contents;
             this.created_at = res.data.created_at;
+            // if (this.loginUser) {
+            //   console.log("loginUser" , this.loginUser);
+            //   this.author =
+            //   this.nickname = this.loginUser.nickname;
+            // }
           })
           .catch((err) => {
             console.log(err);
@@ -483,7 +494,7 @@ export default {
       });
     },
     fnSave() {
-      this.author = this.loginUser.id;
+
 
       if (this.isSaving) return; // 이미 저장 중이면 실행되지 않도록 방지
       this.isSaving = true; // 저장 중 상태 활성화
@@ -495,16 +506,17 @@ export default {
         return;
       }
 
-      // 저장할 데이터 준비
-      this.form = {
-        idx: this.idx,
-        title: this.title,
-        contents: this.config.initialData, // CKEditor 내용 저장
-        author: this.author,
-      };
+
 
 
       if (this.idx === undefined) {
+        // 저장할 데이터 준비
+        this.form = {
+          idx: this.idx,
+          title: this.title,
+          contents: this.config.initialData, // CKEditor 내용 저장
+          author: this.author = this.loginUser.id
+        };
         // 새 글 저장
         axios
             .post(apiUrl, this.form)
@@ -521,6 +533,13 @@ export default {
               this.isSaving = false; // 저장 중 상태 해제
             });
       } else {
+        // 저장할 데이터 준비
+        this.form = {
+          idx: this.idx,
+          title: this.title,
+          contents: this.config.initialData, // CKEditor 내용 저장
+          author: this.author
+        };
         // 글 수정
         axios
             .patch(apiUrl, this.form)
