@@ -150,6 +150,11 @@ export default {
     };
   },
   mounted() {
+    if (this.loginUser) {
+      console.log("loginUser" , this.loginUser);
+      this.author = this.loginUser.id;
+      this.nickname = this.loginUser.nickname;
+    }
     this.fnGetView();
     // CKEditor 초기화
     this.config = {
@@ -420,10 +425,7 @@ export default {
 			translations: [translations]
 		};
     this.isLayoutReady = true;
-    if (this.loginUser) {
-      this.author = this.loginUser.id;
-      this.nickname = this.loginUser.nickname;
-    }
+
 
   },
   methods: {
@@ -443,7 +445,6 @@ export default {
     //   };
     // },
     onEditorReady(editor) {
-		console.log("onEditorReady" , editor)
 
         // CKEditor가 준비된 후에 uploader 설정
         editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
@@ -482,6 +483,8 @@ export default {
       });
     },
     fnSave() {
+      this.author = this.loginUser.id;
+
       if (this.isSaving) return; // 이미 저장 중이면 실행되지 않도록 방지
       this.isSaving = true; // 저장 중 상태 활성화
 
@@ -499,6 +502,7 @@ export default {
         contents: this.config.initialData, // CKEditor 내용 저장
         author: this.author,
       };
+
 
       if (this.idx === undefined) {
         // 새 글 저장
@@ -521,7 +525,7 @@ export default {
         axios
             .patch(apiUrl, this.form)
             .then((res) => {
-              alert('글이 저장되었습니다.');
+              alert('글이 수정되었습니다.');
               this.fnView(res.data.idx); // 수정 후 글 상세 보기로 이동
             })
             .catch((err) => {
