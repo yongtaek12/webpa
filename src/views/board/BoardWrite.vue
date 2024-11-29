@@ -152,24 +152,21 @@ export default {
   created() {
     setTimeout(() => {
       if (this.idx === undefined && this.loginUser) {
-        console.log("ddddd3")
         this.nickname = this.loginUser.nickname;
       }
     }, 100); // 5000ms = 5초
   },
   mounted(){
-    console.log("ddddd1", this.idx)
-    console.log("ddddd2", this.loginUser)
-
     // if (this.loginUser) {
     //   console.log("loginUser" , this.loginUser);
     //   this.author = this.loginUser.id;
     //   this.nickname = this.loginUser.nickname;
     // }
     this.fnGetView();
+
     // CKEditor 초기화
     this.config = {
-			toolbar: {
+      toolbar: {
 				items: [
 					'undo',
 					'redo',
@@ -394,7 +391,7 @@ export default {
 				]
 			},
 
-			initialData: '....',
+			initialData: '',
 
 			language: 'ko',
 			link: {
@@ -469,7 +466,6 @@ export default {
             params: this.requestBody,
           })
           .then((res) => {
-            console.log("fnGetView : ", res)
             this.title = res.data.title;
             this.author = res.data.authorId;
             this.nickname = res.data.author;
@@ -494,6 +490,7 @@ export default {
       });
     },
     fnSave() {
+      console.log("저장")
 
 
       if (this.isSaving) return; // 이미 저장 중이면 실행되지 않도록 방지
@@ -503,6 +500,7 @@ export default {
 
       if (this.title.length === 0) {
         alert('글 제목은 필수로 입력하십시오'); // 제목 필수 입력 경고
+        this.isSaving = false; // 저장 중 상태 활성화
         return;
       }
 
