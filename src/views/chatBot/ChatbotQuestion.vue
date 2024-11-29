@@ -69,6 +69,7 @@ export default {
       nLetterSets: 4, // 편지 세트 수
       letterPoolIntervals: [], // 편지 풀 인터벌 배열
       resetTimeout: null, // 리셋 타임아웃
+      requestBody: {},
       systemMessage: { // 초기 세팅 메세지..
         role: "system",
         content: "You are an English conversation teacher. Your goal is to help students improve their English speaking skills by practicing conversations, correcting their grammar, and providing clear explanations when needed. Always respond in simple and clear English suitable for learners."
@@ -76,96 +77,72 @@ export default {
     };
   },
   methods: {
-    // 사용자 리뷰 메서드
-    proofreading(){
-      const chatBox = this.$refs.chatBox; // 채팅 박스 참조
-      if(chatBox){
-        const userMessages = [];
-        const messages = Array.from(chatBox.querySelectorAll('.content .text')); // NodeList를 배열로 변환
-        messages.reverse().forEach((message, index) => {
-          const messageText = message.innerText.trim();
-
-          console.log(`[${index + 1}] ${message.innerText}`); // 각 말풍선 텍스트 출력
-          const isUserMessage = message.parentElement.parentElement.classList.contains("sent");
-          if (isUserMessage) {
-            userMessages.push(messageText);
-          }
-
-          // 사용자가 작성한 내용이 없으면 알림을 띄우고 함수 종료
-          if (userMessages.length === 0) {
-            return;
-          }
-          const lastUserMessage = userMessages[userMessages.length - 1];
-          console.log("사용자의 마지막 메시지:", lastUserMessage);
-        });
-      }
+    fnView(idx) {
+      // console.log("fnView : ", idx)
+      this.requestBody.idx = idx
+      this.requestBody.category = 2
+      this.$router.push({
+        path: '/review/detail', // 경로를 'review/detail'로 설정
+        query: this.requestBody
+      })
     },
     // 리뷰 버튼 클릭 메서드
     reviewChatMessages() {
-      const chatBox = this.$refs.chatBox; // 채팅 박스 참조
+      try {
+        const chatBox = this.$refs.chatBox; // 채팅 박스 참조
+        if (chatBox) {
+          this.isLoading = true; // 로딩 상태 설정
+          const messages = Array.from(chatBox.querySelectorAll('.message'))
+              .reverse() // 배열을 역순으로 정렬
+              .filter((message) => {
+                // 'sent'와 'proofread'를 모두 포함하는 메시지는 제외
+                return !(message.classList.contains('sent') && message.classList.contains('proofread'));
+              })
+              .map((message) => {
+                return {
+                  role: message.classList.contains('received') ? 'assistant' : 'user', // 클래스 확인
+                  content: message.querySelector('.text').textContent.trim() // 텍스트 내용 가져오기
+                };
+              })
+          const reviewRequired = {
+            role: 'system',
+            content: "대화 내용을 기반으로, 사용자(User)의 문법적 오류를 분석하고, 이를 원어민 수준의 자연스러운 표현으로 수정합니다. " +
+                "또한 사용자의 언어적 약점을 파악하고, 이를 개선할 수 있도록 구체적인 연습 예문을 몇 가지 제안합니다. " +
+                "이를 통해 사용자가 올바르게 학습하도록 유도하는 리뷰를 작성하세요.",
+            timestamp: new Date().toISOString() }; // 사용자 메시지 객체 생성
 
-      if (chatBox) {
-        const messages = Array.from(chatBox.querySelectorAll('.content .text')); // NodeList를 배열로 변환
-        const userMessages = [];
-        const allMessages = [];
-
-        console.log('=== 모든 대화 내용 ===')
-
-        messages.reverse().forEach((message, index) => {
-          const messageText = message.innerText.trim();
-          allMessages.push(messageText); // 전체 메시지 추가
-
-          console.log(`[${index + 1}] ${message.innerText}`); // 각 말풍선 텍스트 출력
-          const isUserMessage = message.parentElement.parentElement.classList.contains("sent");
-          if (isUserMessage) {
-            userMessages.push(message.innerText.trim());
+         // reviewRequired 마지막에 추가
+          messages.push({
+            role: reviewRequired.role,
+            content: reviewRequired.content,
+            timestamp: reviewRequired.timestamp
+          });
+          // 사용자(user) 메시지가 존재하는지 확인
+          const userMessagesExist = messages.some(message => message.role === 'user');
+          if (!userMessagesExist) {
+            alert('사용자가 작성한 메시지가 없습니다.');
+            this.isLoading = false; // 로딩 상태 해제
+            return; // 함수 실행 중단
           }
-        });
-        console.log('전체 메시지:', allMessages);
-        console.log('사용자 메시지:', userMessages);
-        // 사용자가 작성한 내용이 없으면 알림을 띄우고 함수 종료
-        if (userMessages.length === 0) {
-          alert("사용자가 작성한 메시지가 없습니다.");
-          return;
+          const requestPayload = {
+            model: this.model,
+            messages: messages
+          }
+          // 서버에 요청
+          axios.post("http://localhost:8085/chat-gpt/chatEnd", requestPayload).then((result) => {
+            alert('글이 저장되었습니다.');
+            this.fnView(result.data.board.idx); // 저장 후 글 상세 보기로 이동
+          }).finally(()=>{
+            this.isLoading = false; // 로딩 상태 해제
+          });
+        } else {
+          console.error('chatBox를 찾을 수 없습니다.');
         }
-        // 서버 요청 payload 생성
-        const payload = {
-          model: this.model,
-          allMessages: allMessages.join("\n"), // 전체 메시지를 합침
-          userMessages: userMessages.join("\n"), // 사용자 메시지만 합침
-          messages: [
-            {
-              role: "system",
-              content:
-                  "Please correct the following sentences for grammar mistakes and improve them to sound more natural, as if written by a native English speaker. " +
-                  "Additionally, explain why the correction was made and provide reasons why native speakers would choose these expressions."
-            },
-            {
-              role: "user",
-              content: userMessages.join("\n"), // 사용자가 작성한 메시지 합치기
-            },
-          ],
-        }
-        // 서버에 요청
-        axios
-            .post("http://localhost:8085/chat-gpt/chatEnd", payload)
-            .then((response) => {
-              const correctedMessages =
-                  response.data.choices[0].message.content || "교정된 메시지가 없습니다.";
 
-              console.log("=== 교정된 메시지 ===");
-              console.log(correctedMessages);
-
-              // 결과를 화면에 표시하거나 알림
-              alert("교정 결과:\n" + correctedMessages);
-            })
-            .catch((error) => {
-              console.error("교정 요청 중 오류 발생:", error);
-            });
-      } else {
-        console.error('chatBox를 찾을 수 없습니다.');
+      }catch (error){
+        console.error('메시지 전송 중 오류 발생:', error); // 오류 로그 출력
+        this.isLoading = false; // 로딩 상태 해제
       }
-
     },
     // init 초기 시스템 메시지를 서버로 전송
     sendSystemMessage() {
@@ -182,6 +159,7 @@ export default {
 
 
             this.speakText(botContent);
+            // 처음 대화 ai 응답 메세지만 chatMessages 에 담는다.
             this.chatMessages.push({
               role: 'assistant',
               content: botContent,
@@ -447,6 +425,7 @@ export default {
       return this.getRand(20000, 40000); // 20000과 40000 사이의 랜덤 간격 반환
     },
 
+    //실제 통신을 담당
     sendMessage() {
       if (!this.userInput.trim()) return; // 입력이 없으면 반환
 
@@ -484,17 +463,16 @@ export default {
         };
 
         axios.post('http://localhost:8085/chat-gpt/chat', requestPayload).then((result) => {
+          // AI와의 대화
           const conversationResponse = result.data.conversationResponse; // conversationResponse 추출
+          // AI의 교정
           const proofreadResponse = result.data.proofreadResponse;
 
+          const botContent = JSON.parse(conversationResponse).choices[0].message.content; // 응답에서 content 가져오기
           const proofreadContent = JSON.parse(proofreadResponse).choices[0].message.content; // 응답에서 content 가져오기
 
-          console.log("응답 내용 챗봇 : ", proofreadContent)
-          const botContent = JSON.parse(conversationResponse).choices[0].message.content; // 응답에서 content 가져오기
-          const botContent2 = JSON.parse(proofreadResponse).choices[0].message.content; // 응답에서 content 가져오기
-
           setTimeout(() => {
-            this.addChatMessage(botContent2, false, true); // 챗봇 교정
+            this.addChatMessage(proofreadContent, false, true); // 챗봇 교정
             this.addChatMessage(botContent, true, false); // 챗봇 메시지 추가
             // 챗봇 메시지를 음성으로 읽음
             this.speakText(botContent);
