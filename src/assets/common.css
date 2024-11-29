@@ -1389,7 +1389,7 @@ select.form-control2 {
 /* boardWrite */
 /**textarea 크기 조절 */
 .ck-editor__editable {
-  min-height: 800px !important;
+  min-height: 650px !important;
   min-width: 1200px !important;
   /* color: black !important; */
 
@@ -1397,6 +1397,9 @@ select.form-control2 {
 }
 .ck-content {
   color: black !important;
+}
+.ck-content .ck-placeholder {
+  display: none !important; /* Placeholder 숨기기 */
 }
 /** CKEditor의 p 태그(Paragraph)의 색상을 검정색으로 강제 설정 */
 .ck-content p {
