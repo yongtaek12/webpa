@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import PageHome from '@/views/PageHome.vue';
 import BoardList from '@/views/board/BoardList.vue';
 import BoardDetail from '@/views/board/BoardDetail.vue';
+import ReviewList from "@/views/review/ReviewList.vue";
+import ReviewDetail from "@/views/review/ReviewDetail.vue";
 import BoardWrite from '@/views/board/BoardWrite.vue';
 import UserLogin from '@/views/member/UserLogin.vue';
 import Signup from '@/views/member/Signup.vue';
@@ -34,9 +36,21 @@ const routes = [
     meta: { showHeaderFooter: true , requiredLogin: true} // 로그인 필수 여부//
   },
   {
+    path: '/review/list',
+    name: 'ReviewList',
+    component: ReviewList,
+    meta: { showHeaderFooter: true , requiredLogin: true} // 로그인 필수 여부//
+  },
+  {
     path: '/board/detail',
     name: 'BoardDetail',
     component: BoardDetail,
+    meta: { showHeaderFooter: true, requiredLogin: true}
+  },
+  {
+    path: '/review/detail',
+    name: 'ReviewDetail',
+    component: ReviewDetail,
     meta: { showHeaderFooter: true, requiredLogin: true}
   },
   {

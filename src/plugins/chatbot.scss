@@ -415,6 +415,20 @@ html, body {
               animation-delay: 0.5s;
               margin-right: 20px;
             }
+            // 교정 말풍선
+            // sent와 proofread 클래스가 동시에 존재할 때의 스타일
+            &.proofread {
+              .content {
+                background-color: #dff5eb; // 연한 연두색 배경
+                border: 1px solid #c3e6cb; // 초록색 테두리
+                color: white; // 글자 색상을 하얀색으로 설정
+                margin-right: 10px; // 간격 조정
+              }
+
+              .profile-icon {
+                display: none; // 프로필 아이콘 숨김
+              }
+            }
           }
 
           .profile-icon {

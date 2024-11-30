@@ -1,4 +1,4 @@
-<template>
+<template> //d
   <form @submit.prevent="onSubmit">
     <fieldset>
       <input type="email" placeholder="이메일 주소" v-model.trim="formData.email" maxlength="64" required>

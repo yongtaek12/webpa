@@ -38,7 +38,8 @@ const exportObject = {
                if(res.status ===200){
 
                    // window.location.replace("/");
-                   // 정상적으로 응답을 받은경우, processLogin 함수를 실행합니다
+                   // 정상적으로 응답을 받은경우,
+                   // 함수를 실행합니다
 
                     await exportObject.processLogin(res.data)
 
@@ -64,9 +65,9 @@ const exportObject = {
 
             })
             .then(async (res) => {
-                // console.log("console : ", res)
+                await alert('회원 등록이 완료되었습니다.')
                 // 정상적으로 응답을 받은경우, processLogin 함수를 실행합니다.
-                await exportObject.processLogin(res.data)
+                // await exportObject.processLogin(res.data)
             })
     },
     /**
@@ -92,6 +93,7 @@ const exportObject = {
     * 로그인이 완료 된경우, 응답데이타를 이용하여 클라이언트에 토큰을 저장합니다.
     */
    processLogin: async (result) => {
+       console.log("result : ", result);
 
        // AccessToken 과 refreshToken 발급에 성공한 경우
        if (result?.accessToken && result?.refreshToken) {
