@@ -239,10 +239,12 @@ html, body {
 
       #message-input {
         @include center;
+        padding: 5px 10px; /* 내부 여백 축소 */
+
         background-color: white;
         border-radius: 100px;
         box-shadow: $shadow1;
-        height: 50px;
+        height: auto;
         line-height: 50px;
         overflow: hidden;
         width: 400px;
@@ -341,7 +343,7 @@ html, body {
         .message {
           animation: expand 0.5s ease-in-out;
           margin-bottom: 20px;
-          white-space: nowrap;          
+          white-space: nowrap;
           // margin-bottom: 20px;
           // white-space: nowrap;
           // animation: expand 0.5s ease-in-out forwards;
