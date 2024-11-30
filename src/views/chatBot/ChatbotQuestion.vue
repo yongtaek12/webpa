@@ -197,6 +197,7 @@ export default {
 
       const playSentence = (index) => {
         if (index >= sentences.length) {
+          console.log("모든 문장 재생 완료.!");
           return;
         }
 
