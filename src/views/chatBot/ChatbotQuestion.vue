@@ -180,20 +180,45 @@ export default {
     },
     // 음성 말하기 기능 추가
     speakText(text) {
-      // console.log("speakText : ", text);
+      console.log("speakText : ", text);
+
       if (!window.speechSynthesis) {
         console.warn("이 브라우저는 Web Speech API를 지원하지 않습니다.");
         return;
       }
 
-      const utterance = new SpeechSynthesisUtterance(text);
-      // utterance.lang = 'ko-KR'; // 한국어 설정
-      utterance.lang = 'en-US'; // 영어 설정
-      utterance.rate = 1.0; // 말하기 속도
-      utterance.pitch = 1.2; // 음 높이
+      if (window.speechSynthesis.speaking) {
+        console.log("음성이 재생 중입니다. 기존 음성을 멈춥니다.");
+        window.speechSynthesis.cancel();
+      }
 
-      // 음성 재생
-      window.speechSynthesis.speak(utterance);
+      // 문장 단위로 텍스트 나누기
+      const sentences = text.match(/[^.!?]+[.!?]*/g) || [text];
+
+      const playSentence = (index) => {
+        if (index >= sentences.length) {
+          console.log("모든 문장 재생 완료.");
+          return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(sentences[index]);
+        utterance.lang = 'en-US';
+        utterance.rate = 1.0;
+        utterance.pitch = 1.2;
+
+        utterance.onend = () => {
+          console.log(`Sentence ${index + 1} 재생 완료.`);
+          playSentence(index + 1); // 다음 문장 재생
+        };
+
+        utterance.onerror = (error) => {
+          console.error(`Sentence ${index + 1} 재생 중 오류 발생:`, error);
+        };
+
+        window.speechSynthesis.speak(utterance);
+      };
+
+      playSentence(0); // 첫 번째 문장부터 재생
     },
     /**
      * 감정 상태를 설정합니다.
@@ -206,12 +231,14 @@ export default {
         this.setMoodInterval(this.getRandMoodInterval()); // 랜덤 감정 상태 간격을 설정합니다
       }, time);
     },
-    // 음성 인식 활성화/비활성화 토글
+    // 음성 인식 활성화/비활성화 토글l
     toggleVoiceRecognition() {
       if (!this.recognition) {
+        console.log("음성 인식 초기화");
         this.initVoiceRecognition(); // 음성 인식 초기화
       }
       if (this.isVoiceRecognitionActive) {
+        console.log("음성 인식 중지");
         this.recognition.stop(); // 음성 인식 중지
         this.isVoiceRecognitionActive = false;
       } else {
@@ -243,7 +270,7 @@ export default {
           }
         }
         // 중복 제거 후 userInput 업데이트
-        this.userInput = finalTranscript;
+        this.userInput += finalTranscript + " ";
       };
       recognition.onerror = (event) => {
         console.error('음성 인식 에러:', event.error);
