@@ -198,6 +198,12 @@ export default {
         console.warn("이 브라우저는 Web Speech API를 지원하지 않습니다.");
         return;
       }
+      // 음성 인식 중지
+      if (this.recognition && this.isVoiceRecognitionActive) {
+        console.log("음성 인식 중지");
+        this.recognition.stop();
+        this.isVoiceRecognitionActive = false;
+      }
 
       if (window.speechSynthesis.speaking) {
         console.log("음성이 재생 중입니다. 기존 음성을 멈춥니다.");
@@ -210,6 +216,14 @@ export default {
       const playSentence = (index) => {
         if (index >= sentences.length) {
           console.log("모든 문장 재생 완료.");
+
+          // 음성 인식 다시 시작
+          if (this.recognition && !this.isVoiceRecognitionActive) {
+            console.log("음성 인식 다시 시작");
+            this.recognition.start();
+            this.isVoiceRecognitionActive = true;
+          }
+
           return;
         }
 
@@ -472,6 +486,7 @@ export default {
     sendMessage() {
       if (!this.userInput.trim()) return; // 입력이 없으면 반환
 
+      console.log("sendMessage");
       const timestamp = new Date().toISOString(); // 타임스탬프 생성
       const userMessage = { role: 'user', content: this.userInput, timestamp: timestamp }; // 사용자 메시지 객체 생성
       this.addChatMessage(userMessage.content, false, false); // 사용자 메시지 추가
