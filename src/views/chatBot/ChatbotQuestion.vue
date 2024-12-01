@@ -89,6 +89,11 @@ export default {
     };
   },
   methods: {
+    handleGlobalKeyUp(event) {
+      if (event.key === 'Enter') {
+        this.sendMessage();
+      }
+    },
     fnView(idx) {
       // console.log("fnView : ", idx)
       this.requestBody.idx = idx
@@ -1115,6 +1120,8 @@ export default {
     }
   },
   mounted() {
+    window.addEventListener('keyup', this.handleGlobalKeyUp);
+
     this.sendSystemMessage(); // 컴포넌트가 마운트될 때 시스템 메시지 전송
 
     // this.setChatbotMood(); // 챗봇 감정 상태 설정
@@ -1129,6 +1136,8 @@ export default {
     });
   },
   beforeDestroy() {
+    window.removeEventListener('keyup', this.handleGlobalKeyUp);
+
     window.removeEventListener('focus', this.resetLetterPool); // 포커스 이벤트 리스너 제거
     window.removeEventListener('resize', throttle(this.resetLetterPool, 200)); // 리사이즈 이벤트 리스너 제거
   }
