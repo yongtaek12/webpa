@@ -15,8 +15,20 @@
         <!-- 리뷰 버튼 추가 -->
         <button id="review-button" @click="reviewChatMessages">리뷰</button>
         <div id="message-input" :class="{ 'send-enabled': !isLoading && userInput.trim() }"> <!-- 메시지 입력 div -->
-          <input id="message-input-field" ref="messageInputField" type="text" placeholder="Type a message" maxlength="400" v-model="userInput" @keyup.enter="sendMessage" :disabled="isLoading"> <!-- 메시지 입력 필드 -->
-          <div id="send-message-button" @click="sendMessage" :class="{ 'send-enabled': !isLoading && userInput.trim() }"> <!-- 메시지 전송 버튼 div -->
+          <textarea
+              id="message-input-field"
+              ref="messageInputField"
+              placeholder="Type a message"
+              maxlength="400"
+              v-model="userInput"
+              @keyup.enter="sendMessage"
+              :disabled="isLoading"
+          ></textarea> <!-- 메시지 입력 필드 -->
+          <div
+              id="send-message-button"
+              @click="sendMessage"
+              :class="{ 'send-enabled': !isLoading && userInput.trim() }"
+          > <!-- 메시지 전송 버튼 div -->
             <i class="far fa-arrow-alt-circle-right"></i> <!-- 전송 아이콘 -->
           </div>
         </div>

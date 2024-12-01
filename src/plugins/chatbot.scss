@@ -44,7 +44,6 @@ $shadow3: rgba(0, 0, 0, 0.19) 0px 10px 30px, rgba(0, 0, 0, 0.23) 0px 6px 10px;
   transform: translateY(100%); /* Initially position the bubble below the container */
   transition: opacity 1s ease-in-out, transform 1s ease-in-out;
 }
-
 .bubble.visible {
   opacity: 1;
   transform: translateY(0); /* Move the bubble into view */
@@ -231,7 +230,7 @@ html, body {
 
     #message-input-wrapper {
       bottom: 0px;
-      height: 90px;
+      height: 150px;
       left: 0px;
       position: absolute;
       width: 100%;
@@ -239,15 +238,19 @@ html, body {
 
       #message-input {
         @include center;
+
+        display: flex; /* Flexbox로 자식 요소 배치 */
         padding: 5px 10px; /* 내부 여백 축소 */
+        align-items: center; /* 수직 정렬 */
 
         background-color: white;
-        border-radius: 100px;
+        border-radius: 30px;
         box-shadow: $shadow1;
+        min-height: 100px;
         height: auto;
         line-height: 50px;
         overflow: hidden;
-        width: 400px;
+        width: 500px;
 
         &.send-enabled #send-message-button {
           &:before, &:after {
@@ -263,7 +266,20 @@ html, body {
             color: $blue;
           }
         }
-
+        /* textarea 스타일 */
+        textarea {
+          flex: 1; /* 가용 공간 사용 */
+          margin-right: 35px; /* 버튼과 간격 추가 */
+          line-height: 1.2; /* 줄 간격 */
+          font-size: 14px; /* 글자 크기 */
+          padding: 10px; /* 내부 여백 */
+          width: 100%; /* 너비 */
+          height: 100px; /* 높이 */
+          border: 1px solid $gray230;
+          border-radius: 5px;
+          resize: none; /* 크기 조정 비활성화 */
+          box-sizing: border-box;
+        }
         #message-input-field {
           border: none;
           color: $gray180;

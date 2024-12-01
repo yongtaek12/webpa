@@ -184,7 +184,7 @@
     width: fit-content;
     align-self: flex-start; /* 왼쪽 정렬 */
   }
-  
+
   /* AI 메시지 내용 스타일 */
   .bot-message .message-content {
     padding: 10px;
@@ -210,10 +210,11 @@
     border-top: 1px solid #ddd;
     background-color: #f9f9f9;
   }
-  
+
   /* 텍스트 영역 스타일 */
   textarea {
     flex: 1;
+    line-height: 1.3; /* 줄 간격 조정 (1.2는 기본보다 좁은 간격) */
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
