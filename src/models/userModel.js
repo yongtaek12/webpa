@@ -1,6 +1,7 @@
 // import store from './vuex/store'  //1. store 추가
 import store from '@/store'
 import axios from '@/plugins/axios'
+import router from "@/router";
 let vueInstance = null;
 
 
@@ -21,7 +22,7 @@ const exportObject = {
         return !!(accessToken && accessToken !== 'undefined');
     },
     /*
-    * REST API 서버로 로그인 요청을 보냅니다.
+    * REST API 서버로 로그인 요청을 보냅니다.!!!!!!
     */
    requestLogin: async (payload) => {
     const serverUrl = vueInstance.config.globalProperties.$serverUrl;
@@ -37,9 +38,10 @@ const exportObject = {
                if(res.status ===200){
 
                    // window.location.replace("/");
-                   // 정상적으로 응답을 받은경우, processLogin 함수를 실행합니다
+                   // 정상적으로 응답을 받은경우,
+                   // 함수를 실행합니다
 
-                   await exportObject.processLogin2(res.data)
+                    await exportObject.processLogin(res.data)
 
                }
 
@@ -63,7 +65,7 @@ const exportObject = {
 
             })
             .then(async (res) => {
-                // console.log("console : ", res)
+                await alert('회원 등록이 완료되었습니다.')
                 // 정상적으로 응답을 받은경우, processLogin 함수를 실행합니다.
                 // await exportObject.processLogin(res.data)
             })
@@ -72,7 +74,6 @@ const exportObject = {
      * 로그인이 완료 된경우, 응답데이타를 이용하여 클라이언트에 토큰을 저장합니다. session 기반
      */
     processLogin2: async (result) => {
-        console.log("로그인정보 : ", result);
         // vuex 상태관리에서 현재 로그인 상태를 TRUE 로 변경합니다.
         localStorage.setItem('accessToken', result.cookie);
 
@@ -81,7 +82,7 @@ const exportObject = {
         const res = {
             id: 10,
             nickname: result.loginId+'  님         ',// 회원 닉네임
-            auth: result.roles// 권한 레벨
+            auth: result.rolesList// 권한 레벨
         };
 
         store.commit('authorize/setUserInfo', res);
@@ -92,6 +93,7 @@ const exportObject = {
     * 로그인이 완료 된경우, 응답데이타를 이용하여 클라이언트에 토큰을 저장합니다.
     */
    processLogin: async (result) => {
+       console.log("result : ", result);
 
        // AccessToken 과 refreshToken 발급에 성공한 경우
        if (result?.accessToken && result?.refreshToken) {
@@ -128,35 +130,21 @@ const exportObject = {
         localStorage.removeItem('refreshToken');
         store.commit('authorize/setLogin', false);
         store.commit('authorize/setUserInfo', null);
-
-        //세션기반 로그아웃 추가로직
-        const serverUrl = vueInstance.config.globalProperties.$serverUrl;
-        return await axios
-            .get(serverUrl + '/users/logout', {
-
-            })
-            .then(async (res) => {
-                console.log("console : ", res)
-                // 정상적으로 응답을 받은경우, processLogin 함수를 실행합니다.
-                // await exportObject.processLogin(res.data)
-            })
-    }, 
+        return router.push({ path: '/' });
+    },
 
     /**
-    * REST API로 내 정보를 가져옵니다.
+    * REST API로 내 정보를 가져옵니다.!!!
     */
     requestMyInfo: async () => {
-        // console.log("requestMyInfo", this.$serverUrl )
 
-        // const serverUrl = vueInstance.config.globalProperties.$serverUrl;
-        
         const accessToken = localStorage.getItem('accessToken');
-        // console.log("requestMyInfo2", accessToken )
-        return await axios.get('//localhost:8085/users', {
+        return await axios.get('//api.speak-english-withai.com/users', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
         }).then(res => {
+            // console.log("requestMyInfo sucesses", res )
 
             store.commit('authorize/setUserInfo', res.data);
         }).catch(err => {

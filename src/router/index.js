@@ -2,13 +2,19 @@ import { createRouter, createWebHistory } from 'vue-router';
 import PageHome from '@/views/PageHome.vue';
 import BoardList from '@/views/board/BoardList.vue';
 import BoardDetail from '@/views/board/BoardDetail.vue';
+import ReviewList from "@/views/review/ReviewList.vue";
+import ReviewDetail from "@/views/review/ReviewDetail.vue";
 import BoardWrite from '@/views/board/BoardWrite.vue';
 import UserLogin from '@/views/member/UserLogin.vue';
 import Signup from '@/views/member/Signup.vue';
 import Signin from '@/views/member/Signin.vue';
-import ChatbotQuestion from '@/views/common/ChatbotQuestion.vue';
+import ChatbotQuestion from '@/views/chatBot/ChatbotQuestion.vue';
 import Admin from '@/views/admin/Admin.vue';
+import UserDetail from '@/views/admin/detail/usersDetail.vue';
+import RolesDetail from '@/views/admin/detail/rolesDetail.vue';
+import ResourcesDetail from "@/views/admin/detail/resourcesDetail.vue";
 import usersModel from "@/models/userModel";
+import Error from "@/views/error/Error.vue";
 
 const routes = [
   {
@@ -30,9 +36,21 @@ const routes = [
     meta: { showHeaderFooter: true , requiredLogin: true} // 로그인 필수 여부//
   },
   {
+    path: '/review/list',
+    name: 'ReviewList',
+    component: ReviewList,
+    meta: { showHeaderFooter: true , requiredLogin: true} // 로그인 필수 여부//
+  },
+  {
     path: '/board/detail',
     name: 'BoardDetail',
     component: BoardDetail,
+    meta: { showHeaderFooter: true, requiredLogin: true}
+  },
+  {
+    path: '/review/detail',
+    name: 'ReviewDetail',
+    component: ReviewDetail,
     meta: { showHeaderFooter: true, requiredLogin: true}
   },
   {
@@ -70,6 +88,48 @@ const routes = [
     name: 'Admin',
     component: Admin,
     meta: { showHeaderFooter: true,requiredLogin: false }
+  },
+  {
+    path: '/admin/user/:id', // :id로 동적 경로 설정
+    name: 'UserDetail',
+    component: UserDetail,
+    meta: { showHeaderFooter: true,requiredLogin: false }
+  },
+  {
+    path: '/admin/role/:id', // :id로 동적 경로 설정
+    name: 'RolesDetail1',
+    component: RolesDetail,
+    meta: { showHeaderFooter: true,requiredLogin: false }
+  },
+  {
+  path: '/admin/role/insert', // :id로 동적 경로 설정
+    name: 'RolesDetail2',
+    component: RolesDetail,
+    meta: { showHeaderFooter: true,requiredLogin: false }
+  },
+  {
+    path: '/admin/resource/:id', // :id로 동적 경로 설정
+    name: 'ResourcesDetail1',
+    component: ResourcesDetail,
+    meta: { showHeaderFooter: true,requiredLogin: false }
+  },
+  {
+    path: '/admin/resource/insert', // :id로 동적 경로 설정
+    name: 'ResourcesDetail2',
+    component: ResourcesDetail,
+    meta: { showHeaderFooter: true,requiredLogin: false }
+  },
+  {
+    path: '/error', // :에러페이지
+    name: 'Error',
+    component: Error,
+    meta: { showHeaderFooter: false,requiredLogin: false }
+  },
+    
+  {
+    path: '/:pathMatch(.*)*', // 없는 url 로 이동할 경우
+    redirect : "/error"
+    
   }
 ];
 

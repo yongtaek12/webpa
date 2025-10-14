@@ -1,11 +1,11 @@
 /* common.css */
 .nav-links {
   display: flex;
-  flex-direction: column; /* 세로 정렬 */
+  flex-direction: row; /* 세로 정렬 */
   justify-content: center;
   align-items: center;
   //margin-top: 8px;
-  padding: 10px 20px;
+  padding: 13px 20px;
 }
 .nav-links > button {
   margin-top: 8px; /* 버튼 간의 간격 */
@@ -87,7 +87,40 @@
 }
 
 /* chatbotQuestion.vue */
+#review-button {
+  position: absolute;
+  right: 90px; /* 전송 버튼과 겹치지 않도록 위치 조정 */
+  top: 30%;
+  background-color: #007bff; /* 버튼 배경색 */
+  color: white; /* 텍스트 색상 */
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+#review-button:hover {
+  background-color: #0056b3; /* 호버 시 색상 */
+}
 /* 전체 컨테이너 스타일 */
+#voice-recognition-button {
+  position: absolute;
+  right: 50px; /* 전송 버튼과 겹치지 않도록 위치 조정 */
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #555;
+}
+#voice-recognition-button i {
+  font-size: 18px;
+}
+
+#voice-recognition-button:hover {
+  background-color: #e0e0e0;
+}
 .chatbot-interface {
     display: flex;
     justify-content: center; /* 수평 중앙 정렬 */
@@ -151,7 +184,7 @@
     width: fit-content;
     align-self: flex-start; /* 왼쪽 정렬 */
   }
-  
+
   /* AI 메시지 내용 스타일 */
   .bot-message .message-content {
     padding: 10px;
@@ -161,7 +194,7 @@
     color: #e9ecea; /* 텍스트 색상 */
     border: 1px solid #ddd;
   }
-  
+
   /* 타임스탬프 스타일 */
   .timestamp {
     font-size: 0.8em;
@@ -177,10 +210,11 @@
     border-top: 1px solid #ddd;
     background-color: #f9f9f9;
   }
-  
+
   /* 텍스트 영역 스타일 */
   textarea {
     flex: 1;
+    line-height: 1.3; /* 줄 간격 조정 (1.2는 기본보다 좁은 간격) */
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -914,7 +948,7 @@ section.notice {
 
 .board-table th, .board-table td {
   padding: 14px;
-  text-align: left;
+  /*text-align: left;*/
   border-bottom: 1px solid #ddd;
 }
 
@@ -1017,6 +1051,15 @@ section.notice {
   width: 1700px;
   /* height: 170px; */
   margin: 0 auto;
+}
+.container-right {
+  width: 1700px;
+  /* height: 170px; */
+  margin: 0 auto;
+  text-align: right;
+  padding: 20px 0; /* 위아래 20px, 좌우 0 */
+
+
 }
 .blind {
   position: absolute;
@@ -1158,3 +1201,239 @@ section.notice {
 .add-role-button:hover {
   background-color: #45a049;
 }
+
+/* 관리자 디테일에서만 쓰는 css */
+/* 전체 폼 스타일 */
+.tbl_wrp {
+  background-color: #2c2f33; /* 어두운 배경색 */
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 80%;
+  margin: 20px auto; /* 중앙 정렬 */
+  font-family: 'Roboto', sans-serif; /* Roboto 폰트 사용 */
+  color: #ffffff; /* 기본 텍스트 색상 */
+}
+
+/* 레이블 스타일 */
+.form-group2 label {
+  font-weight: 500; /* Roboto 500 굵기 */
+  color: #b0b3b8; /* 회색 텍스트 */
+  margin-bottom: 5px;
+  display: block; /* 블록으로 표시 */
+  text-align: left; /* 레이블 왼쪽 정렬 */
+}
+
+/* 입력 필드 스타일 */
+.form-control2 {
+  background-color: #ffffff; /* 입력 필드 배경색을 하얀색으로 설정 */
+  border: 1px solid #555; /* 테두리 색상 */
+  border-radius: 5px;
+  color: #2c2f33; /* 텍스트 색상 */
+  padding: 8px; /* 패딩을 줄여서 컴팩트하게 */
+  font-size: 14px;
+  margin-bottom: 15px;
+  width: 100%; /* 입력 필드 너비를 100%로 설정 */
+}
+/* 체크박스와 권한 라벨 정렬 */
+.form-group2 span {
+  display: flex;
+  align-items: center;
+}
+input[type="checkbox"] {
+  margin-right: 5px; /* 체크박스와 라벨 간격 */
+}
+
+
+
+/* 목록 버튼 */
+.form-group2 .col-sm-offset-1 .btn {
+  background-color: #4a4e69;
+  color: #ffffff;
+  padding: 8px 16px; /* 버튼 크기를 줄이기 */
+  font-size: 14px;
+  border-radius: 5px;
+  text-decoration: none;
+  margin-left: 10px;
+  transition: background-color 0.3s;
+}
+
+.form-group2 .col-sm-offset-1 .btn:hover {
+  background-color: #6a6f89; /* 호버 시 색상 */
+}
+
+/* 폼 그룹 스타일 */
+.form-group2 {
+  margin-bottom: 15px; /* 그룹 간격을 줄이기 */
+}
+
+.select-wrapper {
+  width: 100%;
+}
+
+/* 셀렉트 박스 스타일 */
+select.form-control2 {
+  background-color: #1e2125; /* 셀렉트 박스 배경색 */
+  color: #ffffff; /* 셀렉트 박스 텍스트 색상 */
+  border: 1px solid #555; /* 테두리 색상 */
+  border-radius: 5px;
+  padding: 8px; /* 패딩을 줄이기 */
+  width: 100%; /* 너비를 100%로 설정 */
+}
+.hover-underline:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+/* 관리자 디테일에서만 쓰는 css */
+
+/* 에러페이지에서만 쓰는 css */
+.container-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+}
+.stack-container-error {
+  position: relative;
+  width: 420px;
+  height: 210px;
+  transition: width 1s, height 1s;
+}
+.error-error {
+  width: 400px;
+  padding: 40px;
+  text-align: center;
+}
+.error-error h1 {
+  font-size: 125px;
+  margin: 0;
+  font-weight: 700;
+}
+.error-error h2 {
+  margin: -30px 0 0;
+  font-size: 47px;
+  letter-spacing: 12px;
+}
+.writing-error {
+  width: 320px;
+  height: 200px;
+  background-color: #3f3f3f;
+  border: 1px solid #bbbbbb;
+  border-radius: 6px 6px 4px 4px;
+  position: relative;
+}
+.writing-error .topbar-error {
+  position: absolute;
+  width: 100%;
+  height: 12px;
+  background-color: #f1f1f1;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+.writing-error .topbar-error div {
+  height: 6px;
+  width: 6px;
+  border-radius: 50%;
+  margin: 3px;
+  float: left;
+}
+.writing-error .topbar-error .green-error {
+  background-color: #60d060;
+}
+.writing-error .topbar-error .red-error {
+  background-color: red;
+}
+.writing-error .topbar-error .yellow-error {
+  background-color: #e6c015;
+}
+.writing-error .code-error {
+  padding: 15px;
+}
+.writing-error .code-error ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.writing-error .code-error ul li {
+  background-color: #9e9e9e;
+  width: 0;
+  height: 7px;
+  border-radius: 6px;
+  margin: 10px 0;
+}
+.perspec-error {
+  perspective: 1000px;
+}
+.explode-error {
+  animation: explode-error 0.5s ease-in-out forwards;
+}
+.writeLine-error {
+  animation: writeLine-error 0.4s linear forwards;
+}
+.card-error {
+  animation: tiltcard-error 0.5s ease-in-out 1s forwards;
+  position: absolute;
+}
+@keyframes tiltcard-error {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(-30deg); }
+}
+@keyframes explode-error {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(var(--spreaddist), var(--vertdist)) scale(var(--scaledist)); }
+}
+@keyframes writeLine-error {
+  0% { width: 0; }
+  100% { width: var(--linelength); }
+}
+/* 에러페이지에서만 쓰는 css */
+/* boardWrite */
+/**textarea 크기 조절 */
+.ck-editor__editable {
+  min-height: 650px !important;
+  min-width: 1200px !important;
+  /* color: black !important; */
+
+  /* min-width: 800; */
+}
+.ck-content {
+  color: black !important;
+}
+.ck-content .ck-placeholder {
+  display: none !important; /* Placeholder 숨기기 */
+}
+/** CKEditor의 p 태그(Paragraph)의 색상을 검정색으로 강제 설정 */
+.ck-content p {
+  color: black !important;
+}
+.ck-content h1 {
+  text-align: left;
+  color: black !important;
+}
+/*Toolbar*/
+.ck-editor__top {
+  min-width: 1200px;
+}
+.ck-content p.ck-heading_paragraph {
+  text-align: left !important;
+  color: #000000 !important;
+}
+.ck.ck-content ul,
+.ck.ck-content ul li {
+  list-style-type: inherit;
+}
+
+.ck.ck-content ul {
+  /* Default user agent stylesheet, you can change it to your needs. */
+  padding-left: 40px;
+}
+
+.ck.ck-content ol,
+.ck.ck-content ol li {
+  list-style-type: decimal;
+}
+.ck.ck-content ol {
+  /* Default user agent stylesheet, you can change it to your needs. */
+  padding-left: 40px;
+}
+/* boardWrite */
