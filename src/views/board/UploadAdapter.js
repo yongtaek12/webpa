@@ -14,7 +14,7 @@ export default class UploadAdapter {
     //XMLHttpRequest 객체를 준비하고, POST 요청을 설정합니다
     _initRequest() {
         const xhr = this.xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:8085/board/ckeditor5Upload', true);
+        xhr.open('POST', 'https://api.speak-english-withai.com/board/ckeditor5Upload', true);
         xhr.responseType = 'json';
     }
 

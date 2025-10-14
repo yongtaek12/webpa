@@ -151,7 +151,7 @@ export default {
             messages: messages
           }
           // 서버에 요청
-          axios.post("http://localhost:8085/chat-gpt/chatEnd", requestPayload).then((result) => {
+          axios.post("https://api.speak-english-withai.com/chat-gpt/chatEnd", requestPayload).then((result) => {
             alert('글이 저장되었습니다.');
             this.fnView(result.data.board.idx); // 저장 후 글 상세 보기로 이동
           }).finally(()=>{
@@ -174,7 +174,7 @@ export default {
       }
       this.isLoading = true;
 
-      axios.post('http://localhost:8085/chat-gpt/chat', payload)
+      axios.post('https://api.speak-english-withai.com/chat-gpt/chat', payload)
           .then(response => {
             const conversationResponse = response.data.conversationResponse; // conversationResponse 추출
             const botContent = JSON.parse(conversationResponse).choices[0].message.content; // 응답에서 content 가져오기
@@ -463,12 +463,15 @@ export default {
      * @returns {boolean} 값이 있으면 true, 없으면 false
      */
     checkIfInputFieldHasVal() {
+      console.log("롸롸 : ", this.userInput);
       return this.userInput.length > 0; // 입력 필드에 값이 있는지 확인
     },
     /**
      * 입력을 토글합니다.
      */
     toggleInput() {
+      console.log("toggleInput");
+
       const canSendMessage = this.checkIfInputFieldHasVal() && !this.isUserSendingMessage && !this.isChatBotSendingMessage; // 메시지 전송 가능 여부 확인
       const messageInputEl = this.$refs.messageInput; // 메시지 입력 요소 참조
       if (messageInputEl) {
@@ -525,7 +528,7 @@ export default {
           messages: messages
         };
 
-        axios.post('http://localhost:8085/chat-gpt/chat', requestPayload).then((result) => {
+        axios.post('https://api.speak-english-withai.com/chat-gpt/chat', requestPayload).then((result) => {
           // AI와의 대화
           const conversationResponse = result.data.conversationResponse; // conversationResponse 추출
           // AI의 교정
@@ -544,6 +547,7 @@ export default {
         }).finally(() => {
           this.isLoading = false; // 로딩 상태 해제
           // this.scrollToBottomOfMessages(); // 메시지 창을 맨 아래로 스크롤
+          console.log("1");
           this.toggleInput(); // 입력 토글
         });
       } catch (error) {
@@ -556,6 +560,7 @@ export default {
         this.chatMessages.push(errorMessage); // 오류 메시지 추가
         this.isLoading = false; // 로딩 상태 해제
         // this.scrollToBottomOfMessages(); // 메시지 창을 맨 아래로 스크롤
+        console.log("2");
         this.toggleInput(); // 입력 토글
       }
     },
@@ -624,6 +629,7 @@ export default {
             }
           }, 1); // 3초 후에 새 메시지 추가
         });
+        console.log("3");
         this.toggleInput(); // 입력 토글
         setTimeout(() => {
           const profileIcon = message.querySelector('.profile-icon'); // 프로필 아이콘 참조

@@ -101,8 +101,9 @@ export default {
   computed: {
     isAdmin() {
       //roop 돌아서 admin 있는경우 관리자 페이지 이동 아이콘 보이기
-      return this.loginUser.auth === 'ROLE_ADMIN';
-    },
+      return this.loginUser.auth === 'ROLE_ADMIN'
+          || this.loginUser.auth === 'ROLE_MANAGER';
+      },
     ...mapGetters('authorize', ['isLogin', 'loginUser'])
   }
 }

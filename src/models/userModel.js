@@ -22,7 +22,7 @@ const exportObject = {
         return !!(accessToken && accessToken !== 'undefined');
     },
     /*
-    * REST API 서버로 로그인 요청을 보냅니다.
+    * REST API 서버로 로그인 요청을 보냅니다.!!!!!!
     */
    requestLogin: async (payload) => {
     const serverUrl = vueInstance.config.globalProperties.$serverUrl;
@@ -134,12 +134,12 @@ const exportObject = {
     },
 
     /**
-    * REST API로 내 정보를 가져옵니다.
+    * REST API로 내 정보를 가져옵니다.!!!
     */
     requestMyInfo: async () => {
 
         const accessToken = localStorage.getItem('accessToken');
-        return await axios.get('//localhost:8085/users', {
+        return await axios.get('//api.speak-english-withai.com/users', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }

@@ -152,7 +152,7 @@ export default {
     };
     // 데이터 가져오기
 
-    const serverUrl = 'http://localhost:8085'; // 여기에 실제 서버 URL을 입력하세요
+    const serverUrl = 'https://api.speak-english-withai.com'; // 여기에 실제 서버 URL을 입력하세요
 
     const fetchRoles = async () => {
       try {
