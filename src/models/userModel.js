@@ -139,7 +139,7 @@ const exportObject = {
     requestMyInfo: async () => {
 
         const accessToken = localStorage.getItem('accessToken');
-        return await axios.get('//api.speak-english-withai.com/users', {
+        return await axios.get('//localhost:8085/users', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }

@@ -1,6 +1,6 @@
 const GlobalState = {
     vueInstance: null,
-    serverUrl: 'https://api.speak-english-withai.com',
+    serverUrl: 'http://localhost:8085',
 };
 
 export default GlobalState;
