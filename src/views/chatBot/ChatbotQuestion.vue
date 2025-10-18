@@ -60,6 +60,7 @@
 
 
 <script>
+import GlobalState from '../../global.js';
 import axios from '@/plugins/axios.js';
 import { throttle } from 'lodash'; // lodash의 throttle 함수 임포트
 
@@ -133,7 +134,7 @@ export default {
                 "답변은 반드시 **한국어**로 작성하되, 대화 내용만 원래 영어로 표시해주세요.",
             timestamp: new Date().toISOString() }; // 사용자 메시지 객체 생성
 
-         // reviewRequired 마지막에 추가
+          // reviewRequired 마지막에 추가
           messages.push({
             role: reviewRequired.role,
             content: reviewRequired.content,
@@ -151,7 +152,7 @@ export default {
             messages: messages
           }
           // 서버에 요청
-          axios.post("https://api.speak-english-withai.com/chat-gpt/chatEnd", requestPayload).then((result) => {
+          axios.post(`${GlobalState.serverUrl}/chat-gpt/chatEnd`, requestPayload).then((result) => {
             alert('글이 저장되었습니다.');
             this.fnView(result.data.board.idx); // 저장 후 글 상세 보기로 이동
           }).finally(()=>{
@@ -174,7 +175,7 @@ export default {
       }
       this.isLoading = true;
 
-      axios.post('https://api.speak-english-withai.com/chat-gpt/chat', payload)
+      axios.post(`${GlobalState.serverUrl}/chat-gpt/chat`, payload)
           .then(response => {
             const conversationResponse = response.data.conversationResponse; // conversationResponse 추출
             const botContent = JSON.parse(conversationResponse).choices[0].message.content; // 응답에서 content 가져오기
@@ -528,7 +529,7 @@ export default {
           messages: messages
         };
 
-        axios.post('https://api.speak-english-withai.com/chat-gpt/chat', requestPayload).then((result) => {
+        axios.post(`${GlobalState.serverUrl}/chat-gpt/chat`, requestPayload).then((result) => {
           // AI와의 대화
           const conversationResponse = result.data.conversationResponse; // conversationResponse 추출
           // AI의 교정
@@ -719,8 +720,8 @@ export default {
      * 편지 풀을 채웁니다.
      * @param {number} nSets - 채울 편지 세트 수
      * 소문자와 대문자 알파벳을 생성.
-     * 이 편지들에 대해 무작위 경로를 설정하여 화면을 돌아다니도록 설정.												  
-																									
+     * 이 편지들에 대해 무작위 경로를 설정하여 화면을 돌아다니도록 설정.
+
      */
     fillLetterPool(nSets = 2) {
       for (let i = 0; i < nSets; i++) {
@@ -734,13 +735,13 @@ export default {
      * 랜덤 편지 경로를 설정합니다.
      * @param {Array} letters - 편지 배열
      * 편지에 대해 무작위 시작 위치와 다음 위치를 설정.
-     * 일정 시간 동안 무작위 경로로 편지가 움직이도록 설정.																		   
-																				 
+     * 일정 시간 동안 무작위 경로로 편지가 움직이도록 설정.
+
      */
     setRandLetterPaths(letters) {
       const letterPool = this.$refs.letterPool; // 편지 풀 참조
       if (!letterPool) {
-																
+
         return;
       }
 
@@ -910,7 +911,7 @@ export default {
         // this.setElPosFromRight(overlayLetter,
 
       }
-      
+
       this.$refs.letterOverlay.appendChild(overlayLetter); // 오버레이 편지를 오버레이에 추가
       setTimeout(() => {
         this.setElPos(overlayLetter, finalPos.left-109, finalPos.top-280); // 오버레이 편지 최종 위치 설정
@@ -1118,11 +1119,11 @@ export default {
      * @returns {boolean} 유효한 문자 여부
      */
     isValidLetter(e) {
-      return !e.ctrlKey 
-        && e.key !== 'Enter'
-        && e.keyCode !== 8
-        && e.keyCode !== 9
-        && e.keyCode !== 13;
+      return !e.ctrlKey
+          && e.key !== 'Enter'
+          && e.keyCode !== 8
+          && e.keyCode !== 9
+          && e.keyCode !== 13;
     }
   },
   mounted() {

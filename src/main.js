@@ -26,7 +26,6 @@ app.mixin(mixins)
 app.component('navigation-bar', VueNavigationBar);
 app.config.globalProperties.$axios = axiosInstance
 app.config.globalProperties.$axios = axios;  //전역변수로 설정 컴포넌트에서 this.$axios 호출할 수 있음
-app.config.globalProperties.$serverUrl = '//localhost:8085' //api server
 app.config.globalProperties.$store = store
 // BootstrapVue 플러그인 등록
 userModel.init(app) // 유틸리티 모듈에 Vue 인스턴스 주입

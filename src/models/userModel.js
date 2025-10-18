@@ -2,6 +2,10 @@
 import store from '@/store'
 import axios from '@/plugins/axios'
 import router from "@/router";
+// 1. global.js에서 GlobalState를 임포트합니다.
+// userModel.js는 src/models/ 폴더에 있으므로 상위 폴더로 한 번만 이동합니다.
+import GlobalState from '../global.js';
+
 let vueInstance = null;
 
 
@@ -25,9 +29,9 @@ const exportObject = {
     * REST API 서버로 로그인 요청을 보냅니다.!!!!!!
     */
    requestLogin: async (payload) => {
-    const serverUrl = vueInstance.config.globalProperties.$serverUrl;
+    //const serverUrl = vueInstance.config.globalProperties.$serverUrl;
     return await axios
-           .post(serverUrl +'/users/authorize', {
+        .post(`${GlobalState.serverUrl}/users/authorize`, {
                loginId: payload.loginId,
                loginPass: payload.loginPass,
            })
@@ -54,9 +58,9 @@ const exportObject = {
     * REST API 서버로 회원가입 요청을 보냅니다.
     */
     requestSignUp: async (payload) => {
-        const serverUrl = vueInstance.config.globalProperties.$serverUrl;
+        //const serverUrl = vueInstance.config.globalProperties.$serverUrl;
         return await axios
-            .post(serverUrl +'/users', {
+            .post(`${GlobalState.serverUrl}/users`, {
                 registerEmail: payload.registerEmail,
                 registerPass: payload.registerPass,
                 registerName: payload.registerName,
@@ -139,7 +143,7 @@ const exportObject = {
     requestMyInfo: async () => {
 
         const accessToken = localStorage.getItem('accessToken');
-        return await axios.get('//localhost:8085/users', {
+        return await axios.get(`${GlobalState.serverUrl}/users`, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }

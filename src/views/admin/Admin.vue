@@ -98,7 +98,8 @@
 
 <script>
 import axios from '@/plugins/axios.js';
-
+// 1. global.js에서 GlobalState를 임포트합니다.
+import GlobalState from '../../global.js';
 import { ref, onMounted } from 'vue';
 
 export default {
@@ -152,7 +153,7 @@ export default {
     };
     // 데이터 가져오기
 
-    const serverUrl = 'http://localhost:8085'; // 여기에 실제 서버 URL을 입력하세요
+    const serverUrl = GlobalState.serverUrl;
 
     const fetchRoles = async () => {
       try {
