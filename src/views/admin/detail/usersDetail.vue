@@ -1,5 +1,6 @@
 <script>
 import axios from '@/plugins/axios.js';
+import GlobalState from '../../../global.js';
   export default {
     data() {
       return {
@@ -41,7 +42,7 @@ import axios from '@/plugins/axios.js';
         };
         console.log("payload", payload);
         // console.log("payload" , this.roleList);
-        axios.post(this.$serverUrl + '/admin/users', payload)
+        axios.put(`${GlobalState.serverUrl}/admin/resources`, payload)
             .then(response => {
               // console.log('전송 성공:', response.data);
               alert('데이터가 성공적으로 전송되었습니다.');
@@ -53,7 +54,7 @@ import axios from '@/plugins/axios.js';
       },
       //role list 가져오는 로직
       fnGetView(){
-        axios.get(this.$serverUrl + '/admin/resources/' + this.role.id, {
+        axios.get(`${GlobalState.serverUrl}/admin/resources/${this.role.id}`, {
         }).then((res) => {
           console.log("rest : ", res);
 

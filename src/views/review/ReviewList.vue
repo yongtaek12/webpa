@@ -108,6 +108,8 @@
 
 <script>
 import axios from '@/plugins/axios.js';
+// 1. global.js에서 GlobalState를 임포트합니다.
+import GlobalState from '../../global.js';
 export default {
   data() { //변수생성
     return {
@@ -155,7 +157,7 @@ export default {
         category: 2 // 카테고리 추가
       }
 
-      axios.get(this.$serverUrl + "/board/list", {
+      axios.get(`${GlobalState.serverUrl}/board/list`, {
         params: this.requestBody,
         headers: {}
       }).then((res) => {      

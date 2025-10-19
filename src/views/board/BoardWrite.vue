@@ -129,7 +129,7 @@ import {
 import translations from 'ckeditor5/translations/ko.js';
 import UploadAdapter from '@/views/board/UploadAdapter';
 import axios from '@/plugins/axios.js';
-
+import GlobalState from '@/global.js';
 import 'ckeditor5/ckeditor5.css';
 
 export default {
@@ -462,7 +462,7 @@ export default {
     fnGetView() {
       if (this.idx !== undefined) {
         axios
-          .get(this.$serverUrl + '/board/' + this.idx, {
+          .get(`${GlobalState.serverUrl}/board/${this.idx}`, {
             params: this.requestBody,
           })
           .then((res) => {
@@ -496,7 +496,7 @@ export default {
       if (this.isSaving) return; // 이미 저장 중이면 실행되지 않도록 방지
       this.isSaving = true; // 저장 중 상태 활성화
 
-      let apiUrl = this.$serverUrl + '/board';
+      let apiUrl = `${GlobalState.serverUrl}/board`;
 
       if (this.title.length === 0) {
         alert('글 제목은 필수로 입력하십시오'); // 제목 필수 입력 경고

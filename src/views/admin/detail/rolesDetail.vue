@@ -1,5 +1,6 @@
 <script>
 import axios from '@/plugins/axios.js';
+import GlobalState from '../../../global.js';
   export default {
     data() {
       return {
@@ -44,7 +45,7 @@ import axios from '@/plugins/axios.js';
             roleName : this.role.roleName
           };
           console.log("payLoad", payload)
-          axios.put(this.$serverUrl + '/admin/roles', payload)
+          axios.put(`${GlobalState.serverUrl}/admin/roles`, payload)
               .then(response => {
                 // console.log('전송 성공:', response.data);
                 alert('데이터가 성공적으로 전송되었습니다.');
@@ -59,7 +60,7 @@ import axios from '@/plugins/axios.js';
             isExpression: this.role.isExpression,
             roleName : this.role.roleName
           };
-          axios.post(this.$serverUrl + '/admin/roles', payload)
+          axios.post(`${GlobalState.serverUrl}/admin/roles`, payload)
               .then(response => {
                 // console.log('전송 성공:', response.data);
                 alert('데이터가 성공적으로 전송되었습니다.');
@@ -74,7 +75,7 @@ import axios from '@/plugins/axios.js';
       },
       deleteRole() {
         if (confirm("정말로 삭제하시겠습니까?")) {
-          axios.delete(`${this.$serverUrl}/admin/roles/${this.role.roleId}`)
+          axios.delete(`${GlobalState.serverUrl}/admin/roles/${this.role.roleId}`)
               .then(() => {
                 alert("삭제가 완료되었습니다.");
                 this.$router.push('/admin'); // 목록 페이지로 이동
@@ -90,7 +91,7 @@ import axios from '@/plugins/axios.js';
         console.log("fnGetView1 : ",  this.role.roleId)
         if(this.role.roleId !==undefined){
           console.log("fnGetView 2: ",  this.role.roleId)
-          axios.get(this.$serverUrl + '/admin/roles/' + this.role.roleId, {
+          axios.get(`${GlobalState.serverUrl}/admin/roles/${this.role.roleId}`, {
           }).then((res) => {
 
             console.log("res :" , res);
@@ -161,7 +162,7 @@ import axios from '@/plugins/axios.js';
         <div class="form-group2">
           <div class="col-sm-offset-1 col-sm-10">
             <button type="submit"  class="btn btn-dark btn-lg">등록</button>
-            <a class="btn btn-dark btn-lg" href="/admin">목록</a>
+            <a class="btn btn-dark btn-lg" href="http://localhost:8080/admin">목록</a>
             <button
                 v-if="$route.name === 'RolesDetail1'"
                 @click="deleteRole"

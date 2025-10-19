@@ -50,6 +50,7 @@ input[type="password"] {
 </style>
 
 <script>
+import GlobalState from '../../global.js';
 export default {
   name: 'SignupForm',
   data() {
@@ -156,7 +157,7 @@ export default {
 
       // 휴대폰 번호 발송중으로 flag 처리
       this.phoneAuth.isLoading = true;
-      this.$axios.post(this.$serverUrl +'/users/authorize/phone', {
+      this.$axios.post(`${GlobalState.serverUrl}/users/authorize/phone`, {
         phone: this.formData.phone
       }).then(res => {
         this.formData.phoneAuthCode = '';
@@ -258,7 +259,7 @@ export default {
       }
 
       // REST API로 전송
-      this.$axios.post('/users', {
+      this.$axios.post(`${GlobalState.serverUrl}/users`, {
         email: this.formData.email,
         password: this.formData.password,
         passwordConfirm: this.formData.passwordConfirm,

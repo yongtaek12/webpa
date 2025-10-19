@@ -108,6 +108,8 @@
 
 <script>
 import axios from '@/plugins/axios.js';
+// C:\Users\laund\webpack\src\views\board\ 에서 C:\Users\laund\webpack\src\ 로 이동 (2단계 상위)
+import GlobalState from '../../global.js';
 export default {
   data() { //변수생성
     return {
@@ -155,8 +157,8 @@ export default {
         category: 1 // 카테고리 추가
       }
       // console.log("page : " , this.page);
-
-      axios.get(this.$serverUrl + "/board/list", {
+      // 2. this.$serverUrl 대신 GlobalState.serverUrl을 사용하도록 수정
+      axios.get(`${GlobalState.serverUrl}/board/list`, {
         params: this.requestBody,
         headers: {}
       }).then((res) => {      

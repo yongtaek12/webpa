@@ -1,5 +1,6 @@
 <script>
 import axios from '@/plugins/axios.js';
+import GlobalState from '../../../global.js';
   export default {
     data() {
       return {
@@ -59,7 +60,8 @@ import axios from '@/plugins/axios.js';
             roleId: this.role.roleId,
           };
 
-          axios.put(this.$serverUrl + '/admin/resources', payload)
+        // 수정 후 (GlobalState.serverUrl 사용)
+          axios.put(`${GlobalState.serverUrl}/admin/resources`, payload)
               .then(response => {
                 // console.log('전송 성공:', response.data);
                 alert('데이터가 성공적으로 전송되었습니다.');
@@ -79,7 +81,7 @@ import axios from '@/plugins/axios.js';
           };
           console.log("payLoad1 ", payload)
 
-          axios.post(this.$serverUrl + '/admin/resources', payload)
+          axios.post(`${GlobalState.serverUrl}/admin/resources`, payload)
               .then(response => {
                 // console.log('전송 성공:', response.data);
                 alert('데이터가 성공적으로 전송되었습니다.');
@@ -94,7 +96,7 @@ import axios from '@/plugins/axios.js';
       },
       deleteRole() {
         if (confirm("정말로 삭제하시겠습니까?")) {
-          axios.delete(`${this.$serverUrl}/admin/resources/${this.role.resourceId}`)
+          axios.delete(`${GlobalState.serverUrl}/admin/resources/${this.role.resourceId}`)
               .then(() => {
                 alert("삭제가 완료되었습니다.");
                 this.$router.push('/admin'); // 목록 페이지로 이동
@@ -112,7 +114,8 @@ import axios from '@/plugins/axios.js';
         if(id===""){
          id =1000
         }
-        axios.get(this.$serverUrl + '/admin/resources/' + id, {
+        // 수정 후 (GlobalState.serverUrl 사용 및 템플릿 리터럴 정리)
+        axios.get(`${GlobalState.serverUrl}/admin/resources/${id}`, {
         }).then((res) => {
           // roleList가 로드된 후 role.roleId와 매칭되는 값이 있는지 확인
 
