@@ -131,6 +131,10 @@ import GlobalState from '../../../global.js';
       bindRoleId(event){
         // console.log("value : ", event.target.value);
         this.role.roleId = event.target.value;
+      },
+      // 새로 추가된 목록 이동 함수
+      fnList() {
+        this.$router.push('/admin'); // /admin 경로로 이동
       }
     }
   };
@@ -202,7 +206,7 @@ import GlobalState from '../../../global.js';
         <div class="form-group2">
           <div class="col-sm-offset-1 col-sm-10">
             <button type="submit"  class="btn btn-dark btn-lg">등록</button>
-            <a class="btn btn-dark btn-lg" href="/admin">목록</a>
+            <button type="button" @click="fnList" class="btn btn-dark btn-lg">목록</button>
             <button
                 v-if="$route.name === 'ResourcesDetail1'"
                 @click="deleteRole"
