@@ -16,6 +16,16 @@ import ResourcesDetail from "@/views/admin/detail/resourcesDetail.vue";
 import usersModel from "@/models/userModel";
 import Error from "@/views/error/Error.vue";
 
+// --- 모바일 화면 감지 유틸리티 함수 ---
+const isMobileDevice = () => {
+  // window 객체가 존재할 때만 확인 (브라우저 환경)
+  if (typeof window !== 'undefined') {
+    return window.innerWidth <= 768;
+  }
+  // 서버 측 렌더링(SSR) 환경 등의 경우를 위해 기본값 지정
+  return false;
+};
+
 const routes = [
   {
     path: '/',
@@ -80,7 +90,14 @@ const routes = [
   {
     path: '/question',
     name: 'Question',
-    component: ChatbotQuestion,
+    // === 여기서 모바일/PC 컴포넌트 분기 처리 ===
+    component: () => {
+      if (isMobileDevice()) {
+        return import('@/views/chatBot/MobileChatbotQuestion.vue');
+      } else {
+        return import('@/views/chatBot/ChatbotQuestion.vue');
+      }
+    },
     meta: { showHeaderFooter: true,requiredLogin: true }
   },
   {

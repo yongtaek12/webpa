@@ -1,54 +1,29 @@
 <template>
   <header>
     <div class="page-wrapper">
-    <div class="nav-wrapper">
-      <div class="grad-bar"></div>
-      <nav class="navbar">
-        <img class="company-logo" src="@/assets/images/logo.gif" alt="Company Logo" />
-        <div class="menu-toggle" @click="toggleMobileMenu">
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-        </div>
-        <ul :class="['nav', { 'search': isSearchActive, 'no-search': !isSearchActive, 'mobile-nav': isMobileNavActive }]">
-          <li class="nav-item"><router-link to="/">Home</router-link></li>
-          <li class="nav-item"><router-link to="/about">About</router-link></li>
-          <li class="nav-item"><router-link to="/board/list">Board</router-link></li>
-          <li class="nav-item"><router-link to="/review/list">Reviews</router-link></li>
-          <li class="nav-item"><router-link to="/question">Chatbot Inquiry</router-link></li>
-          <i class="fas fa-search" id="search-icon" @click="toggleSearch"></i>
-          <input class="search-input" type="text" placeholder="검색어를 " :class="{ 'search-active': isSearchActive }" />
-        </ul>
-      </nav>
+      <div class="nav-wrapper">
+        <div class="grad-bar"></div>
+        <nav class="navbar">
+          <img class="company-logo" src="@/assets/images/logo.gif" alt="Company Logo" />
+          <div class="menu-toggle" @click="toggleMobileMenu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+          </div>
+          <ul :class="['nav', { 'search': isSearchActive, 'no-search': !isSearchActive, 'mobile-nav': isMobileNavActive }]">
+            <!-- 모든 router-link에 closeMobileMenu 메서드 추가 -->
+            <li class="nav-item"><router-link to="/" @click="closeMobileMenu">Home</router-link></li>
+            <li class="nav-item"><router-link to="/about" @click="closeMobileMenu">About</router-link></li>
+            <li class="nav-item"><router-link to="/board/list" @click="closeMobileMenu">Board</router-link></li>
+            <li class="nav-item"><router-link to="/review/list" @click="closeMobileMenu">Reviews</router-link></li>
+            <li class="nav-item"><router-link to="/question" @click="closeMobileMenu">Chatbot Inquiry</router-link></li>
+
+            <i class="fas fa-search" id="search-icon" @click="toggleSearch"></i>
+            <input class="search-input" type="text" placeholder="검색어를 " :class="{ 'search-active': isSearchActive }" />
+          </ul>
+        </nav>
+      </div>
     </div>
-    <!-- <section class="headline">
-      <h1>Responsive Navigation</h1>
-      <p>Using CSS grid and flexbox to easily build navbars!</p>
-    </section> -->
-    <!-- <section class="features">
-      <div class="feature-container">
-        <img src="https://cdn-images-1.medium.com/max/2000/1*HFAEJvVOq4AwFuBivNu_OQ.png" alt="Flexbox Feature" />
-        <h2>Flexbox Featured</h2>
-        <p>
-          This pen contains use of flexbox for the headline and feature section! We use it in our mobile navbar and show the power of mixing css grid and flexbox.
-        </p>
-      </div>
-      <div class="feature-container">
-        <img src="https://blog.webix.com/wp-content/uploads/2017/06/20170621-CSS-Grid-Layout-710x355-tiny.png" alt="Flexbox Feature" />
-        <h2>CSS Grid Navigation</h2>
-        <p>
-          While flexbox is used for the mobile navbar, CSS grid is used for the desktop navbar showing many ways we can use both.
-        </p>
-      </div>
-      <div class="feature-container">
-        <img src="https://www.graycelltech.com/wp-content/uploads/2015/06/GCT-HTML5.jpg" alt="Flexbox Feature" />
-        <h2>Basic HTML5</h2>
-        <p>
-          This pen contains basic html to setup the page to display the responsive navbar.
-        </p>
-      </div>
-    </section> -->
-  </div>
     <div class="top-bar">
       <div id="nav" class="nav-links">
         <template v-if="isLogin">
@@ -59,16 +34,11 @@
 
         </template>
         <template v-else>
-          <router-link to="/signin" >로그인</router-link>
+          <!-- 로그인 링크에도 메뉴 닫기 추가 -->
+          <router-link to="/signin" @click="closeMobileMenu">로그인</router-link>
         </template>
       </div>
     </div>
-    <!-- <div id="nav" class="nav-links">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/board/list">게시판</router-link> |
-      <router-link to="/question">문의</router-link>
-    </div> -->
   </header>
 </template>
 
@@ -86,13 +56,20 @@ export default {
   methods:{
     toggleSearch() {
       this.isSearchActive = !this.isSearchActive;
-    },    
+    },
     toggleMobileMenu() {
+      // 햄버거 버튼 클릭 시 메뉴를 열고 닫는 기존 로직
       this.isMobileNavActive = !this.isMobileNavActive;
-    },    
+    },
+    // 새로 추가된 메뉴 닫기 메서드
+    closeMobileMenu() {
+      if (this.isMobileNavActive) {
+        this.isMobileNavActive = false;
+      }
+    },
     signOut () {
-                if(! confirm('로그아웃 하시겠습니까?')) return
-                  userModel.processLogOut();
+      if(! confirm('로그아웃 하시겠습니까?')) return
+      userModel.processLogOut();
     },
     adminPage() {
       this.$router.push('/admin');
@@ -103,7 +80,7 @@ export default {
       //roop 돌아서 admin 있는경우 관리자 페이지 이동 아이콘 보이기
       return this.loginUser.auth === 'ROLE_ADMIN'
           || this.loginUser.auth === 'ROLE_MANAGER';
-      },
+    },
     ...mapGetters('authorize', ['isLogin', 'loginUser'])
   }
 }
@@ -375,30 +352,30 @@ input {
 
 /* Media Queries */
 
-  /* Mobile Devices - Phones/Tablets */
+/* Mobile Devices - Phones/Tablets */
 
-@media only screen and (max-width: 720px) { 
+@media only screen and (max-width: 720px) {
   .features {
     flex-direction: column;
     padding: 50px;
   }
-  
+
   /* MOBILE HEADINGS */
-  
+
   h1 {
     font-size: 1.9rem;
   }
-  
+
   h2 {
     font-size: 1rem;
   }
-  
+
   p {
     font-size: 0.8rem;
   }
-  
+
   /* MOBILE NAVIGATION */
-     
+
   .navbar ul {
     display: flex;
     flex-direction: column;
@@ -411,57 +388,56 @@ input {
     transform: translate(-101%);
     text-align: center;
     overflow: hidden;
+    transition: transform 0.3s ease-in-out; /* 메뉴가 부드럽게 닫히도록 전환 효과 추가 */
   }
-  
+
   .navbar li {
     padding: 15px;
   }
-  
+
   .navbar li:first-child {
     margin-top: 50px;
   }
-  
+
   .navbar li a {
     font-size: 1rem;
   }
-   
+
   .menu-toggle, .bar {
     display: block;
     cursor: pointer;
   }
-  
+
   .mobile-nav {
     transform: translate(0%)!important;
   }
-  
+
   /* SECTIONS */
-  
+
   .headline {
     height: 20vh;
   }
-    
+
   .feature-container p {
     margin-bottom: 25px;
   }
-  
+
   .feature-container {
     margin-top: 20px;
   }
-  
+
   .feature-container:nth-child(2) {
     order: -1;
   }
-  
+
   /* SEARCH DISABLED ON MOBILE */
-  
+
   #search-icon {
     display: none;
   }
-  
+
   .search-input {
     display: none;
   }
 }
-
-
 </style>
