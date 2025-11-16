@@ -4,8 +4,6 @@ const path = require('path');
 
 module.exports = defineConfig({
 // 👇👇 이 부분을 추가해야 합니다! 👇👇
-  // S3와 같은 정적 호스팅 환경에서 리소스 경로를 HTML 파일을 기준으로 상대 경로로 설정합니다.
-  publicPath: './',
 
   configureWebpack: {
     resolve: {
