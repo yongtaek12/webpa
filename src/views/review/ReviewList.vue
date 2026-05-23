@@ -2,17 +2,17 @@
   <section class="notice">
     <div class="page-title">
       <div class="container">
-        <h3>공지사항</h3>
+        <h3>리뷰</h3>
       </div>
     </div>
 
     <!-- 검색 영역 -->
     <div id="board-search">
       <div class="container">
-        <div class="search-window">                
+        <div class="search-window">
           <form @submit.prevent="fnPage(1,true)">
             <div class="search-wrap">
-              <label for="search" class="blind">공지사항 내용 검색</label>
+              <label for="search" class="blind">리뷰 내용 검색</label>
               <select v-model="search_key" class="search-select">
                 <option value="">- 선택 -</option>
                 <option value="title">제목</option>
@@ -108,7 +108,7 @@
 
 <script>
 import axios from '@/plugins/axios.js';
-// C:\Users\laund\webpack\src\views\board\ 에서 C:\Users\laund\webpack\src\ 로 이동 (2단계 상위)
+// 1. global.js에서 GlobalState를 임포트합니다.
 import GlobalState from '../../global.js';
 export default {
   data() { //변수생성
@@ -154,15 +154,15 @@ export default {
         value: this.search_value,
         page: this.page,
         size: this.size,
-        category: 1 // 카테고리 추가
+        category: 2 // 카테고리 추가
       }
-      // console.log("page : " , this.page);
-      // 2. this.$serverUrl 대신 GlobalState.serverUrl을 사용하도록 수정
+
       axios.get(`${GlobalState.serverUrl}/board/list`, {
         params: this.requestBody,
         headers: {}
       }).then((res) => {      
-
+         // console.log("테스트입니다.", this.$serverUrl);
+         // console.log(res.data);
 
         if (res.data.resultCode === "OK") {
           this.list = res.data.data
@@ -178,7 +178,6 @@ export default {
     },
     fnView(idx) {
       this.requestBody.idx = idx
-      this.requestBody.category = 1
       this.$router.push({
         path: './detail',
         query: this.requestBody
@@ -198,7 +197,7 @@ export default {
 
       if (this.page !== n) {
         this.page = n
-        // console.log("페이지 클릭 ", n);
+        console.log("페이지 클릭 ", n);
         
       }
       this.fnGetList()

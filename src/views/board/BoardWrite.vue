@@ -5,17 +5,18 @@
 			type="text"
 			v-model="title"
 			class="w3-input w3-border"
-			placeholder="제목을 입력해주세요...."
+			placeholder="글제목을 입력해주세요."
 			style="resize: none; width: 25%;"
 		/>
-		<input
-			type="text"
-			v-model="author"
-			class="w3-input w3-border"
-			placeholder="작성자를 입력해주세요.."
-			v-if="idx === undefined"
-			style="resize: none; width: 25%;"
-		/>
+    <div v-if="this.loginUser">
+      <input
+        type="text"
+        v-model="nickname"
+        class="w3-input w3-border"
+        readonly
+        style="resize: none; width: 25%;"
+      />
+    </div>
 		</div>
     <div class="board-contents">
       <div class="main-container">
@@ -31,11 +32,7 @@
       </div>
     </div>
     <div class="common-buttons">
-      <button
-        type="button"
-        class="w3-button w3-round w3-blue-gray"
-        v-on:click="fnSave"
-      >
+      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnSave">
         저장
       </button>
       &nbsp;
@@ -131,8 +128,8 @@ import {
 } from 'ckeditor5';
 import translations from 'ckeditor5/translations/ko.js';
 import UploadAdapter from '@/views/board/UploadAdapter';
-
-
+import axios from '@/plugins/axios.js';
+import GlobalState from '@/global.js';
 import 'ckeditor5/ckeditor5.css';
 
 export default {
@@ -140,8 +137,10 @@ export default {
     return {
       requestBody: this.$route.query,
       idx: this.$route.query.idx,
+      isSaving: false, // 저장 중 상태 관리 플래그 추가
       title: '',
       author: '',
+      nickname:'',
       contents: '',
       created_at: '',
       isLayoutReady: false,
@@ -150,11 +149,24 @@ export default {
   
     };
   },
-  mounted() {
+  created() {
+    setTimeout(() => {
+      if (this.idx === undefined && this.loginUser) {
+        this.nickname = this.loginUser.nickname;
+      }
+    }, 100); // 5000ms = 5초
+  },
+  mounted(){
+    // if (this.loginUser) {
+    //   console.log("loginUser" , this.loginUser);
+    //   this.author = this.loginUser.id;
+    //   this.nickname = this.loginUser.nickname;
+    // }
     this.fnGetView();
+
     // CKEditor 초기화
     this.config = {
-			toolbar: {
+      toolbar: {
 				items: [
 					'undo',
 					'redo',
@@ -379,7 +391,7 @@ export default {
 				]
 			},
 
-			initialData: '<h2>Congratulations on setting up CKEditor 5! 🎉</h2>\n<p>\n    You\'ve successfully created a CKEditor 5 project. This powerful text editor will enhance your application, enabling rich text editing\n    capabilities that are customizable and easy to use.\n</p>\n<h3>What\'s next?</h3>\n<ol>\n    <li>\n        <strong>Integrate into your app</strong>: time to bring the editing into your application. Take the code you created and add to your\n        application.\n    </li>\n    <li>\n        <strong>Explore features:</strong> Experiment with different plugins and toolbar options to discover what works best for your needs.\n    </li>\n    <li>\n        <strong>Customize your editor:</strong> Tailor the editor\'s configuration to match your application\'s style and requirements. Or even\n        write your plugin!\n    </li>\n</ol>\n<p>\n    Keep experimenting, and don\'t hesitate to push the boundaries of what you can achieve with CKEditor 5. Your feedback is invaluable to us\n    as we strive to improve and evolve. Happy editing!\n</p>\n<h3>Helpful resources</h3>\n<ul>\n    <li>📝 <a href="https://orders.ckeditor.com/trial/premium-features">Trial sign up</a>,</li>\n    <li>📕 <a href="https://ckeditor.com/docs/ckeditor5/latest/installation/index.html">Documentation</a>,</li>\n    <li>⭐️ <a href="https://github.com/ckeditor/ckeditor5">GitHub</a> (star us if you can!),</li>\n    <li>🏠 <a href="https://ckeditor.com">CKEditor Homepage</a>,</li>\n    <li>🧑‍💻 <a href="https://ckeditor.com/ckeditor-5/demo/">CKEditor 5 Demos</a>,</li>\n</ul>\n<h3>Need help?</h3>\n<p>\n    See this text, but the editor is not starting up? Check the browser\'s console for clues and guidance. It may be related to an incorrect\n    license key if you use premium features or another feature-related requirement. If you cannot make it work, file a GitHub issue, and we\n    will help as soon as possible!\n</p>\n',
+			initialData: '',
 
 			language: 'ko',
 			link: {
@@ -422,17 +434,19 @@ export default {
 		};
     this.isLayoutReady = true;
 
+
   },
   methods: {
-	// myCustomUploadAdapterPlugin(editor) {
-	// 	console.log("myCustomUploadAdapterPlugin" , editor)
-    //   // CKEditor에서 플러그인으로 인식할 수 있도록 설정
-    //   editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-    //     return new UploadAdapter(loader);
-    //   };
-    // },
+    fnView(idx) {
+      this.requestBody.idx = idx
+      this.requestBody.category = 1
+      this.$router.push({
+        path: './detail',
+        query: this.requestBody
+      })
+    },
+
     onEditorReady(editor) {
-		console.log("onEditorReady" , editor)
 
         // CKEditor가 준비된 후에 uploader 설정
         editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
@@ -447,16 +461,21 @@ export default {
     },
     fnGetView() {
       if (this.idx !== undefined) {
-        this.$axios
-          .get(this.$serverUrl + '/board/' + this.idx, {
+        axios
+          .get(`${GlobalState.serverUrl}/board/${this.idx}`, {
             params: this.requestBody,
           })
           .then((res) => {
             this.title = res.data.title;
-            this.author = res.data.author;
-            //this.contents = res.data.contents;
-			this.config.initialData = res.data.contents;
+            this.author = res.data.authorId;
+            this.nickname = res.data.author;
+			      this.config.initialData = res.data.contents;
             this.created_at = res.data.created_at;
+            // if (this.loginUser) {
+            //   console.log("loginUser" , this.loginUser);
+            //   this.author =
+            //   this.nickname = this.loginUser.nickname;
+            // }
           })
           .catch((err) => {
             console.log(err);
@@ -471,51 +490,69 @@ export default {
       });
     },
     fnSave() {
-      let apiUrl = this.$serverUrl + '/board';
+      console.log("저장")
+
+
+      if (this.isSaving) return; // 이미 저장 중이면 실행되지 않도록 방지
+      this.isSaving = true; // 저장 중 상태 활성화
+
+      let apiUrl = `${GlobalState.serverUrl}/board`;
 
       if (this.title.length === 0) {
-        alert('글 제목은 필수로 입력하십시오');
+        alert('글 제목은 필수로 입력하십시오'); // 제목 필수 입력 경고
+        this.isSaving = false; // 저장 중 상태 활성화
         return;
       }
-	  console.log("글저장 값 : ", this.config.initialData)
-	//   return;
-    //   if (this.contents.length === 0) {
-    //     alert('글 내용을 입력하십시오');
-    //     return;
-    //   }
 
 
-      this.form = {
-        idx: this.idx,
-        title: this.title,
-        contents: this.config.initialData,
-        author: this.author,
-      };
+
 
       if (this.idx === undefined) {
-        this.$axios
-          .post(apiUrl, this.form)
-          .then((res) => {
-            alert('글이 저장되었습니다.');
-            this.fnView(res.data.idx);
-          })
-          .catch((err) => {
-            if (err.message.indexOf('Network Error') > -1) {
-              alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
-            }
-          });
+        // 저장할 데이터 준비
+        this.form = {
+          idx: this.idx,
+          title: this.title,
+          contents: this.config.initialData, // CKEditor 내용 저장
+          author: this.author = this.loginUser.id
+        };
+        // 새 글 저장
+        axios
+            .post(apiUrl, this.form)
+            .then((res) => {
+              alert('글이 저장되었습니다.');
+              this.fnView(res.data.idx); // 저장 후 글 상세 보기로 이동
+            })
+            .catch((err) => {
+              if (err.message.indexOf('Network Error') > -1) {
+                alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
+              }
+            })
+            .finally(() => {
+              this.isSaving = false; // 저장 중 상태 해제
+            });
       } else {
-        this.$axios
-          .patch(apiUrl, this.form)
-          .then((res) => {
-            alert('글이 저장되었습니다.');
-            this.fnView(res.data.idx);
-          })
-          .catch((err) => {
-            if (err.message.indexOf('Network Error') > -1) {
-              alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
-            }
-          });
+        // 저장할 데이터 준비
+        this.form = {
+          idx: this.idx,
+          title: this.title,
+          contents: this.config.initialData, // CKEditor 내용 저장
+          author: this.author
+        };
+        // 글 수정
+        axios
+            .patch(apiUrl, this.form)
+            .then((res) => {
+              alert('글이 수정되었습니다.');
+              this.fnView(res.data.idx); // 수정 후 글 상세 보기로 이동
+            })
+            .catch((err) => {
+              if (err.message.indexOf('Network Error') > -1) {
+                alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
+              }
+            })
+            .finally(() => {
+              this.isSaving = false; // 저장 중 상태 해제
+            });
       }
     },
   },
@@ -523,48 +560,4 @@ export default {
 </script>
 
 <style>
-/**textarea 크기 조절 */
-.ck-editor__editable {
-  min-height: 1200px !important;
-  min-width: 1200px !important;
-  /* color: black !important; */
-
-  /* min-width: 800; */
-}
-.ck-content {
-    color: black !important;
-}
-/** CKEditor의 p 태그(Paragraph)의 색상을 검정색으로 강제 설정 */
-.ck-content p {
-  color: black !important;
-}
-.ck-content h1 {
-  color: black !important;
-}
-/*Toolbar*/
-.ck-editor__top {
-	min-width: 1200px;
-}
-.ck-content p.ck-heading_paragraph {
-  text-align: left !important;
-  color: #000000 !important;
-}
-.ck.ck-content ul,
-.ck.ck-content ul li {
-  list-style-type: inherit;
-}
-
-.ck.ck-content ul {
-  /* Default user agent stylesheet, you can change it to your needs. */
-  padding-left: 40px;
-}
-
-.ck.ck-content ol,
-.ck.ck-content ol li {
-  list-style-type: decimal;
-}
-.ck.ck-content ol {
-  /* Default user agent stylesheet, you can change it to your needs. */
-  padding-left: 40px;
-}
 </style>

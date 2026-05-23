@@ -1,3 +1,6 @@
+// 1. global.js에서 GlobalState를 임포트합니다.
+// 경로 수정: src/views/board/ 기준 두 단계 상위 폴더로 이동 (../../global.js)
+import GlobalState from '../../global.js';
 export default class UploadAdapter {
     constructor(loader) {
         this.loader = loader;
@@ -11,10 +14,14 @@ export default class UploadAdapter {
         })))
     }
 
-    //XMLHttpRequest 객체를 준비하고, POST 요청을 설정합니다
+//XMLHttpRequest 객체를 준비하고, POST 요청을 설정합니다
     _initRequest() {
         const xhr = this.xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:8085/board/ckeditor5Upload', true);
+
+        // 2. 하드코딩된 URL을 GlobalState.serverUrl을 사용하도록 수정합니다.
+        const url = `${GlobalState.serverUrl}/board/ckeditor5Upload`;
+
+        xhr.open('POST', url, true);
         xhr.responseType = 'json';
     }
 

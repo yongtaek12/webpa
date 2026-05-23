@@ -3,6 +3,8 @@ const webpack = require('webpack');
 const path = require('path');
 
 module.exports = defineConfig({
+// 👇👇 이 부분을 추가해야 합니다! 👇👇
+
   configureWebpack: {
     resolve: {
       alias: {

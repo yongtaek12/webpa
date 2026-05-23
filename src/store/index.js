@@ -4,11 +4,18 @@ import { createStore } from 'vuex'
 import authorizeStore from '@/store/auth'
 
 export default createStore({
+  namespaced: true, // 네임스페이스 사용
+
   state: {
+    roles: [] // roles 상태 추가
+
   },
   getters: {
   },
   mutations: {
+    SET_ROLES(state, roles) {
+      state.roles = roles; // roles 데이터를 상태에 설정
+    }
   },
   actions: {
   },

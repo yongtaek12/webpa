@@ -25,7 +25,7 @@
           >
         </p>
         <p>
-          <a href="https://github.com/sanketbodke"
+          <a href="https://github.com/yongtaek12"
             ><i class="fab fa-github"></i> Github</a
           >
         </p>
@@ -35,7 +35,7 @@
           >
         </p>
         <p>
-          <a href="https://www.instagram.com/imsanketbodke/?hl=en"
+          <a href="https://www.instagram.com/yongtaek1235/"
             ><i class="fab fa-instagram"></i> Instagram</a
           >
         </p>
@@ -44,7 +44,7 @@
         <h4>Quick links</h4>
         <p><a href="#">Home</a></p>
         <p><a href="#">About</a></p>
-        <p><a href="#">Blogs</a></p>
+        <p><a href="https://blog.naver.com/red_dragon_taek">Blogs</a></p>
         <p><a href="#">Contact</a></p>
       </div>
       <div class="details">
@@ -56,7 +56,7 @@
         <h4 class="mobile">Mobile</h4>
         <p><a href="#">+9112233445</a></p>
         <h4 class="mail">Email</h4>
-        <p><a href="#">abcdef@gmail.com</a></p>
+        <p><a href="#">laundryday085@gmail.com</a></p>
       </div>
     </div>
     <footer>
